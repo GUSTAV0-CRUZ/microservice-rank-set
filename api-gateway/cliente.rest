@@ -1,0 +1,215 @@
+@baseUrl = http://localhost:3000/api/v1/
+
+### Player
+
+# @name PlayerGetAll
+GET {{baseUrl}}player
+?limit=15
+&offset=0
+
+###
+# @name PlayerGetOne
+GET {{baseUrl}}player/69a1a8f29fda1c56f912a825
+
+###
+# @name PlayerPost
+POST {{baseUrl}}player
+Content-Type: application/json
+
+{
+  "name": "Test2",
+  "email": "test@gmail.com",
+  "tell": "949734857234",
+  "ranking": "A",
+  "positionRanking": 1,
+  "pictureUrl": "http://localhost:3000/picture/3"
+}
+
+###
+# @name PlayerPatch
+PATCH  {{baseUrl}}player/69ab34d55a827cb4bdbe175e
+Content-Type: application/json
+
+{
+  "name": "test updated"
+}
+###
+# @name PlayerDelete
+DELETE  {{baseUrl}}player/69ab34d55a827cb4bdbe175e
+
+
+
+### Category
+
+# @name CategoryGetAll
+GET {{baseUrl}}category
+
+###
+# @name CategoryGetOne
+GET {{baseUrl}}category/69a45d44f8f5fdc6cefa39db
+
+###
+# @name CategoryPost
+POST {{baseUrl}}category
+Content-Type: application/json
+
+{
+  "name": "A",
+  "description": "Medium category",
+  "events": [
+    {
+      "name": "Event one",
+      "operation": "any operation",
+      "value": 50
+    },
+    {
+      "name": "Event two",
+      "operation": "any operation",
+      "value": 25
+    }
+  ]
+
+}
+
+###
+# @name CategoryPatch
+PATCH  {{baseUrl}}category/69a830505a486b90d0346b63
+Content-Type: application/json
+
+{
+  "name": "Category update name",
+  "addEvents": [
+    {
+      "name": "Event four",
+      "operation": "any operation",
+      "value": 100
+    }
+  ],
+  "removeEvents": [
+    {
+      "name": "Event one",
+      "operation": "any operation"
+    }
+  ]
+}
+###
+# @name CategoryDelete
+DELETE  {{baseUrl}}category/69a830505a486b90d0346b63
+
+###
+# @name AddPlayer
+PATCH  {{baseUrl}}category/69ab35305a827cb4bdbe1766/addPlayer
+Content-Type: application/json
+
+{
+  "addPlayers": ["69a1a8f29fda1c56f912a825", "69a1a8f29fda1c56f912a825"]
+}
+
+###
+# @name RemovePlayer
+PATCH  {{baseUrl}}category/69ab35305a827cb4bdbe1766/removePlayer
+Content-Type: application/json
+
+{
+  "removePlayers": ["69a45d44f8f5fdc6cefa39d1"]
+}
+
+### challenge
+
+# @name ChallengeGetAll
+GET {{baseUrl}}challenge
+?limit=10
+&offset=0
+
+###
+# @name ChallengeGetOne
+GET {{baseUrl}}challenge/69a851a8ace9c0a64fd80d81
+
+###
+# @name ChallengePlayerGetOne
+GET {{baseUrl}}challenge/player/69a1a8f29fda1c56f912a825
+
+###
+# @name ChallengePost
+POST {{baseUrl}}challenge
+Content-Type: application/json
+
+{
+  "dateHourChallenge": "2026-03-20T07:30:00",
+  "applicant": "69a1a8f29fda1c56f912a825",
+  "players": ["69a1a8f29fda1c56f912a825", "69a6f7a2f38dbedaa8bc29c5"]
+}
+
+###
+# @name ChallengePatch
+PATCH  {{baseUrl}}challenge/69a851a8ace9c0a64fd80d81
+Content-Type: application/json
+
+{
+  "dateHourResponse": "2026-03-20T10:30:00",
+  "status": "ACCEPTED"
+}
+
+###
+# @name ChallengeDelete
+DELETE  {{baseUrl}}challenge/69a851c3ace9c0a64fd80d86
+
+###
+# @name ChallengeAddMatch
+PATCH  {{baseUrl}}challenge/69a851a8ace9c0a64fd80d81/AddMatch
+Content-Type: application/json
+
+{
+  "result": [
+    {
+    "set": "player one wins"
+    }
+  ],
+  "def": "69a1a8f29fda1c56f912a825"
+}
+
+### Match
+
+# @name MatchGetAll
+GET {{baseUrl}}match
+?limit=1
+&offset=0
+
+###
+# @name MatchGetOne
+GET {{baseUrl}}match/69a99767a689f289aa0f25e7
+
+###
+# @name MatchPost
+POST {{baseUrl}}match
+Content-Type: application/json
+
+{
+  "category": "any category",
+  "players": ["69a1a8f29fda1c56f912a825", "69a6f7a2f38dbedaa8bc29c5"],
+  "result": [
+    {
+    "set": "69a1a8f29fda1c56f912a825"
+    }
+  ],
+  "def": "69a1a8f29fda1c56f912a825"
+}
+
+###
+# @name MatchPatch
+PATCH  {{baseUrl}}match/69a99767a689f289aa0f25e7
+Content-Type: application/json
+
+{
+  "result": [
+    {
+    "set": "69a1a8f29fda1c56f912a825"
+    }
+  ],
+  "def": "69a1a8f29fda1c56f912a825"
+}
+
+###
+# @name MatchDelete
+DELETE  {{baseUrl}}match/69a9a470288657000ba71f74
+
