@@ -6,7 +6,7 @@ import {
   // NotFoundException,
 } from '@nestjs/common';
 import { CreateCategoryDto } from './dto/create-category.dto';
-// import { UpdateCategoryDto } from './dto/update-category.dto';
+import { UpdateCategoryDto } from './dto/update-category.dto';
 import { CategoryRepository } from './repository/category.repository';
 import { RpcException } from '@nestjs/microservices';
 import { Category } from './entities/category.entity';
@@ -56,6 +56,7 @@ export class CategoryService {
 
       return category;
     } catch (error) {
+      this.logger.error(error.message, error.stack);
       if (error.path === '_id') throw new RpcException('Type of id invalid');
 
       if (error.status === 404) throw new RpcException('Category not found');
@@ -64,29 +65,26 @@ export class CategoryService {
     }
   }
 
-  // async update(
-  //   id: string,
-  //   updateCategoryDto: UpdateCategoryDto,
-  // ): Promise<Category> {
-  //   try {
-  //     const updatedCategory = await this.categoryRepository.update(
-  //       id,
-  //       updateCategoryDto,
-  //     );
+  async update(
+    id: string,
+    updateCategoryDto: UpdateCategoryDto,
+  ): Promise<Category> {
+    try {
+      const updatedCategory = await this.categoryRepository.update(
+        id,
+        updateCategoryDto,
+      );
 
-  //     if (!updatedCategory) throw new NotFoundException();
+      if (!updatedCategory) throw new RpcException('Category not found');
 
-  //     return updatedCategory;
-  //   } catch (error) {
-  //     if (error.path === '_id')
-  //       throw new BadRequestException('Type of id invalid');
+      return updatedCategory;
+    } catch (error) {
+      this.logger.error(error.message, error.stack);
+      if (error.path === '_id') throw new RpcException('Type of id invalid');
 
-  //     if (error.status === 404)
-  //       throw new NotFoundException('Category not found');
-
-  //     throw new BadRequestException(error.message);
-  //   }
-  // }
+      throw new RpcException(error.message);
+    }
+  }
 
   // async delete(id: string): Promise<Category> {
   //   try {

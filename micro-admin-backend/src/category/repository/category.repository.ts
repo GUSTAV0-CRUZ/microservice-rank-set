@@ -3,7 +3,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { CategoryDocument } from '../schemas/category.schema';
 import { CreateCategoryDto } from '../dto/create-category.dto';
-// import { UpdateCategoryDto } from '../dto/update-category.dto';
+import { UpdateCategoryDto } from '../dto/update-category.dto';
 // import { AddPlayerDto } from '../dto/add-player.dto';
 // import { RemovePlayerDto } from '../dto/remove-player.dto';
 // import { Player } from 'src/player/entities/Player.entitie';
@@ -27,43 +27,42 @@ export class CategoryRepository {
     return this.categoryModel.create(createCategoryDto);
   }
 
-  // async update(id: string, updateCategoryDto: UpdateCategoryDto) {
-  //   const { name, description, addEvents, removeEvents } = updateCategoryDto;
+  async update(id: string, updateCategoryDto: UpdateCategoryDto) {
+    const { name, description, addEvents, removeEvents } = updateCategoryDto;
 
-  //   const operations = [
-  //     {
-  //       updateOne: {
-  //         filter: { _id: id },
-  //         update: {
-  //           $set: { name, description },
-  //           $pull: {
-  //             events: {
-  //               name: { $in: removeEvents?.map(event => event.name) ?? [] },
-  //               operation: {
-  //                 $in: removeEvents?.map(event => event.operation) ?? [],
-  //               },
-  //             },
-  //           },
-  //         },
-  //       },
-  //     },
-  //     {
-  //       updateOne: {
-  //         filter: { _id: id },
-  //         update: {
-  //           $addToSet: {
-  //             events: { $each: addEvents ?? [] },
-  //           },
-  //         },
-  //       },
-  //     },
-  //   ];
+    const operations = [
+      {
+        updateOne: {
+          filter: { _id: id },
+          update: {
+            $set: { name, description },
+            $pull: {
+              events: {
+                name: { $in: removeEvents?.map((event) => event.name) ?? [] },
+                operation: {
+                  $in: removeEvents?.map((event) => event.operation) ?? [],
+                },
+              },
+            },
+          },
+        },
+      },
+      {
+        updateOne: {
+          filter: { _id: id },
+          update: {
+            $addToSet: {
+              events: { $each: addEvents ?? [] },
+            },
+          },
+        },
+      },
+    ];
 
-  //   await this.categoryModel.bulkWrite(
-  //     operations as AnyBulkWriteOperation<CategoryDocument>[],
-  //   );
-  //   return this.categoryModel.findById(id).exec();
-  // }
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+    await this.categoryModel.bulkWrite(operations as any);
+    return this.categoryModel.findById(id).exec();
+  }
 
   // async addPlayers(id: string, addPlayerDto: AddPlayerDto) {
   //   const { addPlayers } = addPlayerDto;

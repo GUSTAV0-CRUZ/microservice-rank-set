@@ -5,11 +5,13 @@ import {
   HttpCode,
   Logger,
   Param,
+  Patch,
   Post,
 } from '@nestjs/common';
 import { CreateCategoryDto } from './dtos/create-category.dto';
 import { ClientproxyRmqService } from 'src/client-proxy-rmq/client-proxy-rmq.service';
 import { ClientProxy } from '@nestjs/microservices';
+import { UpdateCategoryDto } from './dtos/update-category.dto';
 
 @Controller('api/v1/category')
 export class CategoryController {
@@ -35,5 +37,17 @@ export class CategoryController {
   @Get(':id')
   indOne(@Param('id') id: string) {
     return this.clientAdminBackend.send('findOneById-category', id);
+  }
+
+  @HttpCode(202)
+  @Patch(':id')
+  update(
+    @Param('id') id: string,
+    @Body() updateCategoryDto: UpdateCategoryDto,
+  ) {
+    return this.clientAdminBackend.send('update-category', {
+      id,
+      updateCategoryDto,
+    });
   }
 }

@@ -9,6 +9,7 @@ import {
   RmqContext,
 } from '@nestjs/microservices';
 import { Channel, Message } from 'amqplib';
+import { UpdateCategoryDto } from './dto/update-category.dto';
 // import { UpdateCategoryDto } from './dto/update-category.dto';
 // import { AddPlayerDto } from './dto/add-player.dto';
 // import { RemovePlayerDto } from './dto/remove-player.dto';
@@ -45,17 +46,34 @@ export class CategoryController {
   }
 
   @MessagePattern('findOneById-category')
-  findOne(@Payload() id: string) {
-    return this.categoryService.findOne(id);
+  findOne(@Payload() id: string, @Ctx() ctx: RmqContext) {
+    const channel = ctx.getChannelRef() as Channel;
+    const originalMsg = ctx.getMessage() as Message;
+
+    try {
+      return this.categoryService.findOne(id);
+    } finally {
+      channel.ack(originalMsg);
+    }
   }
 
-  // @Patch(':id')
-  // update(
-  //   @Param('id') id: string,
-  //   @Body() updateCategoryDto: UpdateCategoryDto,
-  // ) {
-  //   return this.categoryService.update(id, updateCategoryDto);
-  // }
+  @MessagePattern('update-category')
+  update(@Payload() data: any, @Ctx() ctx: RmqContext) {
+    const channel = ctx.getChannelRef() as Channel;
+    const originalMsg = ctx.getMessage() as Message;
+
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+    const { id, updateCategoryDto } = data;
+
+    try {
+      return this.categoryService.update(
+        id as string,
+        updateCategoryDto as UpdateCategoryDto,
+      );
+    } finally {
+      channel.ack(originalMsg);
+    }
+  }
 
   // @Patch(':id/addPlayer')
   // addPlayer(@Param('id') id: string, @Body() addPlayerDto: AddPlayerDto) {
