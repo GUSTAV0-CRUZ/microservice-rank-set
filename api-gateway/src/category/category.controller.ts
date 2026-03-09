@@ -1,4 +1,12 @@
-import { Body, Controller, Get, HttpCode, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  HttpCode,
+  Logger,
+  Param,
+  Post,
+} from '@nestjs/common';
 import { CreateCategoryDto } from './dtos/create-category.dto';
 import { ClientproxyRmqService } from 'src/client-proxy-rmq/client-proxy-rmq.service';
 import { ClientProxy } from '@nestjs/microservices';
@@ -6,6 +14,7 @@ import { ClientProxy } from '@nestjs/microservices';
 @Controller('api/v1/category')
 export class CategoryController {
   private clientAdminBackend: ClientProxy;
+  private readonly logger = new Logger(CategoryController.name);
 
   constructor(clientProxyRmqModule: ClientproxyRmqService) {
     this.clientAdminBackend =
@@ -21,5 +30,10 @@ export class CategoryController {
   @Get()
   findAll() {
     return this.clientAdminBackend.send('findAll-category', {});
+  }
+
+  @Get(':id')
+  indOne(@Param('id') id: string) {
+    return this.clientAdminBackend.send('findOneById-category', id);
   }
 }

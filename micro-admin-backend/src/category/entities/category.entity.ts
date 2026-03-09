@@ -1,7 +1,9 @@
 // import { Player } from 'src/player/entities/Player.entitie';
 
+import { Types } from 'mongoose';
+
 export class Category {
-  _id?: string;
+  _id?: Types.ObjectId;
   name: string;
   description: string;
   events: EventOfCategory[];

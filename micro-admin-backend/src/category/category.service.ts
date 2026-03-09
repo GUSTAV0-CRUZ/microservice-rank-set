@@ -9,6 +9,7 @@ import { CreateCategoryDto } from './dto/create-category.dto';
 // import { UpdateCategoryDto } from './dto/update-category.dto';
 import { CategoryRepository } from './repository/category.repository';
 import { RpcException } from '@nestjs/microservices';
+import { Category } from './entities/category.entity';
 // import { Category } from './entities/category.entity';
 // import { AddPlayerDto } from './dto/add-player.dto';
 // import { RemovePlayerDto } from './dto/remove-player.dto';
@@ -43,27 +44,25 @@ export class CategoryService {
     }
   }
 
-  async findAll() {
+  async findAll(): Promise<Category[]> {
     return await this.categoryRepository.findAll();
   }
 
-  // async findOne(id: string): Promise<Category> {
-  //   try {
-  //     const category = await this.categoryRepository.findOneId(id);
+  async findOne(id: string): Promise<Category> {
+    try {
+      const category = await this.categoryRepository.findOneId(id);
 
-  //     if (!category) throw new NotFoundException();
+      if (!category) throw new RpcException('Category not found');
 
-  //     return category;
-  //   } catch (error) {
-  //     if (error.path === '_id')
-  //       throw new BadRequestException('Type of id invalid');
+      return category;
+    } catch (error) {
+      if (error.path === '_id') throw new RpcException('Type of id invalid');
 
-  //     if (error.status === 404)
-  //       throw new NotFoundException('Category not found');
+      if (error.status === 404) throw new RpcException('Category not found');
 
-  //     throw new BadRequestException(error.message);
-  //   }
-  // }
+      throw new RpcException(error.message);
+    }
+  }
 
   // async update(
   //   id: string,

@@ -19,9 +19,9 @@ export class CategoryRepository {
     return this.categoryModel.find().exec();
   }
 
-  // findOneId(id: string) {
-  //   return this.categoryModel.findById(id).populate('players').exec();
-  // }
+  findOneId(id: string) {
+    return this.categoryModel.findById(id).exec();
+  }
 
   create(createCategoryDto: CreateCategoryDto) {
     return this.categoryModel.create(createCategoryDto);
