@@ -54,8 +54,8 @@ POST {{baseUrl}}category
 Content-Type: application/json
 
 {
-  "name": "A",
-  "description": "Medium category",
+  "name": "b",
+  "description": "any desripition",
   "events": [
     {
       "name": "Event one",
