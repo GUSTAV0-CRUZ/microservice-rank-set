@@ -58,7 +58,7 @@ export class CategoryController {
   }
 
   @MessagePattern('update-category')
-  update(@Payload() data: any, @Ctx() ctx: RmqContext) {
+  async update(@Payload() data: any, @Ctx() ctx: RmqContext) {
     const channel = ctx.getChannelRef() as Channel;
     const originalMsg = ctx.getMessage() as Message;
 
@@ -66,12 +66,24 @@ export class CategoryController {
     const { id, updateCategoryDto } = data;
 
     try {
-      return this.categoryService.update(
+      await this.categoryService.update(
         id as string,
         updateCategoryDto as UpdateCategoryDto,
       );
     } finally {
       channel.ack(originalMsg);
+    }
+  }
+
+  @EventPattern('delete-category')
+  remove(@Payload() id: string, @Ctx() ctx: RmqContext) {
+    const channel = ctx.getChannelRef() as Channel;
+    const orininalMsg = ctx.getMessage() as Message;
+
+    try {
+      return this.categoryService.delete(id);
+    } finally {
+      channel.ack(orininalMsg);
     }
   }
 
@@ -86,10 +98,5 @@ export class CategoryController {
   //   @Body() removePlayerDto: RemovePlayerDto,
   // ) {
   //   return this.categoryService.removePlayers(id, removePlayerDto);
-  // }
-
-  // @Delete(':id')
-  // remove(@Param('id') id: string) {
-  //   return this.categoryService.delete(id);
   // }
 }

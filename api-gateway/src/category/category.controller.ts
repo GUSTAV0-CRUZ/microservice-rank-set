@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   HttpCode,
   Logger,
@@ -39,7 +40,7 @@ export class CategoryController {
     return this.clientAdminBackend.send('findOneById-category', id);
   }
 
-  @HttpCode(202)
+  @HttpCode(201)
   @Patch(':id')
   update(
     @Param('id') id: string,
@@ -49,5 +50,11 @@ export class CategoryController {
       id,
       updateCategoryDto,
     });
+  }
+
+  @HttpCode(202)
+  @Delete(':id')
+  delete(@Param('id') id: string) {
+    return this.clientAdminBackend.emit('delete-category', id);
   }
 }

@@ -64,6 +64,10 @@ export class CategoryRepository {
     return this.categoryModel.findById(id).exec();
   }
 
+  delete(id: string) {
+    return this.categoryModel.findByIdAndDelete(id).exec();
+  }
+
   // async addPlayers(id: string, addPlayerDto: AddPlayerDto) {
   //   const { addPlayers } = addPlayerDto;
   //   return this.categoryModel.findOneAndUpdate(
@@ -80,10 +84,6 @@ export class CategoryRepository {
   //     { $pull: { players: { $in: removePlayers ?? [] } } },
   //     { returnDocument: 'after' },
   //   );
-  // }
-
-  // delete(id: string) {
-  //   return this.categoryModel.findByIdAndDelete(id).exec();
   // }
 
   // findCategoryContainPlayerId(id: string) {

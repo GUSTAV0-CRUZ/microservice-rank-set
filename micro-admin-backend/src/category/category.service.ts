@@ -24,6 +24,15 @@ export class CategoryService {
     // private readonly playerService: PlayerService,
   ) {}
 
+  private logError(error: any, methodName: string) {
+    return this.logger.error({
+      methodName,
+      message: [error.message],
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+      stack: error.stack,
+    });
+  }
+
   async create(createCategoryDto: CreateCategoryDto): Promise<void> {
     // this.logger.log('CREATECATEGORYDTO:  ', createCategoryDto);
     try {
@@ -31,7 +40,7 @@ export class CategoryService {
 
       return;
     } catch (error) {
-      this.logger.error(error.message, error.stack);
+      this.logError(error, this.create.name);
       // eslint-disable-next-line @typescript-eslint/no-unsafe-call
       const erroFildRequired: string | undefined = error?.message?.split(
         'Path',
@@ -56,7 +65,7 @@ export class CategoryService {
 
       return category;
     } catch (error) {
-      this.logger.error(error.message, error.stack);
+      this.logError(error, this.findOne.name);
       if (error.path === '_id') throw new RpcException('Type of id invalid');
 
       if (error.status === 404) throw new RpcException('Category not found');
@@ -79,28 +88,27 @@ export class CategoryService {
 
       return updatedCategory;
     } catch (error) {
-      this.logger.error(error.message, error.stack);
+      this.logError(error, this.update.name);
+
       if (error.path === '_id') throw new RpcException('Type of id invalid');
 
       throw new RpcException(error.message);
     }
   }
 
-  // async delete(id: string): Promise<Category> {
-  //   try {
-  //     const deletedCategory = await this.categoryRepository.delete(id);
-  //     if (!deletedCategory) throw new NotFoundException();
-  //     return deletedCategory;
-  //   } catch (error) {
-  //     if (error.path === '_id')
-  //       throw new BadRequestException('Type of id invalid');
+  async delete(id: string) {
+    try {
+      const deletedCategory = await this.categoryRepository.delete(id);
+      if (!deletedCategory) throw new RpcException('Category not found');
+      return deletedCategory;
+    } catch (error) {
+      this.logError(error, this.delete.name);
 
-  //     if (error.status === 404)
-  //       throw new NotFoundException('Category not found');
+      if (error.path === '_id') throw new RpcException('Type of id invalid');
 
-  //     throw new BadRequestException(error.message);
-  //   }
-  // }
+      throw new RpcException(error.message);
+    }
+  }
 
   // async addPlayers(id: string, addPlayerDto: AddPlayerDto): Promise<Category> {
   //   try {
