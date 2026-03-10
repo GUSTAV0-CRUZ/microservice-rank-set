@@ -9,8 +9,7 @@ import {
   RmqContext,
 } from '@nestjs/microservices';
 import { Channel, Message } from 'amqplib';
-import { UpdateCategoryDto } from './dto/update-category.dto';
-// import { UpdateCategoryDto } from './dto/update-category.dto';
+import type { UpdateCategoryInterface } from './interfaces/update-category.interface';
 // import { AddPlayerDto } from './dto/add-player.dto';
 // import { RemovePlayerDto } from './dto/remove-player.dto';
 
@@ -29,7 +28,10 @@ export class CategoryController {
     try {
       await this.categoryService.create(createCategoryDto);
       channel.ack(originalMsg);
-    } catch {
+    } catch (error) {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
+      if (error?.message.includes('SSL routines'))
+        return channel.nack(originalMsg, false, true);
       channel.ack(originalMsg);
     }
   }
@@ -52,38 +54,53 @@ export class CategoryController {
 
     try {
       return this.categoryService.findOne(id);
-    } finally {
+    } catch (error) {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
+      if (error?.message.includes('SSL routines'))
+        return channel.nack(originalMsg, false, true);
       channel.ack(originalMsg);
     }
   }
 
   @MessagePattern('update-category')
-  async update(@Payload() data: any, @Ctx() ctx: RmqContext) {
+  async update(
+    @Payload() data: UpdateCategoryInterface,
+    @Ctx() ctx: RmqContext,
+  ) {
     const channel = ctx.getChannelRef() as Channel;
     const originalMsg = ctx.getMessage() as Message;
 
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     const { id, updateCategoryDto } = data;
 
     try {
-      await this.categoryService.update(
-        id as string,
-        updateCategoryDto as UpdateCategoryDto,
+      const categoryUpdated = await this.categoryService.update(
+        id,
+        updateCategoryDto,
       );
-    } finally {
+
+      channel.ack(originalMsg);
+      return categoryUpdated;
+    } catch (error) {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
+      if (error?.message.includes('SSL routines'))
+        return channel.nack(originalMsg, false, true);
       channel.ack(originalMsg);
     }
   }
 
   @EventPattern('delete-category')
-  remove(@Payload() id: string, @Ctx() ctx: RmqContext) {
+  async remove(@Payload() id: string, @Ctx() ctx: RmqContext) {
     const channel = ctx.getChannelRef() as Channel;
-    const orininalMsg = ctx.getMessage() as Message;
+    const originalMsg = ctx.getMessage() as Message;
 
     try {
-      return this.categoryService.delete(id);
-    } finally {
-      channel.ack(orininalMsg);
+      await this.categoryService.delete(id);
+      channel.ack(originalMsg);
+    } catch (error) {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
+      if (error?.message.includes('SSL routines'))
+        return channel.nack(originalMsg, false, true);
+      channel.ack(originalMsg);
     }
   }
 

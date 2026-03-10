@@ -46,7 +46,7 @@ GET {{baseUrl}}category
 
 ###
 # @name CategoryGetOne
-GET {{baseUrl}}category/69af0f57338b6c3df97ea23f
+GET {{baseUrl}}category/69b08073d0b06a83c9e8fe78
 
 ###
 # @name CategoryPost
@@ -54,7 +54,7 @@ POST {{baseUrl}}category
 Content-Type: application/json
 
 {
-  "name": "b",
+  "name": "AAA",
   "description": "any desripition",
   "events": [
     {
@@ -94,7 +94,7 @@ Content-Type: application/json
 }
 ###
 # @name CategoryDelete
-DELETE  {{baseUrl}}category/69a830505a486b90d0346b63
+DELETE  {{baseUrl}}category/69af0f57338b6c3df97ea22f
 
 ###
 # @name AddPlayer
