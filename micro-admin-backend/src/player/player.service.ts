@@ -2,12 +2,10 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { PlayerRepository } from './repository/player.repository';
 import { CreatePlayerDto } from './dtos/create-player.dto';
-// import { UpdatePlayerDto } from './dtos/update-player.dto';
 import { Player } from './entities/Player.entitie';
 import { RpcException } from '@nestjs/microservices';
 import { PaginationDto } from 'src/utils/pagination.dto';
 import { UpdatePlayerDto } from './dtos/update-player.dto';
-// import { PaginationDto } from 'src/utils/pagination.dto';
 
 @Injectable()
 export class PlayerService {
@@ -82,18 +80,16 @@ export class PlayerService {
     }
   }
 
-  // async delete(id: string): Promise<Player> {
-  //   try {
-  //     const deletedPlayer = await this.playerRepository.delete(id);
-  //     if (!deletedPlayer) throw new NotFoundException();
-  //     return deletedPlayer;
-  //   } catch (error) {
-  //     if (error.path === '_id')
-  //       throw new BadRequestException('Type of id invalid');
+  async delete(id: string): Promise<Player> {
+    try {
+      const deletedPlayer = await this.playerRepository.delete(id);
+      if (!deletedPlayer) throw new RpcException('Player not found');
+      return deletedPlayer;
+    } catch (error) {
+      this.logError(error, this.delete.name);
+      if (error.path === '_id') throw new RpcException('Type of id invalid');
 
-  //     if (error.status === 404) throw new NotFoundException('Player not found');
-
-  //     throw new BadRequestException(error.message);
-  //   }
-  // }
+      throw new RpcException(error.message as string);
+    }
+  }
 }

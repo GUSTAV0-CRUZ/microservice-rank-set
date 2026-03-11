@@ -47,6 +47,7 @@ export class PlayerController {
     });
   }
 
+  @HttpCode(202)
   @Delete(':id')
   delete(@Param('id') id: string) {
     return this.clientAdminBackend.emit('delete-player', id);

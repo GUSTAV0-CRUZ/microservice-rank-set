@@ -88,8 +88,20 @@ export class PlayerController {
     }
   }
 
-  // @Delete(':id')
-  // delete(@Param('id') id: string) {
-  //   return this.playerService.delete(id);
-  // }
+  @EventPattern('delete-player')
+  async delete(@Payload() id: string, @Ctx() ctx: RmqContext) {
+    const channel = ctx.getChannelRef() as Channel;
+    const originalMsg = ctx.getMessage() as Message;
+
+    try {
+      await this.playerService.delete(id);
+      channel.ack(originalMsg);
+    } catch (error) {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
+      if (error?.message?.includes('SSL routines'))
+        return channel.nack(originalMsg, false, true);
+
+      channel.ack(originalMsg);
+    }
+  }
 }

@@ -9,7 +9,7 @@ GET {{baseUrl}}player
 
 ###
 # @name PlayerGetOne
-GET {{baseUrl}}player/69b1b16280a6ed3deee3979e
+GET {{baseUrl}}player/69b1929bf60852e6e5bc7a16
 
 ###
 # @name PlayerPost
@@ -27,7 +27,7 @@ Content-Type: application/json
 
 ###
 # @name PlayerPatch
-PATCH  {{baseUrl}}player/69ab34d55a827cb4bdbe175e
+PATCH  {{baseUrl}}player/69b1929bf60852e6e5bc7a1
 Content-Type: application/json
 
 {
