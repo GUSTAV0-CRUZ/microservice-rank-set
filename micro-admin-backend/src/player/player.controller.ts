@@ -21,32 +21,32 @@ export class PlayerController {
   constructor(private readonly playerService: PlayerService) {}
 
   @MessagePattern('findAll-player')
-  findAll(@Query() paginationDto: PaginationDto, @Ctx() ctx: RmqContext) {
+  async findAll(@Query() paginationDto: PaginationDto, @Ctx() ctx: RmqContext) {
     const channel = ctx.getChannelRef() as Channel;
     const originalMsg = ctx.getMessage() as Message;
     try {
-      return this.playerService.findAll(paginationDto);
+      return await this.playerService.findAll(paginationDto);
     } finally {
       channel.ack(originalMsg);
     }
   }
 
   @MessagePattern('findOneById-player')
-  findOne(@Payload() id: string, @Ctx() ctx: RmqContext) {
+  async findOne(@Payload() id: string, @Ctx() ctx: RmqContext) {
     const channel = ctx.getChannelRef() as Channel;
     const originalMsg = ctx.getMessage() as Message;
 
     try {
-      const palyer = this.playerService.findOne(id);
+      const palyer = await this.playerService.findOne(id);
       channel.ack(originalMsg);
       return palyer;
     } catch (error) {
-      console.log('error: ', error);
       // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
       if (error?.message?.includes('SSL routines'))
         return channel.nack(originalMsg, false, true);
 
       channel.ack(originalMsg);
+      throw error;
     }
   }
 

@@ -37,23 +37,23 @@ export class CategoryController {
   }
 
   @MessagePattern('findAll-category')
-  findAll(@Ctx() ctx: RmqContext) {
+  async findAll(@Ctx() ctx: RmqContext) {
     const channel = ctx.getChannelRef() as Channel;
     const originalMsg = ctx.getMessage() as Message;
     try {
-      return this.categoryService.findAll();
+      return await this.categoryService.findAll();
     } finally {
       channel.ack(originalMsg);
     }
   }
 
   @MessagePattern('findOneById-category')
-  findOne(@Payload() id: string, @Ctx() ctx: RmqContext) {
+  async findOne(@Payload() id: string, @Ctx() ctx: RmqContext) {
     const channel = ctx.getChannelRef() as Channel;
     const originalMsg = ctx.getMessage() as Message;
 
     try {
-      const category = this.categoryService.findOne(id);
+      const category = await this.categoryService.findOne(id);
       channel.ack(originalMsg);
       return category;
     } catch (error) {
@@ -61,6 +61,7 @@ export class CategoryController {
       if (error?.message.includes('SSL routines'))
         return channel.nack(originalMsg, false, true);
       channel.ack(originalMsg);
+      throw error;
     }
   }
 

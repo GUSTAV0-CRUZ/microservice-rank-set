@@ -9,7 +9,7 @@ GET {{baseUrl}}player
 
 ###
 # @name PlayerGetOne
-GET {{baseUrl}}player/69b1929bf6085e6e5bc7a16
+GET {{baseUrl}}player/69b1929bf60852e6e5bc7a16
 
 ###
 # @name PlayerPost
@@ -46,7 +46,7 @@ GET {{baseUrl}}category
 
 ###
 # @name CategoryGetOne
-GET {{baseUrl}}category/69b08073d0b06a83c9e8fe7
+GET {{baseUrl}}category/69b08073d0b06a83c9e8fe78
 
 ###
 # @name CategoryPost
