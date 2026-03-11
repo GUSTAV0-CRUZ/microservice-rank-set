@@ -4,7 +4,7 @@ import {
   Delete,
   Get,
   HttpCode,
-  Logger,
+  // Logger,
   Param,
   Patch,
   Post,
@@ -17,11 +17,11 @@ import { UpdateCategoryDto } from './dtos/update-category.dto';
 @Controller('api/v1/category')
 export class CategoryController {
   private clientAdminBackend: ClientProxy;
-  private readonly logger = new Logger(CategoryController.name);
+  // private readonly logger = new Logger(CategoryController.name);
 
-  constructor(clientProxyRmqModule: ClientproxyRmqService) {
+  constructor(clientProxyRmqService: ClientproxyRmqService) {
     this.clientAdminBackend =
-      clientProxyRmqModule.getClientProxyRmqAdminBackend();
+      clientProxyRmqService.getClientProxyRmqAdminBackend();
   }
 
   @HttpCode(202)

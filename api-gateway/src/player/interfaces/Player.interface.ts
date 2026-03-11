@@ -1,4 +1,4 @@
-export interface Player {
+export class Player {
   tell: string;
   email: string;
   name: string;

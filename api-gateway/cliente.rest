@@ -17,12 +17,12 @@ POST {{baseUrl}}player
 Content-Type: application/json
 
 {
-  "name": "Test2",
-  "email": "test@gmail.com",
-  "tell": "949734857234",
+  "name": "Test",
+  "email": "tes@gmail.com",
+  "tell": "967734857234",
   "ranking": "A",
   "positionRanking": 1,
-  "pictureUrl": "http://localhost:3000/picture/3"
+  "pictureUrl": ""
 }
 
 ###
