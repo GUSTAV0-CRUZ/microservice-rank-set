@@ -2,14 +2,14 @@ import {
   Body,
   Controller,
   HttpCode,
-  // Delete,
+  Delete,
   Get,
   Param,
-  // Patch,
+  Patch,
   Post,
 } from '@nestjs/common';
 import { CreatePlayerDto } from './dtos/create-player.dto';
-// import { UpdatePlayerDto } from './dtos/update-player.dto';
+import { UpdatePlayerDto } from './dtos/update-player.dto';
 import { ClientProxy } from '@nestjs/microservices';
 import { ClientproxyRmqService } from 'src/client-proxy-rmq/client-proxy-rmq.service';
 
@@ -38,13 +38,16 @@ export class PlayerController {
     return this.clientAdminBackend.emit('create-player', createPlayerDto);
   }
 
-  // @Patch(':id')
-  // update(@Param('id') id: string, @Body() updatePlayerDto: UpdatePlayerDto) {
-  //   return this.clientAdminBackend.(id, updatePlayerDto);
-  // }
+  @Patch(':id')
+  update(@Param('id') id: string, @Body() updatePlayerDto: UpdatePlayerDto) {
+    return this.clientAdminBackend.emit('update-player', {
+      id,
+      updatePlayerDto,
+    });
+  }
 
-  // @Delete(':id')
-  // delete(@Param('id') id: string) {
-  //   return this.clientAdminBackend.(id);
-  // }
+  @Delete(':id')
+  delete(@Param('id') id: string) {
+    return this.clientAdminBackend.emit('delete-player', id);
+  }
 }
