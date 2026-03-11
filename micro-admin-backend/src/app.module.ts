@@ -4,6 +4,7 @@ import { AppService } from './app.service';
 import { CategoryModule } from './category/category.module';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ConfigModule } from '@nestjs/config';
+import { PlayerModule } from './player/player.module';
 
 @Module({
   imports: [
@@ -12,6 +13,7 @@ import { ConfigModule } from '@nestjs/config';
     }),
     MongooseModule.forRoot(String(process.env.CONECTION_MONGODB)),
     CategoryModule,
+    PlayerModule,
   ],
   controllers: [AppController],
   providers: [AppService],
