@@ -3,11 +3,10 @@ import {
   Controller,
   HttpCode,
   // Delete,
-  // Get,
+  Get,
   // Param,
   // Patch,
   Post,
-  // Query,
 } from '@nestjs/common';
 import { CreatePlayerDto } from './dtos/create-player.dto';
 // import { UpdatePlayerDto } from './dtos/update-player.dto';
@@ -23,10 +22,10 @@ export class PlayerController {
       clienteProxyRmqModule.getClientProxyRmqAdminBackend();
   }
 
-  // @Get()
-  // findAll(@Query() paginationDto: PaginationDto) {
-  //   return this.clientAdminBackend.(paginationDto);
-  // }
+  @Get()
+  findAll() {
+    return this.clientAdminBackend.send('findAll-player', {});
+  }
 
   // @Get(':id')
   // findOne(@Param('id') id: string) {
