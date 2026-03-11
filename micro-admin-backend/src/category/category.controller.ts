@@ -30,9 +30,13 @@ export class CategoryController {
       channel.ack(originalMsg);
     } catch (error) {
       // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
-      if (error?.message.includes('SSL routines'))
-        return channel.nack(originalMsg, false, true);
+      if (error?.message.includes('SSL routines')) {
+        channel.nack(originalMsg, false, true);
+        throw error;
+      }
+
       channel.ack(originalMsg);
+      throw error;
     }
   }
 
@@ -40,10 +44,20 @@ export class CategoryController {
   async findAll(@Ctx() ctx: RmqContext) {
     const channel = ctx.getChannelRef() as Channel;
     const originalMsg = ctx.getMessage() as Message;
+
     try {
-      return await this.categoryService.findAll();
-    } finally {
+      const categorys = await this.categoryService.findAll();
       channel.ack(originalMsg);
+      return categorys;
+    } catch (error) {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
+      if (error?.message.includes('SSL routines')) {
+        channel.nack(originalMsg, false, true);
+        throw error;
+      }
+
+      channel.ack(originalMsg);
+      throw error;
     }
   }
 
@@ -58,8 +72,11 @@ export class CategoryController {
       return category;
     } catch (error) {
       // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
-      if (error?.message.includes('SSL routines'))
-        return channel.nack(originalMsg, false, true);
+      if (error?.message.includes('SSL routines')) {
+        channel.nack(originalMsg, false, true);
+        throw error;
+      }
+
       channel.ack(originalMsg);
       throw error;
     }
@@ -85,9 +102,13 @@ export class CategoryController {
       return categoryUpdated;
     } catch (error) {
       // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
-      if (error?.message.includes('SSL routines'))
-        return channel.nack(originalMsg, false, true);
+      if (error?.message.includes('SSL routines')) {
+        channel.nack(originalMsg, false, true);
+        throw error;
+      }
+
       channel.ack(originalMsg);
+      throw error;
     }
   }
 
@@ -101,9 +122,13 @@ export class CategoryController {
       channel.ack(originalMsg);
     } catch (error) {
       // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
-      if (error?.message.includes('SSL routines'))
-        return channel.nack(originalMsg, false, true);
+      if (error?.message.includes('SSL routines')) {
+        channel.nack(originalMsg, false, true);
+        throw error;
+      }
+
       channel.ack(originalMsg);
+      throw error;
     }
   }
 

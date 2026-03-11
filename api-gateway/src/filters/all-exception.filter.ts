@@ -31,10 +31,10 @@ export class allExceptionFilter implements ExceptionFilter {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-call
     if (exception?.message.includes('not found')) status = 404;
 
-    // console.log('exception: ', exception);
-    // console.log('ctx: ', ctx);
-    // console.log('response: ', response);
-    // console.log('request: ', request);
+    // logger.log('exception: ', exception);
+    // logger.log('ctx: ', ctx);
+    // logger.log('response: ', response);
+    // logger.log('request: ', request);
 
     this.logger.error({
       path: request.path,

@@ -1,4 +1,4 @@
-import { Controller, Logger, Query } from '@nestjs/common';
+import { Controller, Logger } from '@nestjs/common';
 import { PlayerService } from './player.service';
 import { CreatePlayerDto } from './dtos/create-player.dto';
 import {
@@ -21,13 +21,26 @@ export class PlayerController {
   constructor(private readonly playerService: PlayerService) {}
 
   @MessagePattern('findAll-player')
-  async findAll(@Query() paginationDto: PaginationDto, @Ctx() ctx: RmqContext) {
+  async findAll(
+    @Payload() paginationDto: PaginationDto,
+    @Ctx() ctx: RmqContext,
+  ) {
     const channel = ctx.getChannelRef() as Channel;
     const originalMsg = ctx.getMessage() as Message;
+
     try {
-      return await this.playerService.findAll(paginationDto);
-    } finally {
+      const palyers = await this.playerService.findAll(paginationDto);
       channel.ack(originalMsg);
+      return palyers;
+    } catch (error) {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
+      if (error?.message?.includes('SSL routines')) {
+        channel.nack(originalMsg, false, true);
+        throw error;
+      }
+
+      channel.ack(originalMsg);
+      throw error;
     }
   }
 
@@ -42,8 +55,10 @@ export class PlayerController {
       return palyer;
     } catch (error) {
       // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
-      if (error?.message?.includes('SSL routines'))
-        return channel.nack(originalMsg, false, true);
+      if (error?.message?.includes('SSL routines')) {
+        channel.nack(originalMsg, false, true);
+        throw error;
+      }
 
       channel.ack(originalMsg);
       throw error;
@@ -63,10 +78,13 @@ export class PlayerController {
       channel.ack(originalMsg);
     } catch (error) {
       // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
-      if (error?.message?.includes('SSL routines'))
-        return channel.nack(originalMsg, false, true);
+      if (error?.message?.includes('SSL routines')) {
+        channel.nack(originalMsg, false, true);
+        throw error;
+      }
 
       channel.ack(originalMsg);
+      throw error;
     }
   }
 
@@ -84,10 +102,13 @@ export class PlayerController {
       channel.ack(originalMsg);
     } catch (error) {
       // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
-      if (error?.message?.includes('SSL routines'))
-        return channel.nack(originalMsg, false, true);
+      if (error?.message?.includes('SSL routines')) {
+        channel.nack(originalMsg, false, true);
+        throw error;
+      }
 
       channel.ack(originalMsg);
+      throw error;
     }
   }
 
@@ -101,10 +122,13 @@ export class PlayerController {
       channel.ack(originalMsg);
     } catch (error) {
       // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
-      if (error?.message?.includes('SSL routines'))
-        return channel.nack(originalMsg, false, true);
+      if (error?.message?.includes('SSL routines')) {
+        channel.nack(originalMsg, false, true);
+        throw error;
+      }
 
       channel.ack(originalMsg);
+      throw error;
     }
   }
 }
