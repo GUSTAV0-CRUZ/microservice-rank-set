@@ -4,7 +4,7 @@ import {
   HttpCode,
   // Delete,
   Get,
-  // Param,
+  Param,
   // Patch,
   Post,
 } from '@nestjs/common';
@@ -27,10 +27,10 @@ export class PlayerController {
     return this.clientAdminBackend.send('findAll-player', {});
   }
 
-  // @Get(':id')
-  // findOne(@Param('id') id: string) {
-  //   return this.clientAdminBackend.(id);
-  // }
+  @Get(':id')
+  findOne(@Param('id') id: string) {
+    return this.clientAdminBackend.send('findOneById', id);
+  }
 
   @HttpCode(202)
   @Post()
