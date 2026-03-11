@@ -10,6 +10,7 @@ import {
 } from '@nestjs/microservices';
 import { Channel, Message } from 'amqplib';
 import { PaginationDto } from 'src/utils/pagination.dto';
+import type { UpdatePlayerInterface } from './interfaces/update-player.interface';
 // import { UpdatePlayerDto } from './dtos/update-player.dto';
 // import { PaginationDto } from 'src/utils/pagination.dto';
 
@@ -66,10 +67,26 @@ export class PlayerController {
     }
   }
 
-  // @Patch(':id')
-  // update(@Param('id') id: string, @Body() updatePlayerDto: UpdatePlayerDto) {
-  //   return this.playerService.update(id, updatePlayerDto);
-  // }
+  @EventPattern('update-player')
+  async update(
+    @Payload() updatePlayerInterface: UpdatePlayerInterface,
+    @Ctx() ctx: RmqContext,
+  ) {
+    const channel = ctx.getChannelRef() as Channel;
+    const originalMsg = ctx.getMessage() as Message;
+    const { id, updatePlayerDto } = updatePlayerInterface;
+
+    try {
+      await this.playerService.update(id, updatePlayerDto);
+      channel.ack(originalMsg);
+    } catch (error) {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
+      if (error?.message?.includes('SSL routines'))
+        return channel.nack(originalMsg, false, true);
+
+      channel.ack(originalMsg);
+    }
+  }
 
   // @Delete(':id')
   // delete(@Param('id') id: string) {

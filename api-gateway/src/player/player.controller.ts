@@ -38,6 +38,7 @@ export class PlayerController {
     return this.clientAdminBackend.emit('create-player', createPlayerDto);
   }
 
+  @HttpCode(202)
   @Patch(':id')
   update(@Param('id') id: string, @Body() updatePlayerDto: UpdatePlayerDto) {
     return this.clientAdminBackend.emit('update-player', {

@@ -6,6 +6,7 @@ import { CreatePlayerDto } from './dtos/create-player.dto';
 import { Player } from './entities/Player.entitie';
 import { RpcException } from '@nestjs/microservices';
 import { PaginationDto } from 'src/utils/pagination.dto';
+import { UpdatePlayerDto } from './dtos/update-player.dto';
 // import { PaginationDto } from 'src/utils/pagination.dto';
 
 @Injectable()
@@ -36,6 +37,7 @@ export class PlayerService {
 
       return player;
     } catch (error) {
+      this.logError(error, this.create.name);
       if (error.path === '_id') throw new RpcException('Type of id invalid');
 
       throw new RpcException(error.message as string);
@@ -62,25 +64,23 @@ export class PlayerService {
     }
   }
 
-  // async update(id: string, updatePlayerDto: UpdatePlayerDto): Promise<Player> {
-  //   try {
-  //     const updatedPlayer = await this.playerRepository.update(
-  //       id,
-  //       updatePlayerDto,
-  //     );
+  async update(id: string, updatePlayerDto: UpdatePlayerDto): Promise<Player> {
+    try {
+      const updatedPlayer = await this.playerRepository.update(
+        id,
+        updatePlayerDto,
+      );
 
-  //     if (!updatedPlayer) throw new NotFoundException();
+      if (!updatedPlayer) throw new RpcException('Player not found');
 
-  //     return updatedPlayer;
-  //   } catch (error) {
-  //     if (error.path === '_id')
-  //       throw new BadRequestException('Type of id invalid');
+      return updatedPlayer;
+    } catch (error) {
+      this.logError(error, this.update.name);
+      if (error.path === '_id') throw new RpcException('Type of id invalid');
 
-  //     if (error.status === 404) throw new NotFoundException('Player not found');
-
-  //     throw new BadRequestException(error.message);
-  //   }
-  // }
+      throw new RpcException(error.message as string);
+    }
+  }
 
   // async delete(id: string): Promise<Player> {
   //   try {
