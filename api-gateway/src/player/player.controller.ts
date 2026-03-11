@@ -29,7 +29,7 @@ export class PlayerController {
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.clientAdminBackend.send('findOneById', id);
+    return this.clientAdminBackend.send('findOneById-player', id);
   }
 
   @HttpCode(202)

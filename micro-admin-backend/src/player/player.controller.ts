@@ -22,10 +22,10 @@ export class PlayerController {
     return this.playerService.findAll(paginationDto);
   }
 
-  // @Get(':id')
-  // findOne(@Param('id') id: string) {
-  //   return this.playerService.findOne(id);
-  // }
+  @MessagePattern('findOneById-player')
+  findOne(@Payload() id: string) {
+    return this.playerService.findOne(id);
+  }
 
   @EventPattern('create-player')
   async create(

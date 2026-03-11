@@ -9,7 +9,7 @@ GET {{baseUrl}}player
 
 ###
 # @name PlayerGetOne
-GET {{baseUrl}}player/69a1a8f29fda1c56f912a825
+GET {{baseUrl}}player/69b1b16280a6ed3deee3979e
 
 ###
 # @name PlayerPost

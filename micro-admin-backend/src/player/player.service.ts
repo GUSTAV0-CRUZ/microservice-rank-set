@@ -28,23 +28,19 @@ export class PlayerService {
     return await this.playerRepository.findAll({ limit, offset });
   }
 
-  // async findOne(id: string): Promise<Player> {
-  //   try {
-  //     const player = await this.playerRepository.findOneId(id);
+  async findOne(id: string): Promise<Player> {
+    try {
+      const player = await this.playerRepository.findOneId(id);
 
-  //     if (!player) throw new NotFoundException();
+      if (!player) throw new RpcException(`Player with id: ${id} not found`);
 
-  //     return player;
-  //   } catch (error) {
-  //     if (error.path === '_id')
-  //       throw new BadRequestException('Type of id invalid');
+      return player;
+    } catch (error) {
+      if (error.path === '_id') throw new RpcException('Type of id invalid');
 
-  //     if (error.status === 404)
-  //       throw new NotFoundException(`Player with id: ${id} not found`);
-
-  //     throw new BadRequestException(error.message);
-  //   }
-  // }
+      throw new RpcException(error.message as string);
+    }
+  }
 
   async create(createPlayerDto: CreatePlayerDto): Promise<Player> {
     // this.logger.log({ createPlayerDto });
