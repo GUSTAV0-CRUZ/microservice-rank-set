@@ -5,6 +5,7 @@ import { CreatePlayerDto } from './dtos/create-player.dto';
 // import { UpdatePlayerDto } from './dtos/update-player.dto';
 import { Player } from './entities/Player.entitie';
 import { RpcException } from '@nestjs/microservices';
+import { PaginationDto } from 'src/utils/pagination.dto';
 // import { PaginationDto } from 'src/utils/pagination.dto';
 
 @Injectable()
@@ -21,9 +22,11 @@ export class PlayerService {
     });
   }
 
-  // async findAll(paginationDto: PaginationDto): Promise<Player[]> {
-  //   return await this.playerRepository.findAll(paginationDto);
-  // }
+  async findAll(paginationDto: PaginationDto): Promise<Player[]> {
+    const limit = paginationDto?.limit;
+    const offset = paginationDto?.offset;
+    return await this.playerRepository.findAll({ limit, offset });
+  }
 
   // async findOne(id: string): Promise<Player> {
   //   try {

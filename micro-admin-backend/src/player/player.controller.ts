@@ -1,11 +1,15 @@
-import {
-  Controller,
-  // Query,
-} from '@nestjs/common';
+import { Controller, Query } from '@nestjs/common';
 import { PlayerService } from './player.service';
 import { CreatePlayerDto } from './dtos/create-player.dto';
-import { Ctx, EventPattern, Payload, RmqContext } from '@nestjs/microservices';
+import {
+  Ctx,
+  EventPattern,
+  MessagePattern,
+  Payload,
+  RmqContext,
+} from '@nestjs/microservices';
 import { Channel, Message } from 'amqplib';
+import { PaginationDto } from 'src/utils/pagination.dto';
 // import { UpdatePlayerDto } from './dtos/update-player.dto';
 // import { PaginationDto } from 'src/utils/pagination.dto';
 
@@ -13,10 +17,10 @@ import { Channel, Message } from 'amqplib';
 export class PlayerController {
   constructor(private readonly playerService: PlayerService) {}
 
-  // @Get()
-  // findAll(@Query() paginationDto: PaginationDto) {
-  //   return this.playerService.findAll(paginationDto);
-  // }
+  @MessagePattern('findAll-player')
+  findAll(@Query() paginationDto: PaginationDto) {
+    return this.playerService.findAll(paginationDto);
+  }
 
   // @Get(':id')
   // findOne(@Param('id') id: string) {
