@@ -53,7 +53,9 @@ export class CategoryController {
     const originalMsg = ctx.getMessage() as Message;
 
     try {
-      return this.categoryService.findOne(id);
+      const category = this.categoryService.findOne(id);
+      channel.ack(originalMsg);
+      return category;
     } catch (error) {
       // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
       if (error?.message.includes('SSL routines'))

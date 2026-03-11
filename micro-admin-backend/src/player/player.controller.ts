@@ -1,4 +1,4 @@
-import { Controller, Query } from '@nestjs/common';
+import { Controller, Logger, Query } from '@nestjs/common';
 import { PlayerService } from './player.service';
 import { CreatePlayerDto } from './dtos/create-player.dto';
 import {
@@ -16,6 +16,8 @@ import type { UpdatePlayerInterface } from './interfaces/update-player.interface
 
 @Controller('api/v1/player')
 export class PlayerController {
+  private readonly logger = new Logger(PlayerController.name);
+
   constructor(private readonly playerService: PlayerService) {}
 
   @MessagePattern('findAll-player')
@@ -30,15 +32,16 @@ export class PlayerController {
   }
 
   @MessagePattern('findOneById-player')
-  async findOne(@Payload() id: string, @Ctx() ctx: RmqContext) {
+  findOne(@Payload() id: string, @Ctx() ctx: RmqContext) {
     const channel = ctx.getChannelRef() as Channel;
     const originalMsg = ctx.getMessage() as Message;
 
     try {
-      const palyer = await this.playerService.findOne(id);
+      const palyer = this.playerService.findOne(id);
       channel.ack(originalMsg);
       return palyer;
     } catch (error) {
+      console.log('error: ', error);
       // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
       if (error?.message?.includes('SSL routines'))
         return channel.nack(originalMsg, false, true);
