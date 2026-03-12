@@ -102,7 +102,7 @@ PATCH  {{baseUrl}}category/69b08073d0b06a83c9e8fe78/addPlayer
 Content-Type: application/json
 
 {
-  "addPlayers": ["69b1b16280a6ed3deee3979e", "69b19ee9bee6d74ead12d132"]
+  "addPlayers": ["69b1b16280a6ed3deee3979e", "69b19ee9bee6d74ead12d132", "69b1a808d9215a0b0ece5191"]
 }
 
 ###

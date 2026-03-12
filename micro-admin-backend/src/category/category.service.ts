@@ -8,6 +8,7 @@ import { RpcException } from '@nestjs/microservices';
 import { Category } from './entities/category.entity';
 import { AddPlayerDto } from './dto/add-player.dto';
 import { PlayerService } from 'src/player/player.service';
+import { RemovePlayerDto } from './dto/remove-player.dto';
 
 @Injectable()
 export class CategoryService {
@@ -126,29 +127,26 @@ export class CategoryService {
     }
   }
 
-  // async removePlayers(
-  //   id: string,
-  //   removePlayerDto: RemovePlayerDto,
-  // ): Promise<Category> {
-  //   try {
-  //     const updatedCategory = await this.categoryRepository.removePlayers(
-  //       id,
-  //       removePlayerDto,
-  //     );
+  async removePlayers(
+    id: string,
+    removePlayerDto: RemovePlayerDto,
+  ): Promise<Category> {
+    try {
+      const updatedCategory = await this.categoryRepository.removePlayers(
+        id,
+        removePlayerDto,
+      );
 
-  //     if (!updatedCategory) throw new NotFoundException();
+      if (!updatedCategory) throw new RpcException('Category not found');
 
-  //     return updatedCategory;
-  //   } catch (error) {
-  //     if (error.path === '_id')
-  //       throw new BadRequestException('Type of id invalid');
+      return updatedCategory;
+    } catch (error) {
+      this.logError(error, this.removePlayers.name);
+      if (error.path === '_id') throw new RpcException('Type of id invalid');
 
-  //     if (error.status === 404)
-  //       throw new NotFoundException('Category not found');
-
-  //     throw new BadRequestException(error.message);
-  //   }
-  // }
+      throw new RpcException(error.message);
+    }
+  }
 
   // async findCategoryContainPlayerId(id: string) {
   //   try {
