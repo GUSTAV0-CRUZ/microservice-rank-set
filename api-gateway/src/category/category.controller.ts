@@ -13,6 +13,8 @@ import { CreateCategoryDto } from './dtos/create-category.dto';
 import { ClientproxyRmqService } from 'src/client-proxy-rmq/client-proxy-rmq.service';
 import { ClientProxy } from '@nestjs/microservices';
 import { UpdateCategoryDto } from './dtos/update-category.dto';
+import { AddPlayerDto } from './dtos/add-player.dto';
+import { RemovePlayerDto } from './dtos/remove-player.dto';
 
 @Controller('api/v1/category')
 export class CategoryController {
@@ -56,5 +58,24 @@ export class CategoryController {
   @Delete(':id')
   delete(@Param('id') id: string) {
     return this.clientAdminBackend.emit('delete-category', id);
+  }
+
+  @Patch(':id/addPlayer')
+  addPlayer(@Param('id') id: string, @Body() addPlayerDto: AddPlayerDto) {
+    return this.clientAdminBackend.emit('addPlayer-inCategory', {
+      id,
+      addPlayerDto,
+    });
+  }
+
+  @Patch(':id/removePlayer')
+  removePlayer(
+    @Param('id') id: string,
+    @Body() removePlayerDto: RemovePlayerDto,
+  ) {
+    return this.clientAdminBackend.emit('removePlayer-inCategory', {
+      id,
+      removePlayerDto,
+    });
   }
 }
