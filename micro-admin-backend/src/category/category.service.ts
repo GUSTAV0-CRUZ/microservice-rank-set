@@ -1,19 +1,13 @@
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
-import {
-  Injectable,
-  Logger,
-  // NotFoundException,
-} from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
 import { CategoryRepository } from './repository/category.repository';
 import { RpcException } from '@nestjs/microservices';
 import { Category } from './entities/category.entity';
-// import { Category } from './entities/category.entity';
-// import { AddPlayerDto } from './dto/add-player.dto';
-// import { RemovePlayerDto } from './dto/remove-player.dto';
-// import { PlayerService } from 'src/player/player.service';
+import { AddPlayerDto } from './dto/add-player.dto';
+import { PlayerService } from 'src/player/player.service';
 
 @Injectable()
 export class CategoryService {
@@ -21,7 +15,7 @@ export class CategoryService {
 
   constructor(
     private readonly categoryRepository: CategoryRepository,
-    // private readonly playerService: PlayerService,
+    private readonly playerService: PlayerService,
   ) {}
 
   private logError(error: any, methodName: string) {
@@ -110,29 +104,27 @@ export class CategoryService {
     }
   }
 
-  // async addPlayers(id: string, addPlayerDto: AddPlayerDto): Promise<Category> {
-  //   try {
-  //     for (const player of addPlayerDto.addPlayers) {
-  //       await this.playerService.findOne(player);
-  //     }
+  async addPlayers(id: string, addPlayerDto: AddPlayerDto): Promise<Category> {
+    try {
+      for (const player of addPlayerDto.addPlayers) {
+        await this.playerService.findOne(player);
+      }
 
-  //     const updatedCategory = await this.categoryRepository.addPlayers(
-  //       id,
-  //       addPlayerDto,
-  //     );
+      const updatedCategory = await this.categoryRepository.addPlayers(
+        id,
+        addPlayerDto,
+      );
 
-  //     if (!updatedCategory) throw new NotFoundException('Category not found');
+      if (!updatedCategory) throw new RpcException('Category not found');
 
-  //     return updatedCategory;
-  //   } catch (error) {
-  //     if (error.path === '_id')
-  //       throw new BadRequestException('Type of id invalid');
+      return updatedCategory;
+    } catch (error) {
+      this.logError(error, this.addPlayers.name);
+      if (error.path === '_id') throw new RpcException('Type of id invalid');
 
-  //     if (error.status === 404) throw new NotFoundException(error.message);
-
-  //     throw new BadRequestException(error.message);
-  //   }
-  // }
+      throw new RpcException(error.message);
+    }
+  }
 
   // async removePlayers(
   //   id: string,

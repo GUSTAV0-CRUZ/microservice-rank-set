@@ -1,5 +1,7 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Category, EventOfCategory } from '../entities/category.entity';
+import { Player } from 'src/player/entities/Player.entitie';
+import { SchemaTypes } from 'mongoose';
 // import { Player } from 'src/player/entities/Player.entitie';
 // import { SchemaTypes } from 'mongoose';
 
@@ -32,8 +34,8 @@ export class CategorySchemaDb implements Category {
   @Prop({ type: [{ type: EventOfCategorySchema, default: [] }] })
   events: EventOfCategory[];
 
-  // @Prop({ type: [{ type: SchemaTypes.ObjectId, ref: 'Player' }] })
-  // players: Player[];
+  @Prop({ type: [{ type: SchemaTypes.ObjectId, ref: 'Player' }] })
+  players: Player[];
 }
 
 export const CategorySchema = SchemaFactory.createForClass(CategorySchemaDb);

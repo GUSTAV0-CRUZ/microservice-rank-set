@@ -4,20 +4,16 @@ import { CategoryController } from './category.controller';
 import { MongooseModule } from '@nestjs/mongoose';
 import { CategorySchema } from './schemas/category.schema';
 import { CategoryRepository } from './repository/category.repository';
-// import { PlayerService } from 'src/player/player.service';
-// import { PlayerModule } from 'src/player/player.module';
+import { PlayerService } from 'src/player/player.service';
+import { PlayerModule } from 'src/player/player.module';
 
 @Module({
   imports: [
     MongooseModule.forFeature([{ name: 'Category', schema: CategorySchema }]),
-    // PlayerModule,
+    PlayerModule,
   ],
   controllers: [CategoryController],
-  providers: [
-    CategoryService,
-    CategoryRepository,
-    // PlayerService,
-  ],
+  providers: [CategoryService, CategoryRepository, PlayerService],
   exports: [CategoryService, CategoryRepository],
 })
 export class CategoryModule {}

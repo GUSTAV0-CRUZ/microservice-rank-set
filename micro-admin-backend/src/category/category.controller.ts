@@ -10,6 +10,7 @@ import {
 } from '@nestjs/microservices';
 import { Channel, Message } from 'amqplib';
 import type { UpdateCategoryInterface } from './interfaces/update-category.interface';
+import type { AddPlayerInterface } from './interfaces/addPlayer.Interface';
 // import { AddPlayerDto } from './dto/add-player.dto';
 // import { RemovePlayerDto } from './dto/remove-player.dto';
 
@@ -132,10 +133,29 @@ export class CategoryController {
     }
   }
 
-  // @Patch(':id/addPlayer')
-  // addPlayer(@Param('id') id: string, @Body() addPlayerDto: AddPlayerDto) {
-  //   return this.categoryService.addPlayers(id, addPlayerDto);
-  // }
+  @EventPattern('addPlayer-inCategory')
+  async addPlayer(
+    @Payload() addPlayerInterface: AddPlayerInterface,
+    @Ctx() ctx: RmqContext,
+  ) {
+    const channel = ctx.getChannelRef() as Channel;
+    const originalMsg = ctx.getMessage() as Message;
+    const { id, addPlayerDto } = addPlayerInterface;
+
+    try {
+      await this.categoryService.addPlayers(id, addPlayerDto);
+      channel.ack(originalMsg);
+    } catch (error) {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
+      if (error?.message.includes('SSL routines')) {
+        channel.nack(originalMsg, false, true);
+        throw error;
+      }
+
+      channel.ack(originalMsg);
+      throw error;
+    }
+  }
 
   // @Patch(':id/removePlayer')
   // removePlayer(

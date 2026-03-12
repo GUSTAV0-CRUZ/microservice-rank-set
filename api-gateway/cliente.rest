@@ -98,11 +98,11 @@ DELETE  {{baseUrl}}category/69af0f57338b6c3df97ea22f
 
 ###
 # @name AddPlayer
-PATCH  {{baseUrl}}category/69ab35305a827cb4bdbe1766/addPlayer
+PATCH  {{baseUrl}}category/69b08073d0b06a83c9e8fe78/addPlayer
 Content-Type: application/json
 
 {
-  "addPlayers": ["69a1a8f29fda1c56f912a825", "69a1a8f29fda1c56f912a825"]
+  "addPlayers": ["69b1b16280a6ed3deee3979e", "69b19ee9bee6d74ead12d132"]
 }
 
 ###

@@ -31,12 +31,11 @@ export class PlayerService {
     try {
       const player = await this.playerRepository.findOneId(id);
 
-      console.log(player);
       if (!player) throw new RpcException(`Player with id: ${id} not found`);
 
       return player;
     } catch (error) {
-      // this.logError(error, this.findOne.name);
+      this.logError(error, this.findOne.name);
       // eslint-disable-next-line @typescript-eslint/no-unsafe-call
       if (error?.message?.includes('Cast to ObjectId failed for value'))
         throw new RpcException('Type of id invalid');

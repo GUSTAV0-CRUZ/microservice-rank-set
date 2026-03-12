@@ -38,7 +38,7 @@ export class CategoryController {
   }
 
   @Get(':id')
-  indOne(@Param('id') id: string) {
+  fndOne(@Param('id') id: string) {
     return this.clientAdminBackend.send('findOneById-category', id);
   }
 
