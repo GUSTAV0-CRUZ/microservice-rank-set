@@ -6,11 +6,15 @@ import { Player } from './entities/Player.entitie';
 import { RpcException } from '@nestjs/microservices';
 import { PaginationDto } from 'src/utils/pagination.dto';
 import { UpdatePlayerDto } from './dtos/update-player.dto';
+import { CloudinaryService } from 'src/cloudinary/cloudinary.service';
 
 @Injectable()
 export class PlayerService {
   private readonly logger = new Logger(PlayerService.name);
-  constructor(private readonly playerRepository: PlayerRepository) {}
+  constructor(
+    private readonly playerRepository: PlayerRepository,
+    private readonly cloudinaryService: CloudinaryService,
+  ) {}
 
   private logError(error: any, methodName: string) {
     return this.logger.error({
@@ -93,5 +97,13 @@ export class PlayerService {
 
       throw new RpcException(error.message as string);
     }
+  }
+
+  async uploadedImage(id: string, file: Express.Multer.File) {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+    this.logger.log({ id, fileName: file.originalname });
+
+    const player = await this.findOne(id);
+    return player;
   }
 }

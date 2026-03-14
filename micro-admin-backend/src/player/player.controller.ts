@@ -11,8 +11,7 @@ import {
 import { Channel, Message } from 'amqplib';
 import { PaginationDto } from 'src/utils/pagination.dto';
 import type { UpdatePlayerInterface } from './interfaces/update-player.interface';
-// import { UpdatePlayerDto } from './dtos/update-player.dto';
-// import { PaginationDto } from 'src/utils/pagination.dto';
+import type { UploadedImageInterface } from './interfaces/uploaded-image.interface';
 
 @Controller('api/v1/player')
 export class PlayerController {
@@ -120,6 +119,33 @@ export class PlayerController {
     try {
       await this.playerService.delete(id);
       channel.ack(originalMsg);
+    } catch (error) {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
+      if (error?.message?.includes('SSL routines')) {
+        channel.nack(originalMsg, false, true);
+        throw error;
+      }
+
+      channel.ack(originalMsg);
+      throw error;
+    }
+  }
+
+  @MessagePattern('uploadedImage-player')
+  async uploadedImage(
+    @Payload() uploadedImage: UploadedImageInterface,
+    @Ctx() ctx: RmqContext,
+  ) {
+    const channel = ctx.getChannelRef() as Channel;
+    const originalMsg = ctx.getMessage() as Message;
+
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+    const { file, id } = uploadedImage;
+
+    try {
+      const playerUpdated = await this.playerService.uploadedImage(id, file);
+      channel.ack(originalMsg);
+      return playerUpdated;
     } catch (error) {
       // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
       if (error?.message?.includes('SSL routines')) {

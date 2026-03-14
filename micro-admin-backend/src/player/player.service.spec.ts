@@ -98,7 +98,7 @@ describe('PlayerService', () => {
       jest.spyOn(playerRepository, 'create').mockResolvedValue({
         _id: idGenereted,
         ...player,
-      } as any);
+      });
 
       const result = await playerService.create(player);
 
@@ -150,7 +150,7 @@ describe('PlayerService', () => {
       jest.spyOn(playerRepository, 'update').mockResolvedValue({
         ...player,
         ...playerUpdated,
-      } as any);
+      });
 
       const result = await playerService.update(id, playerUpdated);
 
