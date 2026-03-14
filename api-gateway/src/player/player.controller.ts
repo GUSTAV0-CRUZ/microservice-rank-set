@@ -7,11 +7,16 @@ import {
   Param,
   Patch,
   Post,
+  UseInterceptors,
+  UploadedFile,
+  ParseFilePipeBuilder,
+  HttpStatus,
 } from '@nestjs/common';
 import { CreatePlayerDto } from './dtos/create-player.dto';
 import { UpdatePlayerDto } from './dtos/update-player.dto';
 import { ClientProxy } from '@nestjs/microservices';
 import { ClientproxyRmqService } from 'src/client-proxy-rmq/client-proxy-rmq.service';
+import { FileInterceptor } from '@nestjs/platform-express';
 
 @Controller('api/v1/player')
 export class PlayerController {
@@ -51,5 +56,19 @@ export class PlayerController {
   @Delete(':id')
   delete(@Param('id') id: string) {
     return this.clientAdminBackend.emit('delete-player', id);
+  }
+
+  @Patch(':id/upload-image')
+  @UseInterceptors(FileInterceptor('file'))
+  upload(
+    @UploadedFile(
+      new ParseFilePipeBuilder()
+        .addFileTypeValidator({ fileType: /(jpg|jpeg|png)$/ })
+        .addMaxSizeValidator({ maxSize: 5 * 1024 * 1024 })
+        .build({ errorHttpStatusCode: HttpStatus.BAD_REQUEST }),
+    )
+    file: Express.Multer.File,
+  ) {
+    return this.clientAdminBackend.send('uploadedImage-player', file);
   }
 }

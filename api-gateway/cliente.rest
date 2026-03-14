@@ -37,7 +37,17 @@ Content-Type: application/json
 # @name PlayerDelete
 DELETE  {{baseUrl}}player/69ab34d55a827cb4bdbe175e
 
+###
+# @name UploadedImagePlayerPost
+PATCH  {{baseUrl}}player/69ab34d55a827cb4bdbe175e/upload-image
+Content-Type: multipart/form-data; boundary=----FormBoundary
 
+------FormBoundary
+Content-Disposition: form-data; name="file"; filename="nestjs.png"
+Content-Type: image/png
+
+< ./dev/nestjs.png
+------FormBoundary--
 
 ### Category
 
@@ -107,11 +117,11 @@ Content-Type: application/json
 
 ###
 # @name RemovePlayer
-PATCH  {{baseUrl}}category/69ab35305a827cb4bdbe1766/removePlayer
+PATCH  {{baseUrl}}category/69b08073d0b06a83c9e8fe78/removePlayer
 Content-Type: application/json
 
 {
-  "removePlayers": ["69a45d44f8f5fdc6cefa39d1"]
+  "removePlayers": ["69b1a808d9215a0b0ece5191"]
 }
 
 ### challenge

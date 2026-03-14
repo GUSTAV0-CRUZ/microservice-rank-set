@@ -60,6 +60,7 @@ export class CategoryController {
     return this.clientAdminBackend.emit('delete-category', id);
   }
 
+  @HttpCode(202)
   @Patch(':id/addPlayer')
   addPlayer(@Param('id') id: string, @Body() addPlayerDto: AddPlayerDto) {
     return this.clientAdminBackend.emit('addPlayer-inCategory', {
@@ -68,6 +69,7 @@ export class CategoryController {
     });
   }
 
+  @HttpCode(202)
   @Patch(':id/removePlayer')
   removePlayer(
     @Param('id') id: string,
