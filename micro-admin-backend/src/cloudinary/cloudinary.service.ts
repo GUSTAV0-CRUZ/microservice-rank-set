@@ -12,7 +12,7 @@ export class CloudinaryService {
     return new Promise<UploadApiResponse>((res, rej) => {
       const upload = cloudinary.uploader.upload_stream(
         {
-          folder: 'ALETARAR',
+          folder: 'Rank-set',
           public_id: fileName,
           overwrite: true,
           resource_type: 'auto',
@@ -29,8 +29,8 @@ export class CloudinaryService {
           res(result);
         },
       );
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
-      streamifier.createReadStream(file.buffer).pipe(upload);
+      const buffer = Buffer.from(file.buffer['data']);
+      streamifier.createReadStream(buffer).pipe(upload);
     });
   }
 }

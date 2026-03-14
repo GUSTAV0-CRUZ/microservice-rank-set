@@ -139,7 +139,6 @@ export class PlayerController {
     const channel = ctx.getChannelRef() as Channel;
     const originalMsg = ctx.getMessage() as Message;
 
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     const { file, id } = uploadedImage;
 
     try {

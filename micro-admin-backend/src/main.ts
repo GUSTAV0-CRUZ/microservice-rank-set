@@ -11,7 +11,7 @@ async function bootstrap() {
     {
       transport: Transport.RMQ,
       options: {
-        urls: ['amqp://guest:guest@localhost:5672/rank-set'],
+        urls: [String(process.env.RABBITMQ_URL)],
         queue: 'admin-backend',
         noAck: false,
         queueOptions: {

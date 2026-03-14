@@ -100,10 +100,20 @@ export class PlayerService {
   }
 
   async uploadedImage(id: string, file: Express.Multer.File) {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-    this.logger.log({ id, fileName: file.originalname });
+    try {
+      const fileName = `${id}-imageProfile`;
 
-    const player = await this.findOne(id);
-    return player;
+      const uploadedFile = await this.cloudinaryService.uploadedFile(
+        file,
+        fileName,
+      );
+
+      return await this.update(id, { pictureUrl: uploadedFile.url });
+    } catch (error) {
+      this.logError(error, this.uploadedImage.name);
+      if (error.path === '_id') throw new RpcException('Type of id invalid');
+
+      throw new RpcException(error.message as string);
+    }
   }
 }
