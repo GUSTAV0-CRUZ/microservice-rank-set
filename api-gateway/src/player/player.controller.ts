@@ -68,7 +68,12 @@ export class PlayerController {
         .build({ errorHttpStatusCode: HttpStatus.BAD_REQUEST }),
     )
     file: Express.Multer.File,
+    @Param('id') id: string,
   ) {
-    return this.clientAdminBackend.send('uploadedImage-player', file);
+    return this.clientAdminBackend.send('uploadedImage-player', {
+      id,
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+      file,
+    });
   }
 }
