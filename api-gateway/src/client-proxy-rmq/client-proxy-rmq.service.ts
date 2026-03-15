@@ -17,4 +17,15 @@ export class ClientproxyRmqService {
       },
     });
   }
+
+  getClientProxyRmqMicroChallenge() {
+    return ClientProxyFactory.create({
+      transport: Transport.RMQ,
+      options: {
+        urls: [String(process.env.RABBITMQ_URL)],
+        queue: 'micro-challenge',
+        queueOptions: { durable: true },
+      },
+    });
+  }
 }
