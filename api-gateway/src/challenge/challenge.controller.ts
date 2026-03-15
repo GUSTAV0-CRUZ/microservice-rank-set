@@ -1,6 +1,6 @@
-import { Controller, HttpCode, Post } from '@nestjs/common';
+import { Body, Controller, HttpCode, Post } from '@nestjs/common';
 import { ClientproxyRmqService } from 'src/client-proxy-rmq/client-proxy-rmq.service';
-import { ClientProxy, Payload } from '@nestjs/microservices';
+import { ClientProxy } from '@nestjs/microservices';
 import { CreateChallengeDto } from './dto/create-challenge.dto';
 
 @Controller('api/v1/challenge')
@@ -14,7 +14,7 @@ export class ChallengeController {
 
   @HttpCode(202)
   @Post()
-  create(@Payload() createChallengeDto: CreateChallengeDto) {
+  create(@Body() createChallengeDto: CreateChallengeDto) {
     return this.microChallengeClientProxy.emit(
       'create-challenge',
       createChallengeDto,

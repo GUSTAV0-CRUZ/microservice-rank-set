@@ -1,62 +1,58 @@
-// import { Injectable } from '@nestjs/common';
-// import { InjectModel } from '@nestjs/mongoose';
-// import { Model } from 'mongoose';
-// import { ChallengeDocument } from '../schema/challenge.schema';
-// import { CreateChallengeDto } from '../dto/create-challenge.dto';
-// import { UpdateChallengeDto } from '../dto/update-challenge.dto';
-// import { Player } from 'src/player/entities/Player.entitie';
-// import { ChallengeAddMatchRepositoryDto } from '../dto/challenge-addMatch-repository.dto';
-// import { PaginationDto } from 'src/utils/pagination.dto';
+import { Injectable } from '@nestjs/common';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
+import { CreateChallengeDto } from '../dto/create-challenge.dto';
+import { ChallengeDocument } from '../schema/challenge.schema';
 
-// @Injectable()
-// export class ChallengeRepository {
-//   constructor(
-//     @InjectModel('Challenge')
-//     private challengeModel: Model<ChallengeDocument>,
-//   ) {}
+@Injectable()
+export class ChallengeRepository {
+  constructor(
+    @InjectModel('Challenge')
+    private challengeModel: Model<ChallengeDocument>,
+  ) {}
 
-//   findAll(paginationDto: PaginationDto) {
-//     return this.challengeModel
-//       .find()
-//       .skip(paginationDto.offset ?? 0)
-//       .limit(paginationDto.limit ?? 10)
-//       .populate('match')
-//       .populate('players')
-//       .exec();
-//   }
+  // findAll(paginationDto: PaginationDto) {
+  //   return this.challengeModel
+  //     .find()
+  //     .skip(paginationDto.offset ?? 0)
+  //     .limit(paginationDto.limit ?? 10)
+  //     .populate('match')
+  //     .populate('players')
+  //     .exec();
+  // }
 
-//   findOneId(id: string) {
-//     return this.challengeModel.findById(id).populate('match').exec();
-//   }
+  // findOneId(id: string) {
+  //   return this.challengeModel.findById(id).populate('match').exec();
+  // }
 
-//   findChallengesByIdPlayer(id: string) {
-//     const idSeach: unknown = id;
-//     return this.challengeModel.find({ players: idSeach as Player }).exec();
-//   }
+  // findChallengesByIdPlayer(id: string) {
+  //   const idSeach: unknown = id;
+  //   return this.challengeModel.find({ players: idSeach as Player }).exec();
+  // }
 
-//   create(createChallengeDto: CreateChallengeDto) {
-//     return this.challengeModel.create(createChallengeDto);
-//   }
+  create(createChallengeDto: CreateChallengeDto) {
+    return this.challengeModel.create(createChallengeDto);
+  }
 
-//   update(id: string, updateChallengeDto: UpdateChallengeDto) {
-//     return this.challengeModel
-//       .findByIdAndUpdate(id, updateChallengeDto, { returnDocument: 'after' })
-//       .exec();
-//   }
+  // update(id: string, updateChallengeDto: UpdateChallengeDto) {
+  //   return this.challengeModel
+  //     .findByIdAndUpdate(id, updateChallengeDto, { returnDocument: 'after' })
+  //     .exec();
+  // }
 
-//   addMatch(
-//     id: string,
-//     challengeAddMatchRepositoryDto: ChallengeAddMatchRepositoryDto,
-//   ) {
-//     return this.challengeModel
-//       .findByIdAndUpdate(id, challengeAddMatchRepositoryDto, {
-//         returnDocument: 'after',
-//       })
-//       .populate('match')
-//       .exec();
-//   }
+  // addMatch(
+  //   id: string,
+  //   challengeAddMatchRepositoryDto: ChallengeAddMatchRepositoryDto,
+  // ) {
+  //   return this.challengeModel
+  //     .findByIdAndUpdate(id, challengeAddMatchRepositoryDto, {
+  //       returnDocument: 'after',
+  //     })
+  //     .populate('match')
+  //     .exec();
+  // }
 
-//   delete(id: string) {
-//     return this.challengeModel.findByIdAndDelete(id).exec();
-//   }
-// }
+  // delete(id: string) {
+  //   return this.challengeModel.findByIdAndDelete(id).exec();
+  // }
+}

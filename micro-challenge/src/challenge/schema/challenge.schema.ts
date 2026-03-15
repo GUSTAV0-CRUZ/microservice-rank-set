@@ -1,45 +1,42 @@
-// import { Player } from 'src/player/entities/Player.entitie';
-// import { ChallengeStatus } from '../enums/challenge-status.enum';
-// import { Challenge } from '../entities/challenge.entity';
-// import { Prop, SchemaFactory, Schema } from '@nestjs/mongoose';
-// import mongoose from 'mongoose';
-// import { Match } from 'src/match/entities/match.entity';
+import { ChallengeStatus } from '../enums/challenge-status.enum';
+import { Challenge } from '../entities/challenge.entity';
+import { Prop, SchemaFactory, Schema } from '@nestjs/mongoose';
+import mongoose from 'mongoose';
 
-// export type ChallengeDocument = Document & ChallengeSchemaDb;
+export type ChallengeDocument = Document & ChallengeSchemaDb;
 
-// @Schema({ timestamps: true })
-// export class ChallengeSchemaDb implements Challenge {
-//   @Prop({ type: Date })
-//   dateHourChallenge: Date;
+@Schema({ timestamps: true })
+export class ChallengeSchemaDb implements Challenge {
+  @Prop({ type: Date })
+  dateHourChallenge: Date;
 
-//   @Prop({ type: Date })
-//   dateHourRequest: Date;
+  @Prop({ type: Date })
+  dateHourRequest: Date;
 
-//   @Prop({ type: Date })
-//   dateHourResponse: Date;
+  @Prop({ type: Date })
+  dateHourResponse: Date;
 
-//   @Prop({
-//     type: String,
-//     enum: ChallengeStatus,
-//     default: ChallengeStatus.PENDING,
-//   })
-//   status: ChallengeStatus;
+  @Prop({
+    type: String,
+    enum: ChallengeStatus,
+    default: ChallengeStatus.PENDING,
+  })
+  status: ChallengeStatus;
 
-//   @Prop({ type: mongoose.Schema.ObjectId, ref: 'Player' })
-//   applicant: Player;
+  @Prop({ type: mongoose.Schema.ObjectId })
+  applicant: string;
 
-//   @Prop({ type: String })
-//   category: string;
+  @Prop({ type: String })
+  category: string;
 
-//   @Prop([
-//     {
-//       type: mongoose.Schema.Types.ObjectId,
-//       ref: 'Player',
-//     },
-//   ])
-//   players: Player[];
+  @Prop([
+    {
+      type: mongoose.Schema.Types.ObjectId,
+    },
+  ])
+  players: string[];
 
-//   @Prop({ type: mongoose.Schema.ObjectId, ref: 'Match' })
-//   match: Match;
-// }
-// export const ChallengeSchema = SchemaFactory.createForClass(ChallengeSchemaDb);
+  @Prop({ type: mongoose.Schema.ObjectId })
+  match: string;
+}
+export const ChallengeSchema = SchemaFactory.createForClass(ChallengeSchemaDb);

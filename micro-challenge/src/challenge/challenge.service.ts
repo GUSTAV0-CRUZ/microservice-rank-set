@@ -1,189 +1,185 @@
-// /* eslint-disable @typescript-eslint/no-unsafe-argument */
-// import {
-//   BadRequestException,
-//   Injectable,
-//   NotFoundException,
-// } from '@nestjs/common';
-// import { CreateChallengeDto } from './dto/create-challenge.dto';
-// import { UpdateChallengeDto } from './dto/update-challenge.dto';
-// import { ChallengeRepository } from './repository/challenge.repository';
-// import { PlayerService } from 'src/player/player.service';
-// import { CategoryService } from 'src/category/category.service';
-// import { ChallengeStatus } from './enums/challenge-status.enum';
-// import { Challenge } from './entities/challenge.entity';
-// import { MatchService } from 'src/match/match.service';
-// import { CreateAddMatchDto } from './dto/create-addMatch.dto';
-// import { PaginationDto } from 'src/utils/pagination.dto';
+import { Injectable, Logger } from '@nestjs/common';
+import { ChallengeRepository } from './repository/challenge.repository';
+import { CreateChallengeDto } from './dto/create-challenge.dto';
+import { Challenge } from './entities/challenge.entity';
+import { ChallengeStatus } from './enums/challenge-status.enum';
+import { RpcException } from '@nestjs/microservices';
 
-// @Injectable()
-// export class ChallengeService {
-//   constructor(
-//     private readonly challengeRepository: ChallengeRepository,
-//     private readonly playerService: PlayerService,
-//     private readonly categoryService: CategoryService,
-//     private readonly matchService: MatchService,
-//   ) {}
+@Injectable()
+export class ChallengeService {
+  private readonly logger = new Logger(ChallengeService.name);
+  constructor(private readonly challengeRepository: ChallengeRepository) {}
 
-//   async create(createChallengeDto: CreateChallengeDto): Promise<Challenge> {
-//     try {
-//       const { players, applicant, dateHourChallenge } = createChallengeDto;
+  private logError(error: any, methodName: string) {
+    return this.logger.error({
+      methodName,
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+      message: [error.message],
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
+      stack: error.stack,
+    });
+  }
 
-//       const idOApplicant: unknown = applicant;
-//       const idOne: unknown = players[0];
-//       const idTwo: unknown = players[1];
+  async create(createChallengeDto: CreateChallengeDto): Promise<Challenge> {
+    this.logger.log(createChallengeDto);
+    try {
+      const { players, applicant, dateHourChallenge } = createChallengeDto;
 
-//       await this.playerService.findOne(idOne as any);
-//       await this.playerService.findOne(idTwo as any);
+      // const idOApplicant: unknown = applicant;
+      const idOne: unknown = players[0];
+      const idTwo: unknown = players[1];
 
-//       if (idOne !== applicant && idTwo !== applicant)
-//         throw new BadRequestException(
-//           'Applicant not is one player of challenge',
-//         );
+      // await this.playerService.findOne(idOne as any);
+      // await this.playerService.findOne(idTwo as any);
 
-//       const category = await this.categoryService.findCategoryContainPlayerId(
-//         idOApplicant as string,
-//       );
+      if (idOne !== applicant && idTwo !== applicant)
+        throw new RpcException('Applicant not is one player of challenge');
 
-//       const challenge = {
-//         dateHourChallenge,
-//         applicant,
-//         players,
-//         dateHourRequest: new Date(),
-//         status: ChallengeStatus.PENDING,
-//         category: category.name,
-//       };
+      // const category = await this.categoryService.findCategoryContainPlayerId(
+      //   idOApplicant as string,
+      // );
 
-//       const newChallenge = this.challengeRepository.create(challenge);
+      const challenge = {
+        dateHourChallenge,
+        applicant,
+        players,
+        dateHourRequest: new Date(),
+        status: ChallengeStatus.PENDING,
+        category: 'category.name',
+      };
 
-//       return newChallenge;
-//     } catch (error) {
-//       // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-//       throw new BadRequestException(error.message);
-//     }
-//   }
+      const newChallenge = this.challengeRepository.create(challenge);
 
-//   findAll(paginationDto: PaginationDto) {
-//     return this.challengeRepository.findAll(paginationDto);
-//   }
+      return newChallenge;
+    } catch (error) {
+      this.logError(error, this.create.name);
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
+      throw new RpcException(error.message);
+    }
+  }
 
-//   async findOne(id: string): Promise<Challenge> {
-//     try {
-//       const challenge = await this.challengeRepository.findOneId(id);
+  // findAll(paginationDto: PaginationDto) {
+  //   return this.challengeRepository.findAll(paginationDto);
+  // }
 
-//       if (!challenge) throw new NotFoundException();
+  // async findOne(id: string): Promise<Challenge> {
+  //   try {
+  //     const challenge = await this.challengeRepository.findOneId(id);
 
-//       return challenge;
-//     } catch (error) {
-//       // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-//       if (error.path === '_id')
-//         throw new BadRequestException('Type of id invalid');
+  //     if (!challenge) throw new NotFoundException();
 
-//       // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-//       if (error.status === 404)
-//         throw new NotFoundException('Challenge not found');
+  //     return challenge;
+  //   } catch (error) {
+  //     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+  //     if (error.path === '_id')
+  //       throw new BadRequestException('Type of id invalid');
 
-//       // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-//       throw new BadRequestException(error.message);
-//     }
-//   }
+  //     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+  //     if (error.status === 404)
+  //       throw new NotFoundException('Challenge not found');
 
-//   async findChallengesByIdPlayer(id: string): Promise<Challenge[]> {
-//     try {
-//       const challenge =
-//         await this.challengeRepository.findChallengesByIdPlayer(id);
+  //     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+  //     throw new BadRequestException(error.message);
+  //   }
+  // }
 
-//       if (!challenge) throw new NotFoundException();
+  // async findChallengesByIdPlayer(id: string): Promise<Challenge[]> {
+  //   try {
+  //     const challenge =
+  //       await this.challengeRepository.findChallengesByIdPlayer(id);
 
-//       return challenge;
-//     } catch (error) {
-//       // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-//       if (error.path === '_id')
-//         throw new BadRequestException('Type of id invalid');
+  //     if (!challenge) throw new NotFoundException();
 
-//       // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-//       if (error.status === 404)
-//         throw new NotFoundException('Challenge not found');
+  //     return challenge;
+  //   } catch (error) {
+  //     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+  //     if (error.path === '_id')
+  //       throw new BadRequestException('Type of id invalid');
 
-//       // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-//       throw new BadRequestException(error.message);
-//     }
-//   }
+  //     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+  //     if (error.status === 404)
+  //       throw new NotFoundException('Challenge not found');
 
-//   async update(
-//     id: string,
-//     updateChallengeDto: UpdateChallengeDto,
-//   ): Promise<Challenge> {
-//     try {
-//       const challenge = await this.challengeRepository.update(
-//         id,
-//         updateChallengeDto,
-//       );
+  //     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+  //     throw new BadRequestException(error.message);
+  //   }
+  // }
 
-//       if (!challenge) throw new NotFoundException();
+  // async update(
+  //   id: string,
+  //   updateChallengeDto: UpdateChallengeDto,
+  // ): Promise<Challenge> {
+  //   try {
+  //     const challenge = await this.challengeRepository.update(
+  //       id,
+  //       updateChallengeDto,
+  //     );
 
-//       return challenge;
-//     } catch (error) {
-//       // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-//       if (error.path === '_id')
-//         throw new BadRequestException('Type of id invalid');
+  //     if (!challenge) throw new NotFoundException();
 
-//       // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-//       if (error.status === 404)
-//         throw new NotFoundException('Challenge not found');
+  //     return challenge;
+  //   } catch (error) {
+  //     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+  //     if (error.path === '_id')
+  //       throw new BadRequestException('Type of id invalid');
 
-//       // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-//       throw new BadRequestException(error.message);
-//     }
-//   }
+  //     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+  //     if (error.status === 404)
+  //       throw new NotFoundException('Challenge not found');
 
-//   async delete(id: string): Promise<Challenge> {
-//     try {
-//       const challenge = await this.challengeRepository.delete(id);
+  //     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+  //     throw new BadRequestException(error.message);
+  //   }
+  // }
 
-//       if (!challenge) throw new NotFoundException();
+  // async delete(id: string): Promise<Challenge> {
+  //   try {
+  //     const challenge = await this.challengeRepository.delete(id);
 
-//       return challenge;
-//     } catch (error) {
-//       // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-//       if (error.path === '_id')
-//         throw new BadRequestException('Type of id invalid');
+  //     if (!challenge) throw new NotFoundException();
 
-//       // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-//       if (error.status === 404)
-//         throw new NotFoundException('Challenge not found');
+  //     return challenge;
+  //   } catch (error) {
+  //     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+  //     if (error.path === '_id')
+  //       throw new BadRequestException('Type of id invalid');
 
-//       // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-//       throw new BadRequestException(error.message);
-//     }
-//   }
+  //     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+  //     if (error.status === 404)
+  //       throw new NotFoundException('Challenge not found');
 
-//   async addMatch(
-//     id: string,
-//     createAddMatchDto: CreateAddMatchDto,
-//   ): Promise<Challenge> {
-//     try {
-//       const challenge = await this.findOne(id);
-//       const { category, players } = challenge;
+  //     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+  //     throw new BadRequestException(error.message);
+  //   }
+  // }
 
-//       const createMatch = await this.matchService.create({
-//         category,
-//         players,
-//         def: createAddMatchDto.def,
-//         result: createAddMatchDto.result,
-//         challenge,
-//       });
+  // async addMatch(
+  //   id: string,
+  //   createAddMatchDto: CreateAddMatchDto,
+  // ): Promise<Challenge> {
+  //   try {
+  //     const challenge = await this.findOne(id);
+  //     const { category, players } = challenge;
 
-//       const challengeUpdated = await this.challengeRepository.addMatch(id, {
-//         match: createMatch,
-//         status: ChallengeStatus.ACCOMPLISHED,
-//       });
+  //     const createMatch = await this.matchService.create({
+  //       category,
+  //       players,
+  //       def: createAddMatchDto.def,
+  //       result: createAddMatchDto.result,
+  //       challenge,
+  //     });
 
-//       if (!challengeUpdated) throw new BadRequestException();
+  //     const challengeUpdated = await this.challengeRepository.addMatch(id, {
+  //       match: createMatch,
+  //       status: ChallengeStatus.ACCOMPLISHED,
+  //     });
 
-//       return challengeUpdated;
-//     } catch (error) {
-//       // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-//       throw new BadRequestException(error.message);
-//     }
-//   }
-// }
+  //     if (!challengeUpdated) throw new BadRequestException();
+
+  //     return challengeUpdated;
+  //   } catch (error) {
+  //     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+  //     throw new BadRequestException(error.message);
+  //   }
+  // }
+}
