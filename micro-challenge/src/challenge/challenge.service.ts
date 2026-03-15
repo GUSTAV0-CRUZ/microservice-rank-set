@@ -3,12 +3,21 @@ import { ChallengeRepository } from './repository/challenge.repository';
 import { CreateChallengeDto } from './dto/create-challenge.dto';
 import { Challenge } from './entities/challenge.entity';
 import { ChallengeStatus } from './enums/challenge-status.enum';
-import { RpcException } from '@nestjs/microservices';
+import { ClientProxy, RpcException } from '@nestjs/microservices';
+import { ClienteProxyRmqService } from 'src/cliente-proxy-rmq/cliente-proxy-rmq.service';
+import { lastValueFrom } from 'rxjs';
 
 @Injectable()
 export class ChallengeService {
   private readonly logger = new Logger(ChallengeService.name);
-  constructor(private readonly challengeRepository: ChallengeRepository) {}
+  private miCroBackendClientProxy: ClientProxy;
+  constructor(
+    private readonly challengeRepository: ChallengeRepository,
+    clienteProxyRmqService: ClienteProxyRmqService,
+  ) {
+    this.miCroBackendClientProxy =
+      clienteProxyRmqService.getClientProxyRmqAdminBackend();
+  }
 
   private logError(error: any, methodName: string) {
     return this.logger.error({
@@ -21,23 +30,31 @@ export class ChallengeService {
   }
 
   async create(createChallengeDto: CreateChallengeDto): Promise<Challenge> {
-    this.logger.log(createChallengeDto);
+    // this.logger.log(createChallengeDto);
     try {
       const { players, applicant, dateHourChallenge } = createChallengeDto;
 
-      // const idOApplicant: unknown = applicant;
-      const idOne: unknown = players[0];
-      const idTwo: unknown = players[1];
+      const idOne = players[0];
+      const idTwo = players[1];
 
-      // await this.playerService.findOne(idOne as any);
-      // await this.playerService.findOne(idTwo as any);
+      await Promise.all([
+        lastValueFrom(
+          this.miCroBackendClientProxy.send('findOneById-player', idOne),
+        ),
+        lastValueFrom(
+          this.miCroBackendClientProxy.send('findOneById-player', idTwo),
+        ),
+      ]);
 
       if (idOne !== applicant && idTwo !== applicant)
         throw new RpcException('Applicant not is one player of challenge');
 
-      // const category = await this.categoryService.findCategoryContainPlayerId(
-      //   idOApplicant as string,
-      // );
+      const category = await lastValueFrom<{ name: string }>(
+        this.miCroBackendClientProxy.send(
+          'findCategoryContainPlayerId-category',
+          applicant,
+        ),
+      );
 
       const challenge = {
         dateHourChallenge,
@@ -45,7 +62,7 @@ export class ChallengeService {
         players,
         dateHourRequest: new Date(),
         status: ChallengeStatus.PENDING,
-        category: 'category.name',
+        category: category['name'],
       };
 
       const newChallenge = this.challengeRepository.create(challenge);
