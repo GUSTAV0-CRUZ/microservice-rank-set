@@ -1,16 +1,16 @@
-// import { Type } from 'class-transformer';
-// import { ArrayMinSize, IsArray, IsMongoId, IsNotEmpty } from 'class-validator';
-// import { Result } from 'src/match/entities/match.entity';
-// import { Player } from 'src/player/entities/Player.entitie';
+import { Type } from 'class-transformer';
+import { ArrayMinSize, IsArray, IsMongoId, IsNotEmpty } from 'class-validator';
+import { ResultInterface } from '../interfaces/result.interface';
 
-// export class CreateAddMatchDto {
-//   @IsNotEmpty()
-//   @IsMongoId({ each: true })
-//   def: Player;
+export class CreateAddMatchDto {
+  @IsNotEmpty()
+  @IsMongoId()
+  def: string;
 
-//   @IsNotEmpty()
-//   @IsArray()
-//   @ArrayMinSize(1)
-//   @Type(() => Array<Result>)
-//   result: Result[];
-// }
+  @IsNotEmpty()
+  @IsArray()
+  @ArrayMinSize(1)
+  @IsMongoId({ each: true })
+  @Type(() => Array<ResultInterface>)
+  result: ResultInterface[];
+}

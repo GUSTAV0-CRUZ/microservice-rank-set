@@ -7,6 +7,7 @@ import { ClientProxy, RpcException } from '@nestjs/microservices';
 import { ClienteProxyRmqService } from 'src/cliente-proxy-rmq/cliente-proxy-rmq.service';
 import { lastValueFrom } from 'rxjs';
 import { UpdateChallengeDto } from './dto/update-challenge.dto';
+import { CreateAddMatchDto } from './dto/create-addMatch.dto';
 
 @Injectable()
 export class ChallengeService {
@@ -35,19 +36,16 @@ export class ChallengeService {
     try {
       const { players, applicant, dateHourChallenge } = createChallengeDto;
 
-      const idOne = players[0];
-      const idTwo = players[1];
-
       await Promise.all([
         lastValueFrom(
-          this.miCroBackendClientProxy.send('findOneById-player', idOne),
+          this.miCroBackendClientProxy.send('findOneById-player', players[0]),
         ),
         lastValueFrom(
-          this.miCroBackendClientProxy.send('findOneById-player', idTwo),
+          this.miCroBackendClientProxy.send('findOneById-player', players[1]),
         ),
       ]);
 
-      if (idOne !== applicant && idTwo !== applicant)
+      if (players[0] !== applicant && players[1] !== applicant)
         throw new RpcException('Applicant not is one player of challenge');
 
       const category = await lastValueFrom<{ name: string }>(
@@ -170,33 +168,44 @@ export class ChallengeService {
     }
   }
 
-  // async addMatch(
-  //   id: string,
-  //   createAddMatchDto: CreateAddMatchDto,
-  // ): Promise<Challenge> {
-  //   try {
-  //     const challenge = await this.findOne(id);
-  //     const { category, players } = challenge;
+  async addMatch(
+    id: string,
+    createAddMatchDto: CreateAddMatchDto,
+  ): Promise<Challenge> {
+    try {
+      const challenge = await this.findOne(id);
 
-  //     const createMatch = await this.matchService.create({
-  //       category,
-  //       players,
-  //       def: createAddMatchDto.def,
-  //       result: createAddMatchDto.result,
-  //       challenge,
-  //     });
+      const playerIsChallenge = challenge.players.filter(
+        (idPlayer) => idPlayer.toString() === createAddMatchDto.def,
+      );
+      if (playerIsChallenge.length === 0)
+        throw new RpcException('def not player of challenge');
 
-  //     const challengeUpdated = await this.challengeRepository.addMatch(id, {
-  //       match: createMatch,
-  //       status: ChallengeStatus.ACCOMPLISHED,
-  //     });
+      const { category, players } = challenge;
 
-  //     if (!challengeUpdated) throw new BadRequestException();
+      // const createMatch = await this.matchService.create({
+      const createMatch = {
+        _id: '69b832a91053bde0e1abe28f',
+        category,
+        players,
+        def: createAddMatchDto.def,
+        result: createAddMatchDto.result,
+        challenge,
+      };
 
-  //     return challengeUpdated;
-  //   } catch (error) {
-  //     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-  //     throw new BadRequestException(error.message);
-  //   }
-  // }
+      const challengeUpdated = await this.challengeRepository.addMatch(id, {
+        match: createMatch,
+        status: ChallengeStatus.ACCOMPLISHED,
+      });
+
+      if (!challengeUpdated)
+        throw new RpcException('Object of challenge is empity');
+
+      return challengeUpdated;
+    } catch (error) {
+      this.logError(error, this.addMatch.name);
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-argument
+      throw new RpcException(error.message);
+    }
+  }
 }

@@ -12,6 +12,7 @@ import { ClientproxyRmqService } from 'src/client-proxy-rmq/client-proxy-rmq.ser
 import { ClientProxy } from '@nestjs/microservices';
 import { CreateChallengeDto } from './dto/create-challenge.dto';
 import { UpdateChallengeDto } from './dto/update-challenge.dto';
+import { CreateAddMatchDto } from './dto/create-addMatch.dto';
 
 @Controller('api/v1/challenge')
 export class ChallengeController {
@@ -66,11 +67,15 @@ export class ChallengeController {
     );
   }
 
-  // @Patch(':id/AddMatch')
-  // AddMatch(
-  //   @Param('id') id: string,
-  //   @Body() createAddMatchDto: CreateAddMatchDto,
-  // ) {
-  //   return this.challengeService.addMatch(id, createAddMatchDto);
-  // }
+  @HttpCode(202)
+  @Patch(':id/AddMatch')
+  AddMatch(
+    @Param('id') id: string,
+    @Body() createAddMatchDto: CreateAddMatchDto,
+  ) {
+    return this.microChallengeClientProxy.emit('addMatch-challenge', {
+      id,
+      createAddMatchDto,
+    });
+  }
 }

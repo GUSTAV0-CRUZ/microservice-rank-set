@@ -4,6 +4,7 @@ import { Model } from 'mongoose';
 import { CreateChallengeDto } from '../dto/create-challenge.dto';
 import { ChallengeDocument } from '../schema/challenge.schema';
 import { UpdateChallengeDto } from '../dto/update-challenge.dto';
+import { ChallengeAddMatchRepositoryDto } from '../dto/challenge-addMatch-repository.dto copy';
 
 @Injectable()
 export class ChallengeRepository {
@@ -38,15 +39,14 @@ export class ChallengeRepository {
     return this.challengeModel.find({ players: id }).exec();
   }
 
-  // addMatch(
-  //   id: string,
-  //   challengeAddMatchRepositoryDto: ChallengeAddMatchRepositoryDto,
-  // ) {
-  //   return this.challengeModel
-  //     .findByIdAndUpdate(id, challengeAddMatchRepositoryDto, {
-  //       returnDocument: 'after',
-  //     })
-  //     .populate('match')
-  //     .exec();
-  // }
+  addMatch(
+    id: string,
+    challengeAddMatchRepositoryDto: ChallengeAddMatchRepositoryDto,
+  ) {
+    return this.challengeModel
+      .findByIdAndUpdate(id, challengeAddMatchRepositoryDto, {
+        returnDocument: 'after',
+      })
+      .exec();
+  }
 }

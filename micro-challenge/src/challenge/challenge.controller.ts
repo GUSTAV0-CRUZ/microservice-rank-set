@@ -10,6 +10,7 @@ import { ChallengeService } from './challenge.service';
 import { CreateChallengeDto } from './dto/create-challenge.dto';
 import { Channel, Message } from 'amqplib';
 import type { UpdateChallengeInterface } from './interfaces/update-challenge.interface';
+import type { CreateAddMatchInterface } from './interfaces/create-add-match.interface';
 
 @Controller('api/v1/challenge')
 export class ChallengeController {
@@ -154,11 +155,28 @@ export class ChallengeController {
     }
   }
 
-  // @Patch(':id/AddMatch')
-  // AddMatch(
-  //   @Param('id') id: string,
-  //   @Body() createAddMatchDto: CreateAddMatchDto,
-  // ) {
-  //   return this.challengeService.addMatch(id, createAddMatchDto);
-  // }
+  @EventPattern('addMatch-challenge')
+  async AddMatch(
+    @Payload() createAddMatchInterface: CreateAddMatchInterface,
+    @Ctx() ctx: RmqContext,
+  ) {
+    const channel = ctx.getChannelRef() as Channel;
+    const originalMsg = ctx.getMessage() as Message;
+    const { createAddMatchDto, id } = createAddMatchInterface;
+
+    try {
+      await this.challengeService.addMatch(id, createAddMatchDto);
+
+      channel.ack(originalMsg);
+    } catch (error) {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
+      if (error?.message?.includes('SSL routines')) {
+        channel.nack(originalMsg, false, true);
+        throw error;
+      }
+
+      channel.ack(originalMsg);
+      throw error;
+    }
+  }
 }
