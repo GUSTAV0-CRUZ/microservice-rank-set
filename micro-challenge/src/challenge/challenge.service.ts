@@ -6,6 +6,7 @@ import { ChallengeStatus } from './enums/challenge-status.enum';
 import { ClientProxy, RpcException } from '@nestjs/microservices';
 import { ClienteProxyRmqService } from 'src/cliente-proxy-rmq/cliente-proxy-rmq.service';
 import { lastValueFrom } from 'rxjs';
+import { UpdateChallengeDto } from './dto/update-challenge.dto';
 
 @Injectable()
 export class ChallengeService {
@@ -102,58 +103,61 @@ export class ChallengeService {
     }
   }
 
-  // async findChallengesByIdPlayer(id: string): Promise<Challenge[]> {
-  //   try {
-  //     const challenge =
-  //       await this.challengeRepository.findChallengesByIdPlayer(id);
+  async update(
+    id: string,
+    updateChallengeDto: UpdateChallengeDto,
+  ): Promise<Challenge> {
+    // this.logger.log({ id, updateChallengeDto });
 
-  //     if (!challenge) throw new NotFoundException();
+    if ((await this.findOne(id)).status !== ChallengeStatus.PENDING)
+      throw new RpcException(
+        'The Status of Challenge should is "PENDING" for updateded',
+      );
 
-  //     return challenge;
-  //   } catch (error) {
-  //     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-  //     if (error.path === '_id')
-  //       throw new BadRequestException('Type of id invalid');
+    try {
+      const challenge = await this.challengeRepository.update(
+        id,
+        updateChallengeDto,
+      );
 
-  //     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-  //     if (error.status === 404)
-  //       throw new NotFoundException('Challenge not found');
+      if (!challenge) throw new RpcException('Challenge not found');
 
-  //     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-  //     throw new BadRequestException(error.message);
-  //   }
-  // }
+      return challenge;
+    } catch (error) {
+      this.logError(error, this.update.name);
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+      if (error.path === '_id') throw new RpcException('Type of id invalid');
 
-  // async update(
-  //   id: string,
-  //   updateChallengeDto: UpdateChallengeDto,
-  // ): Promise<Challenge> {
-  //   try {
-  //     const challenge = await this.challengeRepository.update(
-  //       id,
-  //       updateChallengeDto,
-  //     );
-
-  //     if (!challenge) throw new NotFoundException();
-
-  //     return challenge;
-  //   } catch (error) {
-  //     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-  //     if (error.path === '_id')
-  //       throw new BadRequestException('Type of id invalid');
-
-  //     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-  //     if (error.status === 404)
-  //       throw new NotFoundException('Challenge not found');
-
-  //     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-  //     throw new BadRequestException(error.message);
-  //   }
-  // }
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-argument
+      throw new RpcException(error.message);
+    }
+  }
 
   // async delete(id: string): Promise<Challenge> {
   //   try {
   //     const challenge = await this.challengeRepository.delete(id);
+
+  //     if (!challenge) throw new NotFoundException();
+
+  //     return challenge;
+  //   } catch (error) {
+  //     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+  //     if (error.path === '_id')
+  //       throw new BadRequestException('Type of id invalid');
+
+  //     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+  //     if (error.status === 404)
+  //       throw new NotFoundException('Challenge not found');
+
+  //     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+  //     throw new BadRequestException(error.message);
+  //   }
+  // }
+
+  // async findChallengesByIdPlayer(id: string): Promise<Challenge[]> {
+  //   try {
+  //     const challenge =
+  //       await this.challengeRepository.findChallengesByIdPlayer(id);
 
   //     if (!challenge) throw new NotFoundException();
 

@@ -136,10 +136,6 @@ GET {{baseUrl}}challenge
 GET {{baseUrl}}challenge/69b70985e4ad71e18c0b04f8
 
 ###
-# @name ChallengePlayerGetOne
-GET {{baseUrl}}challenge/player/69b70985e4ad71e18c0b04f8
-
-###
 # @name ChallengePost
 POST {{baseUrl}}challenge
 Content-Type: application/json
@@ -152,7 +148,7 @@ Content-Type: application/json
 
 ###
 # @name ChallengePatch
-PATCH  {{baseUrl}}challenge/69a851a8ace9c0a64fd80d81
+PATCH  {{baseUrl}}challenge/69b70985e4ad71e18c0b04f8
 Content-Type: application/json
 
 {
@@ -163,6 +159,10 @@ Content-Type: application/json
 ###
 # @name ChallengeDelete
 DELETE  {{baseUrl}}challenge/69a851c3ace9c0a64fd80d86
+
+###
+# @name ChallengePlayerGetOne
+GET {{baseUrl}}challenge/player/69b70985e4ad71e18c0b04f8
 
 ###
 # @name ChallengeAddMatch

@@ -3,6 +3,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { CreateChallengeDto } from '../dto/create-challenge.dto';
 import { ChallengeDocument } from '../schema/challenge.schema';
+import { UpdateChallengeDto } from '../dto/update-challenge.dto';
 
 @Injectable()
 export class ChallengeRepository {
@@ -19,19 +20,19 @@ export class ChallengeRepository {
     return this.challengeModel.findById(id).exec();
   }
 
-  // findChallengesByIdPlayer(id: string) {
-  //   const idSeach: unknown = id;
-  //   return this.challengeModel.find({ players: idSeach as Player }).exec();
-  // }
-
   create(createChallengeDto: CreateChallengeDto) {
     return this.challengeModel.create(createChallengeDto);
   }
 
-  // update(id: string, updateChallengeDto: UpdateChallengeDto) {
-  //   return this.challengeModel
-  //     .findByIdAndUpdate(id, updateChallengeDto, { returnDocument: 'after' })
-  //     .exec();
+  update(id: string, updateChallengeDto: UpdateChallengeDto) {
+    return this.challengeModel
+      .findByIdAndUpdate(id, updateChallengeDto, { returnDocument: 'after' })
+      .exec();
+  }
+
+  // findChallengesByIdPlayer(id: string) {
+  //   const idSeach: unknown = id;
+  //   return this.challengeModel.find({ players: idSeach as Player }).exec();
   // }
 
   // addMatch(

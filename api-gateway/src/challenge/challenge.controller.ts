@@ -1,7 +1,16 @@
-import { Body, Controller, Get, HttpCode, Param, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  HttpCode,
+  Param,
+  Patch,
+  Post,
+} from '@nestjs/common';
 import { ClientproxyRmqService } from 'src/client-proxy-rmq/client-proxy-rmq.service';
 import { ClientProxy } from '@nestjs/microservices';
 import { CreateChallengeDto } from './dto/create-challenge.dto';
+import { UpdateChallengeDto } from './dto/update-challenge.dto';
 
 @Controller('api/v1/challenge')
 export class ChallengeController {
@@ -31,22 +40,25 @@ export class ChallengeController {
     return this.microChallengeClientProxy.send('findOneById-challenge', id);
   }
 
-  // @Get('player/:id')
-  // findChallengesByIdPlayer(@Param('id') id: string) {
-  //   return this.challengeService.findChallengesByIdPlayer(id);
-  // }
-
-  // @Patch(':id')
-  // update(
-  //   @Param('id') id: string,
-  //   @Body() updateChallengeDto: UpdateChallengeDto,
-  // ) {
-  //   return this.challengeService.update(id, updateChallengeDto);
-  // }
+  @Patch(':id')
+  update(
+    @Param('id') id: string,
+    @Body() updateChallengeDto: UpdateChallengeDto,
+  ) {
+    return this.microChallengeClientProxy.send('update-challenge', {
+      id,
+      updateChallengeDto,
+    });
+  }
 
   // @Delete(':id')
   // remove(@Param('id') id: string) {
   //   return this.challengeService.delete(id);
+  // }
+
+  // @Get('player/:id')
+  // findChallengesByIdPlayer(@Param('id') id: string) {
+  //   return this.challengeService.findChallengesByIdPlayer(id);
   // }
 
   // @Patch(':id/AddMatch')
