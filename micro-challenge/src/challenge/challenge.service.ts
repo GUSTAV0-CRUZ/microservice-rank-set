@@ -79,32 +79,28 @@ export class ChallengeService {
     try {
       return this.challengeRepository.findAll();
     } catch (error) {
-      this.logError(error, this.create.name);
+      this.logError(error, this.findAll.name);
       // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
       throw new RpcException(error.message);
     }
   }
 
-  // async findOne(id: string): Promise<Challenge> {
-  //   try {
-  //     const challenge = await this.challengeRepository.findOneId(id);
+  async findOne(id: string): Promise<Challenge> {
+    try {
+      const challenge = await this.challengeRepository.findOneId(id);
 
-  //     if (!challenge) throw new NotFoundException();
+      if (!challenge) throw new RpcException('Challenge not found');
 
-  //     return challenge;
-  //   } catch (error) {
-  //     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-  //     if (error.path === '_id')
-  //       throw new BadRequestException('Type of id invalid');
+      return challenge;
+    } catch (error) {
+      this.logError(error, this.findOne.name);
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+      if (error.path === '_id') throw new RpcException('Type of id invalid');
 
-  //     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-  //     if (error.status === 404)
-  //       throw new NotFoundException('Challenge not found');
-
-  //     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-  //     throw new BadRequestException(error.message);
-  //   }
-  // }
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-argument
+      throw new RpcException(error.message);
+    }
+  }
 
   // async findChallengesByIdPlayer(id: string): Promise<Challenge[]> {
   //   try {

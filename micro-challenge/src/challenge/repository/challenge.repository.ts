@@ -15,9 +15,9 @@ export class ChallengeRepository {
     return this.challengeModel.find();
   }
 
-  // findOneId(id: string) {
-  //   return this.challengeModel.findById(id).populate('match').exec();
-  // }
+  findOneId(id: string) {
+    return this.challengeModel.findById(id).exec();
+  }
 
   // findChallengesByIdPlayer(id: string) {
   //   const idSeach: unknown = id;

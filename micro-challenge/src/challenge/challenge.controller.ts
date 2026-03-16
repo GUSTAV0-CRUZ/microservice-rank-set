@@ -43,8 +43,9 @@ export class ChallengeController {
     const originalMsg = ctx.getMessage() as Message;
 
     try {
-      await this.challengeService.findAll();
+      const challenges = await this.challengeService.findAll();
       channel.ack(originalMsg);
+      return challenges;
     } catch (error) {
       // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
       if (error?.message?.includes('SSL routines')) {
@@ -57,10 +58,26 @@ export class ChallengeController {
     }
   }
 
-  // @Get(':id')
-  // findOne(@Param('id') id: string) {
-  //   return this.challengeService.findOne(id);
-  // }
+  @MessagePattern('findOneById-challenge')
+  async findOne(@Payload() id: string, @Ctx() ctx: RmqContext) {
+    const channel = ctx.getChannelRef() as Channel;
+    const originalMsg = ctx.getMessage() as Message;
+
+    try {
+      const challenge = await this.challengeService.findOne(id);
+      channel.ack(originalMsg);
+      return challenge;
+    } catch (error) {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
+      if (error?.message?.includes('SSL routines')) {
+        channel.nack(originalMsg, false, true);
+        throw error;
+      }
+
+      channel.ack(originalMsg);
+      throw error;
+    }
+  }
 
   // @Get('player/:id')
   // findChallengesByIdPlayer(@Param('id') id: string) {

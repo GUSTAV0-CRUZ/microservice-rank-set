@@ -133,11 +133,11 @@ GET {{baseUrl}}challenge
 
 ###
 # @name ChallengeGetOne
-GET {{baseUrl}}challenge/69a851a8ace9c0a64fd80d81
+GET {{baseUrl}}challenge/69b70985e4ad71e18c0b04f8
 
 ###
 # @name ChallengePlayerGetOne
-GET {{baseUrl}}challenge/player/69a1a8f29fda1c56f912a825
+GET {{baseUrl}}challenge/player/69b70985e4ad71e18c0b04f8
 
 ###
 # @name ChallengePost
