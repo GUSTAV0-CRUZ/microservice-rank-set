@@ -73,7 +73,6 @@ export class ChallengeController {
         channel.nack(originalMsg, false, true);
         throw error;
       }
-
       channel.ack(originalMsg);
       throw error;
     }
