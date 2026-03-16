@@ -195,11 +195,12 @@ POST {{baseUrl}}match
 Content-Type: application/json
 
 {
+  "challenge": "69b879414a0cd4f77edb80ec",
   "category": "any category",
   "players": ["69a1a8f29fda1c56f912a825", "69a6f7a2f38dbedaa8bc29c5"],
   "result": [
     {
-    "set": "69a1a8f29fda1c56f912a825"
+    "set": "2-0"
     }
   ],
   "def": "69a1a8f29fda1c56f912a825"

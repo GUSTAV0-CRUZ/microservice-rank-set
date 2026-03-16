@@ -1,19 +1,35 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { MatchRepository } from './repository/match.repository';
+import { CreateMatchDto } from './dto/create-match.dto';
+import { Match } from './entities/match.entity';
+import { RpcException } from '@nestjs/microservices';
 
 @Injectable()
 export class MatchService {
+  private readonly logger = new Logger(MatchService.name);
   constructor(private readonly matchRepository: MatchRepository) {}
 
-  // async create(createMatchDto: CreateMatchDto): Promise<Match> {
-  //   try {
-  //     const match = await this.matchRepository.create(createMatchDto);
-  //     return match;
-  //   } catch (error) {
-  //     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-  //     throw new BadRequestException(error.message);
-  //   }
-  // }
+  private logError(error: any, methodName: string) {
+    return this.logger.error({
+      methodName,
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+      message: [error.message],
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
+      stack: error.stack,
+    });
+  }
+
+  async create(createMatchDto: CreateMatchDto): Promise<Match> {
+    this.logger.log(createMatchDto);
+    try {
+      const match = await this.matchRepository.create(createMatchDto);
+      return match;
+    } catch (error) {
+      this.logError(error, this.create.name);
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-argument
+      throw new RpcException(error.message);
+    }
+  }
 
   // async findAll(pagination: PaginationDto): Promise<Match[]> {
   //   return await this.matchRepository.findAll(pagination);
