@@ -20,7 +20,7 @@ export class MatchService {
   }
 
   async create(createMatchDto: CreateMatchDto): Promise<Match> {
-    this.logger.log(createMatchDto);
+    // this.logger.log(createMatchDto);
     try {
       const match = await this.matchRepository.create(createMatchDto);
       return match;
@@ -41,25 +41,22 @@ export class MatchService {
     }
   }
 
-  // async findOne(id: string): Promise<Match> {
-  //   try {
-  //     const match = await this.matchRepository.findOneId(id);
+  async findOne(id: string): Promise<Match> {
+    try {
+      const match = await this.matchRepository.findOneId(id);
 
-  //     if (!match) throw new NotFoundException();
+      if (!match) throw new RpcException('Match not found');
 
-  //     return match;
-  //   } catch (error) {
-  //     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-  //     if (error.path === '_id')
-  //       throw new BadRequestException('Type of id invalid');
+      return match;
+    } catch (error) {
+      this.logError(error, this.findOne.name);
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+      if (error.path === '_id') throw new RpcException('Type of id invalid');
 
-  //     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-  //     if (error.status === 404) throw new NotFoundException('Match not found');
-
-  //     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-  //     throw new BadRequestException(error.message);
-  //   }
-  // }
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-argument
+      throw new RpcException(error.message);
+    }
+  }
 
   // async update(id: string, updateMatchDto: UpdateMatchDto): Promise<Match> {
   //   try {

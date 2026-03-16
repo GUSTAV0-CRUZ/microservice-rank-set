@@ -58,10 +58,26 @@ export class MatchController {
     }
   }
 
-  // @Get(':id')
-  // findOne(@Param('id') id: string) {
-  //   return this.matchService.findOne(id);
-  // }
+  @MessagePattern('findOne-match')
+  async findOne(@Payload() id: string, @Ctx() ctx: RmqContext) {
+    const channel = ctx.getChannelRef() as Channel;
+    const originalMsg = ctx.getMessage() as Message;
+
+    try {
+      const macth = await this.matchService.findOne(id);
+      channel.ack(originalMsg);
+      return macth;
+    } catch (error) {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
+      if (error?.message?.includes('SSL routines')) {
+        channel.nack(originalMsg, false, true);
+        throw error;
+      }
+
+      channel.ack(originalMsg);
+      throw error;
+    }
+  }
 
   // @Patch(':id')
   // update(@Param('id') id: string, @Body() updateMatchDto: UpdateMatchDto) {

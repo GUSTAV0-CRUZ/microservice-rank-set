@@ -187,7 +187,7 @@ GET {{baseUrl}}match
 
 ###
 # @name MatchGetOne
-GET {{baseUrl}}match/69a99767a689f289aa0f25e7
+GET {{baseUrl}}match/69b8815a3e944bae1247165f
 
 ###
 # @name MatchPost
