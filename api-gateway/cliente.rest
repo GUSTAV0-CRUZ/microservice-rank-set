@@ -158,7 +158,7 @@ Content-Type: application/json
 
 ###
 # @name ChallengeDelete
-DELETE  {{baseUrl}}challenge/69a851c3ace9c0a64fd80d86
+DELETE  {{baseUrl}}challenge/69b805a4a40974d27b69d69a
 
 ###
 # @name ChallengePlayerGetOne

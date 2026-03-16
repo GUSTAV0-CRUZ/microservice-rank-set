@@ -30,6 +30,10 @@ export class ChallengeRepository {
       .exec();
   }
 
+  delete(id: string) {
+    return this.challengeModel.findByIdAndDelete(id).exec();
+  }
+
   // findChallengesByIdPlayer(id: string) {
   //   const idSeach: unknown = id;
   //   return this.challengeModel.find({ players: idSeach as Player }).exec();
@@ -45,9 +49,5 @@ export class ChallengeRepository {
   //     })
   //     .populate('match')
   //     .exec();
-  // }
-
-  // delete(id: string) {
-  //   return this.challengeModel.findByIdAndDelete(id).exec();
   // }
 }

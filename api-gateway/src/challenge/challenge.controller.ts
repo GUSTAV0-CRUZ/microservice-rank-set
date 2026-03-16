@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   HttpCode,
   Param,
@@ -51,10 +52,10 @@ export class ChallengeController {
     });
   }
 
-  // @Delete(':id')
-  // remove(@Param('id') id: string) {
-  //   return this.challengeService.delete(id);
-  // }
+  @Delete(':id')
+  delete(@Param('id') id: string) {
+    return this.microChallengeClientProxy.emit('delete-challenge', id);
+  }
 
   // @Get('player/:id')
   // findChallengesByIdPlayer(@Param('id') id: string) {
