@@ -72,7 +72,6 @@ export class PlayerController {
   ) {
     return this.clientAdminBackend.send('uploadedImage-player', {
       id,
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       file,
     });
   }

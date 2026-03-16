@@ -1,5 +1,11 @@
 import { Controller } from '@nestjs/common';
-import { Ctx, EventPattern, Payload, RmqContext } from '@nestjs/microservices';
+import {
+  Ctx,
+  EventPattern,
+  MessagePattern,
+  Payload,
+  RmqContext,
+} from '@nestjs/microservices';
 import { ChallengeService } from './challenge.service';
 import { CreateChallengeDto } from './dto/create-challenge.dto';
 import { Channel, Message } from 'amqplib';
@@ -31,10 +37,25 @@ export class ChallengeController {
     }
   }
 
-  // @Get()
-  // findAll(@Query() paginationDto: PaginationDto) {
-  //   return this.challengeService.findAll(paginationDto);
-  // }
+  @MessagePattern('findAll-challenge')
+  async findAll(@Ctx() ctx: RmqContext) {
+    const channel = ctx.getChannelRef() as Channel;
+    const originalMsg = ctx.getMessage() as Message;
+
+    try {
+      await this.challengeService.findAll();
+      channel.ack(originalMsg);
+    } catch (error) {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
+      if (error?.message?.includes('SSL routines')) {
+        channel.nack(originalMsg, false, true);
+        throw error;
+      }
+
+      channel.ack(originalMsg);
+      throw error;
+    }
+  }
 
   // @Get(':id')
   // findOne(@Param('id') id: string) {

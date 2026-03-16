@@ -11,15 +11,9 @@ export class ChallengeRepository {
     private challengeModel: Model<ChallengeDocument>,
   ) {}
 
-  // findAll(paginationDto: PaginationDto) {
-  //   return this.challengeModel
-  //     .find()
-  //     .skip(paginationDto.offset ?? 0)
-  //     .limit(paginationDto.limit ?? 10)
-  //     .populate('match')
-  //     .populate('players')
-  //     .exec();
-  // }
+  findAll() {
+    return this.challengeModel.find();
+  }
 
   // findOneId(id: string) {
   //   return this.challengeModel.findById(id).populate('match').exec();

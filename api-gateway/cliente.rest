@@ -146,8 +146,8 @@ Content-Type: application/json
 
 {
   "dateHourChallenge": "2026-03-20T07:30:00",
-  "applicant": "69a1a8f29fda1c56f912a825",
-  "players": ["69a1a8f29fda1c56f912a825", "69a6f7a2f38dbedaa8bc29c5"]
+  "applicant": "69b1b16280a6ed3deee3979e",
+  "players": ["69b1b16280a6ed3deee3979e", "69b19ee9bee6d74ead12d132"]
 }
 
 ###

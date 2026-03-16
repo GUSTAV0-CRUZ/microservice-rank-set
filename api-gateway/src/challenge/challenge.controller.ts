@@ -1,4 +1,4 @@
-import { Body, Controller, HttpCode, Post } from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, Post } from '@nestjs/common';
 import { ClientproxyRmqService } from 'src/client-proxy-rmq/client-proxy-rmq.service';
 import { ClientProxy } from '@nestjs/microservices';
 import { CreateChallengeDto } from './dto/create-challenge.dto';
@@ -21,10 +21,10 @@ export class ChallengeController {
     );
   }
 
-  // @Get()
-  // findAll() {
-  //   return this.challengeService.findAll();
-  // }
+  @Get()
+  findAll() {
+    return this.microChallengeClientProxy.send('findAll-challenge', '');
+  }
 
   // @Get(':id')
   // findOne(@Param('id') id: string) {

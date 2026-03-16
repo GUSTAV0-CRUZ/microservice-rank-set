@@ -75,9 +75,15 @@ export class ChallengeService {
     }
   }
 
-  // findAll(paginationDto: PaginationDto) {
-  //   return this.challengeRepository.findAll(paginationDto);
-  // }
+  findAll() {
+    try {
+      return this.challengeRepository.findAll();
+    } catch (error) {
+      this.logError(error, this.create.name);
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
+      throw new RpcException(error.message);
+    }
+  }
 
   // async findOne(id: string): Promise<Challenge> {
   //   try {

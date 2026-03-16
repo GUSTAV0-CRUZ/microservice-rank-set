@@ -148,22 +148,18 @@ export class CategoryService {
     }
   }
 
-  // async findCategoryContainPlayerId(id: string) {
-  //   try {
-  //     const category =
-  //       await this.categoryRepository.findCategoryContainPlayerId(id);
+  async findCategoryContainPlayerId(id: string) {
+    try {
+      const category =
+        await this.categoryRepository.findCategoryContainPlayerId(id);
 
-  //     if (!category) throw new NotFoundException();
+      if (!category) throw new RpcException('Category not found');
 
-  //     return category;
-  //   } catch (error) {
-  //     if (error.path === '_id')
-  //       throw new BadRequestException('Type of id invalid');
+      return category;
+    } catch (error) {
+      if (error.path === '_id') throw new RpcException('Type of id invalid');
 
-  //     if (error.status === 404)
-  //       throw new NotFoundException('Category not found');
-
-  //     throw new BadRequestException(error.message);
-  //   }
-  // }
+      throw new RpcException(error.message);
+    }
+  }
 }
