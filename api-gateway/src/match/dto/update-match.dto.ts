@@ -1,11 +1,12 @@
 import { ArrayMinSize, IsArray, IsMongoId, IsNotEmpty } from 'class-validator';
 import { Type } from 'class-transformer';
-import { Result } from '../entities/match.entity';
+import { Result } from '../interfaces/match.interface';
+import { Player } from 'src/player/interfaces/Player.interface';
 
 export class UpdateMatchDto {
   @IsNotEmpty()
   @IsMongoId()
-  def: string;
+  def: Player;
 
   @IsNotEmpty()
   @IsArray()
