@@ -1,4 +1,4 @@
-import { Body, Controller, HttpCode, Post } from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, Post } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 import { ClientproxyRmqService } from 'src/client-proxy-rmq/client-proxy-rmq.service';
 import { CreateMatchDto } from './dto/create-match.dto';
@@ -17,10 +17,11 @@ export class MatchController {
     return this.clientProxymicroMatch.emit('create-match', createMatchDto);
   }
 
-  // @Get()
-  // findAll(@Query() paginationDto: PaginationDto) {
-  //   return this.matchService.findAll(paginationDto);
-  // }
+  @Get()
+  findAll() {
+    return this.clientProxymicroMatch.send('finAll-match', '');
+  }
+
   // @Get(':id')
   // findOne(@Param('id') id: string) {
   //   return this.matchService.findOne(id);

@@ -1,6 +1,12 @@
 import { Controller } from '@nestjs/common';
 import { MatchService } from './match.service';
-import { Ctx, EventPattern, Payload, RmqContext } from '@nestjs/microservices';
+import {
+  Ctx,
+  EventPattern,
+  MessagePattern,
+  Payload,
+  RmqContext,
+} from '@nestjs/microservices';
 import { CreateMatchDto } from './dto/create-match.dto';
 import { Channel, Message } from 'amqplib';
 
@@ -31,10 +37,26 @@ export class MatchController {
     }
   }
 
-  // @Get()
-  // findAll(@Query() paginationDto: PaginationDto) {
-  //   return this.matchService.findAll(paginationDto);
-  // }
+  @MessagePattern('finAll-match')
+  async findAll(@Ctx() ctx: RmqContext) {
+    const channel = ctx.getChannelRef() as Channel;
+    const originalMsg = ctx.getMessage() as Message;
+
+    try {
+      const macthes = await this.matchService.findAll();
+      channel.ack(originalMsg);
+      return macthes;
+    } catch (error) {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
+      if (error?.message?.includes('SSL routines')) {
+        channel.nack(originalMsg, false, true);
+        throw error;
+      }
+
+      channel.ack(originalMsg);
+      throw error;
+    }
+  }
 
   // @Get(':id')
   // findOne(@Param('id') id: string) {

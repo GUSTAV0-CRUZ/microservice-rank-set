@@ -31,9 +31,15 @@ export class MatchService {
     }
   }
 
-  // async findAll(pagination: PaginationDto): Promise<Match[]> {
-  //   return await this.matchRepository.findAll(pagination);
-  // }
+  async findAll(): Promise<Match[]> {
+    try {
+      return await this.matchRepository.findAll();
+    } catch (error) {
+      this.logError(error, this.findAll.name);
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
+      throw new RpcException(error.message);
+    }
+  }
 
   // async findOne(id: string): Promise<Match> {
   //   try {
