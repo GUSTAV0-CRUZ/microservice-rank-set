@@ -114,7 +114,32 @@ export class ChallengeController {
     const originalMsg = ctx.getMessage() as Message;
 
     try {
-      const challenge = await this.challengeService.delete(id);
+      await this.challengeService.delete(id);
+      channel.ack(originalMsg);
+    } catch (error) {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
+      if (error?.message?.includes('SSL routines')) {
+        channel.nack(originalMsg, false, true);
+        throw error;
+      }
+
+      channel.ack(originalMsg);
+      throw error;
+    }
+  }
+
+  @MessagePattern('findChallengesByIdPlayer-challenge')
+  async findChallengesByIdPlayer(
+    @Payload() id: string,
+    @Ctx() ctx: RmqContext,
+  ) {
+    const channel = ctx.getChannelRef() as Channel;
+    const originalMsg = ctx.getMessage() as Message;
+
+    try {
+      const challenge =
+        await this.challengeService.findChallengesByIdPlayer(id);
+
       channel.ack(originalMsg);
       return challenge;
     } catch (error) {
@@ -128,11 +153,6 @@ export class ChallengeController {
       throw error;
     }
   }
-
-  // @Get('player/:id')
-  // findChallengesByIdPlayer(@Param('id') id: string) {
-  //   return this.challengeService.findChallengesByIdPlayer(id);
-  // }
 
   // @Patch(':id/AddMatch')
   // AddMatch(

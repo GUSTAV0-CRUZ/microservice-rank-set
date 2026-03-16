@@ -150,27 +150,25 @@ export class ChallengeService {
     }
   }
 
-  // async findChallengesByIdPlayer(id: string): Promise<Challenge[]> {
-  //   try {
-  //     const challenge =
-  //       await this.challengeRepository.findChallengesByIdPlayer(id);
+  async findChallengesByIdPlayer(id: string): Promise<Challenge[]> {
+    try {
+      const challenge =
+        await this.challengeRepository.findChallengesByIdPlayer(id);
 
-  //     if (!challenge) throw new NotFoundException();
+      if (!challenge) throw new RpcException('Challenge not found');
+      if (challenge.length === 0)
+        throw new RpcException('Player not is in one challenge');
 
-  //     return challenge;
-  //   } catch (error) {
-  //     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-  //     if (error.path === '_id')
-  //       throw new BadRequestException('Type of id invalid');
+      return challenge;
+    } catch (error) {
+      this.logError(error, this.findChallengesByIdPlayer.name);
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+      if (error.path === '_id') throw new RpcException('Type of id invalid');
 
-  //     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-  //     if (error.status === 404)
-  //       throw new NotFoundException('Challenge not found');
-
-  //     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-  //     throw new BadRequestException(error.message);
-  //   }
-  // }
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-argument
+      throw new RpcException(error.message);
+    }
+  }
 
   // async addMatch(
   //   id: string,

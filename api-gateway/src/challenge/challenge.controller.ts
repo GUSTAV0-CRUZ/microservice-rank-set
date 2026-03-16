@@ -52,15 +52,19 @@ export class ChallengeController {
     });
   }
 
+  @HttpCode(202)
   @Delete(':id')
   delete(@Param('id') id: string) {
     return this.microChallengeClientProxy.emit('delete-challenge', id);
   }
 
-  // @Get('player/:id')
-  // findChallengesByIdPlayer(@Param('id') id: string) {
-  //   return this.challengeService.findChallengesByIdPlayer(id);
-  // }
+  @Get('player/:id')
+  findChallengesByIdPlayer(@Param('id') id: string) {
+    return this.microChallengeClientProxy.send(
+      'findChallengesByIdPlayer-challenge',
+      id,
+    );
+  }
 
   // @Patch(':id/AddMatch')
   // AddMatch(

@@ -34,10 +34,9 @@ export class ChallengeRepository {
     return this.challengeModel.findByIdAndDelete(id).exec();
   }
 
-  // findChallengesByIdPlayer(id: string) {
-  //   const idSeach: unknown = id;
-  //   return this.challengeModel.find({ players: idSeach as Player }).exec();
-  // }
+  findChallengesByIdPlayer(id: string) {
+    return this.challengeModel.find({ players: id }).exec();
+  }
 
   // addMatch(
   //   id: string,

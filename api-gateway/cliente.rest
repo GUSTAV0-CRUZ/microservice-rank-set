@@ -133,7 +133,7 @@ GET {{baseUrl}}challenge
 
 ###
 # @name ChallengeGetOne
-GET {{baseUrl}}challenge/69b70985e4ad71e18c0b04f8
+GET {{baseUrl}}challenge/69b805bba40974d27b69d69d
 
 ###
 # @name ChallengePost
@@ -158,7 +158,7 @@ Content-Type: application/json
 
 ###
 # @name ChallengeDelete
-DELETE  {{baseUrl}}challenge/69b805a4a40974d27b69d69a
+DELETE  {{baseUrl}}challenge/69b805bba40974d27b69d69d
 
 ###
 # @name ChallengePlayerGetOne
