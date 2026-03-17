@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   HttpCode,
   Param,
@@ -45,8 +46,8 @@ export class MatchController {
     });
   }
 
-  // @Delete(':id')
-  // delete(@Param('id') id: string) {
-  //   return this.matchService.delete(id);
-  // }
+  @Delete(':id')
+  delete(@Param('id') id: string) {
+    return this.clientProxymicroMatch.emit('delete-match', id);
+  }
 }

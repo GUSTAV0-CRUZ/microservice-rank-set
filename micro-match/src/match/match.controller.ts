@@ -88,7 +88,6 @@ export class MatchController {
     const channel = ctx.getChannelRef() as Channel;
     const originalMsg = ctx.getMessage() as Message;
     const { id, updateMatchDto } = updateMatchInterface;
-    console.log(updateMatchDto);
 
     try {
       await this.matchService.update(id, updateMatchDto);
@@ -105,8 +104,23 @@ export class MatchController {
     }
   }
 
-  // @Delete(':id')
-  // delete(@Param('id') id: string) {
-  //   return this.matchService.delete(id);
-  // }
+  @EventPattern('delete-match')
+  async delete(@Payload() id: string, @Ctx() ctx: RmqContext) {
+    const channel = ctx.getChannelRef() as Channel;
+    const originalMsg = ctx.getMessage() as Message;
+
+    try {
+      await this.matchService.delete(id);
+      channel.ack(originalMsg);
+    } catch (error) {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
+      if (error?.message?.includes('SSL routines')) {
+        channel.nack(originalMsg, false, true);
+        throw error;
+      }
+
+      channel.ack(originalMsg);
+      throw error;
+    }
+  }
 }
