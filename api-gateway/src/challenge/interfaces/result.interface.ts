@@ -1,3 +1,3 @@
 export class ResultInterface {
-  set: string;
+  setMacth: string;
 }

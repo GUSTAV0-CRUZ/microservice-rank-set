@@ -24,8 +24,9 @@ export class MatchController {
     const originalMsg = ctx.getMessage() as Message;
 
     try {
-      await this.matchService.create(createMatchDto);
+      const match = await this.matchService.create(createMatchDto);
       channel.ack(originalMsg);
+      return match;
     } catch (error) {
       // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
       if (error?.message?.includes('SSL routines')) {

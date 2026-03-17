@@ -21,7 +21,7 @@ export class MatchService {
   }
 
   async create(createMatchDto: CreateMatchDto): Promise<Match> {
-    // this.logger.log(createMatchDto);
+    this.logger.log(createMatchDto);
     try {
       const match = await this.matchRepository.create(createMatchDto);
       return match;

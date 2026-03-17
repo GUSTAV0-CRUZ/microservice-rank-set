@@ -12,13 +12,18 @@ import { CreateAddMatchDto } from './dto/create-addMatch.dto';
 @Injectable()
 export class ChallengeService {
   private readonly logger = new Logger(ChallengeService.name);
-  private miCroBackendClientProxy: ClientProxy;
+  private microBackendClientProxy: ClientProxy;
+  private microMatchClientProxy: ClientProxy;
+
   constructor(
     private readonly challengeRepository: ChallengeRepository,
     clienteProxyRmqService: ClienteProxyRmqService,
   ) {
-    this.miCroBackendClientProxy =
+    this.microBackendClientProxy =
       clienteProxyRmqService.getClientProxyRmqAdminBackend();
+
+    this.microMatchClientProxy =
+      clienteProxyRmqService.getClientProxyRmqMicroMatch();
   }
 
   private logError(error: any, methodName: string) {
@@ -38,10 +43,10 @@ export class ChallengeService {
 
       await Promise.all([
         lastValueFrom(
-          this.miCroBackendClientProxy.send('findOneById-player', players[0]),
+          this.microBackendClientProxy.send('findOneById-player', players[0]),
         ),
         lastValueFrom(
-          this.miCroBackendClientProxy.send('findOneById-player', players[1]),
+          this.microBackendClientProxy.send('findOneById-player', players[1]),
         ),
       ]);
 
@@ -49,7 +54,7 @@ export class ChallengeService {
         throw new RpcException('Applicant not is one player of challenge');
 
       const category = await lastValueFrom<{ name: string }>(
-        this.miCroBackendClientProxy.send(
+        this.microBackendClientProxy.send(
           'findCategoryContainPlayerId-category',
           applicant,
         ),
@@ -183,15 +188,15 @@ export class ChallengeService {
 
       const { category, players } = challenge;
 
-      // const createMatch = await this.matchService.create({
-      const createMatch = {
-        _id: '69b832a91053bde0e1abe28f',
-        category,
-        players,
-        def: createAddMatchDto.def,
-        result: createAddMatchDto.result,
-        challenge,
-      };
+      const createMatch = await lastValueFrom<unknown>(
+        this.microMatchClientProxy.send('create-match', {
+          category,
+          players,
+          def: createAddMatchDto.def,
+          result: createAddMatchDto.result,
+          challenge,
+        }),
+      );
 
       const challengeUpdated = await this.challengeRepository.addMatch(id, {
         match: createMatch,
