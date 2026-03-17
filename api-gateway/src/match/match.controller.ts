@@ -1,7 +1,16 @@
-import { Body, Controller, Get, HttpCode, Param, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  HttpCode,
+  Param,
+  Patch,
+  Post,
+} from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 import { ClientproxyRmqService } from 'src/client-proxy-rmq/client-proxy-rmq.service';
 import { CreateMatchDto } from './dto/create-match.dto';
+import { UpdateMatchDto } from './dto/update-match.dto';
 
 @Controller('api/v1/match')
 export class MatchController {
@@ -26,10 +35,16 @@ export class MatchController {
   findOne(@Param('id') id: string) {
     return this.clientProxymicroMatch.send('findOne-match', id);
   }
-  // @Patch(':id')
-  // update(@Param('id') id: string, @Body() updateMatchDto: UpdateMatchDto) {
-  //   return this.matchService.update(id, updateMatchDto);
-  // }
+
+  @HttpCode(202)
+  @Patch(':id')
+  update(@Param('id') id: string, @Body() updateMatchDto: UpdateMatchDto) {
+    return this.clientProxymicroMatch.emit('update-match', {
+      id,
+      updateMatchDto,
+    });
+  }
+
   // @Delete(':id')
   // delete(@Param('id') id: string) {
   //   return this.matchService.delete(id);

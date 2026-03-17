@@ -3,6 +3,7 @@ import { MatchRepository } from './repository/match.repository';
 import { CreateMatchDto } from './dto/create-match.dto';
 import { Match } from './entities/match.entity';
 import { RpcException } from '@nestjs/microservices';
+import { UpdateMatchDto } from './dto/update-match.dto';
 
 @Injectable()
 export class MatchService {
@@ -58,25 +59,23 @@ export class MatchService {
     }
   }
 
-  // async update(id: string, updateMatchDto: UpdateMatchDto): Promise<Match> {
-  //   try {
-  //     const match = await this.matchRepository.update(id, updateMatchDto);
+  async update(id: string, updateMatchDto: UpdateMatchDto): Promise<Match> {
+    // this.logger.log(updateMatchDto);
+    try {
+      const match = await this.matchRepository.update(id, updateMatchDto);
 
-  //     if (!match) throw new NotFoundException();
+      if (!match) throw new RpcException('Match not found');
 
-  //     return match;
-  //   } catch (error) {
-  //     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-  //     if (error.path === '_id')
-  //       throw new BadRequestException('Type of id invalid');
+      return match;
+    } catch (error) {
+      this.logError(error, this.update.name);
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+      if (error.path === '_id') throw new RpcException('Type of id invalid');
 
-  //     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-  //     if (error.status === 404) throw new NotFoundException('Match not found');
-
-  //     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-  //     throw new BadRequestException(error.message);
-  //   }
-  // }
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-argument
+      throw new RpcException(error.message);
+    }
+  }
 
   // async delete(id: string): Promise<Match> {
   //   try {

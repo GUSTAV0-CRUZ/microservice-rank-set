@@ -29,7 +29,7 @@ export class CreateMatchDto {
   @IsNotEmpty()
   @IsArray()
   @ArrayMinSize(1)
-  @Type(() => Array<Result>)
+  @Type(() => Result)
   result: Result[];
 
   @IsNotEmpty()

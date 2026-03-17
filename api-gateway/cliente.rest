@@ -187,7 +187,7 @@ GET {{baseUrl}}match
 
 ###
 # @name MatchGetOne
-GET {{baseUrl}}match/69b8815a3e944bae1247165f
+GET {{baseUrl}}match/69b89d2bbacb176f5e3c43ec
 
 ###
 # @name MatchPost
@@ -200,7 +200,7 @@ Content-Type: application/json
   "players": ["69a1a8f29fda1c56f912a825", "69a6f7a2f38dbedaa8bc29c5"],
   "result": [
     {
-    "set": "2-0"
+      "setMacth": "2-0"
     }
   ],
   "def": "69a1a8f29fda1c56f912a825"
@@ -208,16 +208,16 @@ Content-Type: application/json
 
 ###
 # @name MatchPatch
-PATCH  {{baseUrl}}match/69a99767a689f289aa0f25e7
+PATCH  {{baseUrl}}match/69b89d2bbacb176f5e3c43ec
 Content-Type: application/json
 
 {
   "result": [
     {
-    "set": "69a1a8f29fda1c56f912a825"
+    "setMacth": "3-1"
     }
   ],
-  "def": "69a1a8f29fda1c56f912a825"
+  "def": "69a1a8f29fda1c56f912a826"
 }
 
 ###

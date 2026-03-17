@@ -8,5 +8,5 @@ export class Match {
 }
 
 export class Result {
-  set: string;
+  setMatch: string;
 }

@@ -10,6 +10,6 @@ export class UpdateMatchDto {
   @IsNotEmpty()
   @IsArray()
   @ArrayMinSize(1)
-  @Type(() => Array<Result>)
+  @Type(() => Result)
   result: Result[];
 }

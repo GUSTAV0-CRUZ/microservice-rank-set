@@ -6,5 +6,5 @@ export class Match {
 }
 
 export class Result {
-  set: string;
+  setMacth: string;
 }

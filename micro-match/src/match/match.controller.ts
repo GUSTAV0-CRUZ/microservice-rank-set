@@ -9,6 +9,7 @@ import {
 } from '@nestjs/microservices';
 import { CreateMatchDto } from './dto/create-match.dto';
 import { Channel, Message } from 'amqplib';
+import type { UpdateMatchInterface } from './interfaces/update-match.interface';
 
 @Controller('api/v1/match')
 export class MatchController {
@@ -79,10 +80,30 @@ export class MatchController {
     }
   }
 
-  // @Patch(':id')
-  // update(@Param('id') id: string, @Body() updateMatchDto: UpdateMatchDto) {
-  //   return this.matchService.update(id, updateMatchDto);
-  // }
+  @EventPattern('update-match')
+  async update(
+    @Payload() updateMatchInterface: UpdateMatchInterface,
+    @Ctx() ctx: RmqContext,
+  ) {
+    const channel = ctx.getChannelRef() as Channel;
+    const originalMsg = ctx.getMessage() as Message;
+    const { id, updateMatchDto } = updateMatchInterface;
+    console.log(updateMatchDto);
+
+    try {
+      await this.matchService.update(id, updateMatchDto);
+      channel.ack(originalMsg);
+    } catch (error) {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
+      if (error?.message?.includes('SSL routines')) {
+        channel.nack(originalMsg, false, true);
+        throw error;
+      }
+
+      channel.ack(originalMsg);
+      throw error;
+    }
+  }
 
   // @Delete(':id')
   // delete(@Param('id') id: string) {
