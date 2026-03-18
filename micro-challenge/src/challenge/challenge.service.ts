@@ -111,6 +111,8 @@ export class ChallengeService {
     updateChallengeDto: UpdateChallengeDto,
   ): Promise<Challenge> {
     // this.logger.log({ id, updateChallengeDto });
+    const { status } = updateChallengeDto;
+    const dateHourResponse = new Date();
 
     if ((await this.findOne(id)).status !== ChallengeStatus.PENDING)
       throw new RpcException(
@@ -118,10 +120,10 @@ export class ChallengeService {
       );
 
     try {
-      const challenge = await this.challengeRepository.update(
-        id,
-        updateChallengeDto,
-      );
+      const challenge = await this.challengeRepository.update(id, {
+        status,
+        dateHourResponse,
+      });
 
       if (!challenge) throw new RpcException('Challenge not found');
 

@@ -3,8 +3,8 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { CreateChallengeDto } from '../dto/create-challenge.dto';
 import { ChallengeDocument } from '../schema/challenge.schema';
-import { UpdateChallengeDto } from '../dto/update-challenge.dto';
 import { ChallengeAddMatchRepositoryDto } from '../dto/challenge-addMatch-repository.dto copy';
+import { UpdateChallengeRepositoryDto } from '../dto/update-challenge-repository.dto';
 
 @Injectable()
 export class ChallengeRepository {
@@ -25,7 +25,7 @@ export class ChallengeRepository {
     return this.challengeModel.create(createChallengeDto);
   }
 
-  update(id: string, updateChallengeDto: UpdateChallengeDto) {
+  update(id: string, updateChallengeDto: UpdateChallengeRepositoryDto) {
     return this.challengeModel
       .findByIdAndUpdate(id, updateChallengeDto, { returnDocument: 'after' })
       .exec();
