@@ -166,7 +166,7 @@ GET {{baseUrl}}challenge/player/69b1b16280a6ed3deee3979e
 
 ###
 # @name ChallengeAddMatch
-PATCH  {{baseUrl}}challenge/69b832731053bde0e1abe28c/AddMatch
+PATCH  {{baseUrl}}challenge/69b70985e4ad71e18c0b04f8/AddMatch
 Content-Type: application/json
 
 {
@@ -187,7 +187,7 @@ GET {{baseUrl}}match
 
 ###
 # @name MatchGetOne
-GET {{baseUrl}}match/69b89d2bbacb176f5e3c43ec
+GET {{baseUrl}}match/69b8acf3bcc6fecbcc8713b6
 
 ###
 # @name MatchPost
