@@ -81,7 +81,7 @@ export class ChallengeController {
     }
   }
 
-  @MessagePattern('update-challenge')
+  @EventPattern('update-challenge')
   async update(
     @Payload() updateChallengeInterface: UpdateChallengeInterface,
     @Ctx() ctx: RmqContext,
@@ -91,12 +91,8 @@ export class ChallengeController {
     const { id, updateChallengeDto } = updateChallengeInterface;
 
     try {
-      const challenge = await this.challengeService.update(
-        id,
-        updateChallengeDto,
-      );
+      await this.challengeService.update(id, updateChallengeDto);
       channel.ack(originalMsg);
-      return challenge;
     } catch (error) {
       // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
       if (error?.message?.includes('SSL routines')) {

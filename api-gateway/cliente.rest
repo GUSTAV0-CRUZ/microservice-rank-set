@@ -122,7 +122,7 @@ GET {{baseUrl}}challenge
 
 ###
 # @name ChallengeGetOne
-GET {{baseUrl}}challenge/69b832a91053bde0e1abe28f
+GET {{baseUrl}}challenge/69bac7eb7b8525d7fb4ad509
 
 ###
 # @name ChallengePost
@@ -137,7 +137,7 @@ Content-Type: application/json
 
 ###
 # @name ChallengePatch
-PATCH  {{baseUrl}}challenge/69b70985e4ad71e18c0b04f8
+PATCH  {{baseUrl}}challenge/69bac7eb7b8525d7fb4ad509
 Content-Type: application/json
 
 {
@@ -146,24 +146,27 @@ Content-Type: application/json
 
 ###
 # @name ChallengeDelete
-DELETE  {{baseUrl}}challenge/69b83a772861647287092946
+DELETE  {{baseUrl}}challenge/69bac6b2e2b75929b312013f
 
 ###
 # @name ChallengePlayerGetOne
-GET {{baseUrl}}challenge/player/69b1b16280a6ed3deee3979e
+GET {{baseUrl}}challenge/player/69bab21c384cfd6900e2e1a7
 
 ###
 # @name ChallengeAddMatch
-PATCH  {{baseUrl}}challenge/69b70985e4ad71e18c0b04f8/AddMatch
+PATCH  {{baseUrl}}challenge/69bac7eb7b8525d7fb4ad509/AddMatch
 Content-Type: application/json
 
 {
   "result": [
     {
-    "setMacth": "1-0"
+    "setMacth": "3-0"
+    },
+    {
+    "setMacth": "2-1"
     }
   ],
-  "def": "69b1b16280a6ed3deee3979e"
+  "def": "69bab231384cfd6900e2e1a9"
 }
 
 ### Match
@@ -175,7 +178,7 @@ GET {{baseUrl}}match
 
 ###
 # @name MatchGetOne
-GET {{baseUrl}}match/69b8acf3bcc6fecbcc8713b6
+GET {{baseUrl}}match/69bac8c26a9145e9d4b17541
 
 ###
 # @name MatchPost
@@ -210,5 +213,5 @@ Content-Type: application/json
 
 ###
 # @name MatchDelete
-DELETE  {{baseUrl}}match/69b8a5520f39e3298ec914fb
+DELETE  {{baseUrl}}match/69bac6486a9145e9d4b1753b
 

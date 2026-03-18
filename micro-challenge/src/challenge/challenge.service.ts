@@ -182,6 +182,9 @@ export class ChallengeService {
     try {
       const challenge = await this.findOne(id);
 
+      if (challenge.status !== ChallengeStatus.ACCEPTED)
+        throw new RpcException('Status of challenge should is "ACCEPTED"');
+
       const playerIsChallenge = challenge.players.filter(
         (idPlayer) => idPlayer.toString() === createAddMatchDto.def,
       );

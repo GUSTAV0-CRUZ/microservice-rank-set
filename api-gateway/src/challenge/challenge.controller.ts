@@ -47,7 +47,7 @@ export class ChallengeController {
     @Param('id') id: string,
     @Body() updateChallengeDto: UpdateChallengeDto,
   ) {
-    return this.microChallengeClientProxy.send('update-challenge', {
+    return this.microChallengeClientProxy.emit('update-challenge', {
       id,
       updateChallengeDto,
     });
