@@ -52,7 +52,15 @@ export class RankingService {
       throw new RpcException(error.message);
     }
   }
-  async findAll() {}
+  async findAll() {
+    try {
+      return this.rankingRepository.findAll();
+    } catch (error) {
+      this.logError(error, this.findAll.name);
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
+      throw new RpcException(error.message);
+    }
+  }
   async findOne(id: string) {}
   async update(id: string, updateRankingDto: UpdateRankingDto) {}
   async delete(id: string) {}
