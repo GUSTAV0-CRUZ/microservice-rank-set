@@ -41,4 +41,17 @@ export class ClientproxyRmqService {
       },
     });
   }
+
+  getClientProxyMicroRanking() {
+    return ClientProxyFactory.create({
+      transport: Transport.RMQ,
+      options: {
+        urls: [String(process.env.RABBITMQ_URL)],
+        queue: 'micro-ranking',
+        queueOptions: {
+          durable: true,
+        },
+      },
+    });
+  }
 }

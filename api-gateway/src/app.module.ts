@@ -4,6 +4,7 @@ import { PlayerModule } from './player/player.module';
 import { ConfigModule } from '@nestjs/config';
 import { ChallengeModule } from './challenge/challenge.module';
 import { MatchModule } from './match/match.module';
+import { RankingModule } from './ranking/ranking.module';
 
 @Module({
   imports: [
@@ -14,6 +15,7 @@ import { MatchModule } from './match/match.module';
     PlayerModule,
     ChallengeModule,
     MatchModule,
+    RankingModule,
   ],
 })
 export class AppModule {}

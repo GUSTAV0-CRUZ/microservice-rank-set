@@ -224,3 +224,15 @@ Content-Type: application/json
 # @name MatchDelete
 DELETE  {{baseUrl}}match/69bac6486a9145e9d4b1753b
 
+
+### Ranking
+
+###
+# @name RankingPost
+POST {{baseUrl}}ranking
+Content-Type: application/json
+
+{
+  "players": ["69a1a8f29fda1c56f912a825", "69a6f7a2f38dbedaa8bc29c5"],
+}
+

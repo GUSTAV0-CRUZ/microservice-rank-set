@@ -2,8 +2,8 @@ import { Injectable } from '@nestjs/common';
 import { Model } from 'mongoose';
 import { RankingDocument } from '../schema/ranking.schema';
 import { InjectModel } from '@nestjs/mongoose';
-import { CreateRankingDto } from '../dtos/create-ranking.dto';
 import { UpdateRankingDto } from '../dtos/update-ranking.dto';
+import { CreateRankingRepositoryDto } from '../dtos/create-ranking-repository.dto';
 
 @Injectable()
 export class RankingRepository {
@@ -20,8 +20,8 @@ export class RankingRepository {
     return this.rankingModel.findById(id).exec();
   }
 
-  create(createrankingDto: CreateRankingDto) {
-    return this.rankingModel.create(createrankingDto);
+  create(createRankingRepositoryDto: CreateRankingRepositoryDto) {
+    return this.rankingModel.create(createRankingRepositoryDto);
   }
 
   update(id: string, updateRankingDto: UpdateRankingDto) {
