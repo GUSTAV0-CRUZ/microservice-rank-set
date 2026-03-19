@@ -1,4 +1,4 @@
-import { Body, Controller, Get, HttpCode, Post } from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, Param, Post } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 import { ClientproxyRmqService } from 'src/client-proxy-rmq/client-proxy-rmq.service';
 import { CreateRankingDto } from './dtos/create-ranking.dto';
@@ -20,5 +20,10 @@ export class RankingController {
   @Get()
   findAll() {
     return this.clientMicroRanking.send('findAll-ranking', '');
+  }
+
+  @Get(':id')
+  findOne(@Param('id') id: string) {
+    return this.clientMicroRanking.send('findOneById-ranking', id);
   }
 }

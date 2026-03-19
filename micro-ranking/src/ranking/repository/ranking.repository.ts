@@ -16,7 +16,7 @@ export class RankingRepository {
     return this.rankingModel.find();
   }
 
-  findOneId(id: string) {
+  findOneById(id: string) {
     return this.rankingModel.findById(id).exec();
   }
 

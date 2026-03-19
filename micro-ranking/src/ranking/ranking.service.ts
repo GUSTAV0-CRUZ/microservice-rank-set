@@ -54,14 +54,30 @@ export class RankingService {
   }
   async findAll() {
     try {
-      return this.rankingRepository.findAll();
+      return await this.rankingRepository.findAll();
     } catch (error) {
       this.logError(error, this.findAll.name);
       // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
       throw new RpcException(error.message);
     }
   }
-  async findOne(id: string) {}
+
+  async findOne(id: string) {
+    try {
+      const ranking = await this.rankingRepository.findOneById(id);
+      if (!ranking) throw new RpcException('ranking not found');
+      return ranking;
+    } catch (error) {
+      this.logError(error, this.findAll.name);
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+      if (error.path === '_id') throw new RpcException('Type of id invalid');
+
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
+      throw new RpcException(error.message);
+    }
+  }
+
   async update(id: string, updateRankingDto: UpdateRankingDto) {}
+
   async delete(id: string) {}
 }
