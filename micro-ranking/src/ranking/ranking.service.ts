@@ -34,8 +34,8 @@ export class RankingService {
     // this.logger.log(createRankingDto);
     const { players } = createRankingDto;
     try {
-      for (const player of players) {
-        await this.rankingRepository.create({
+      const rankings = players.map(async (player) => {
+        return await this.rankingRepository.create({
           player: player,
           position: 0,
           score: 0,
@@ -44,7 +44,8 @@ export class RankingService {
             victory: 0,
           },
         });
-      }
+      });
+      return await Promise.all(rankings);
     } catch (error) {
       this.logError(error, this.create.name);
       // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
