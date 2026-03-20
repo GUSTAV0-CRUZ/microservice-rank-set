@@ -168,6 +168,10 @@ export class RankingService {
           ? rankingsOfPlayers[0]
           : rankingsOfPlayers[1];
 
+      const eventVictoryLeader = categorySelected.events.filter(
+        (event) => event.name === EventsNameEnum.VICTORY_LEADER,
+      )[0];
+
       const eventVictory = categorySelected.events.filter(
         (event) => event.name === EventsNameEnum.VICTORY,
       )[0];
@@ -176,11 +180,14 @@ export class RankingService {
         (event) => event.name === EventsNameEnum.DEFEAT,
       )[0];
 
+      const eventWinning =
+        playerLosing.position === 1 ? eventVictoryLeader : eventVictory;
+
       // eslint-disable-next-line @typescript-eslint/no-unsafe-call
       const scoreWinning = this.calculationScore(
         playerWinning.score,
-        eventVictory.value,
-      )[eventVictory.operation]() as number;
+        eventWinning.value,
+      )[eventWinning.operation]() as number;
 
       // eslint-disable-next-line @typescript-eslint/no-unsafe-call
       const scoreLosing = this.calculationScore(
