@@ -12,6 +12,7 @@ import { ClientProxy } from '@nestjs/microservices';
 import { ClientproxyRmqService } from 'src/client-proxy-rmq/client-proxy-rmq.service';
 import { CreateRankingDto } from './dtos/create-ranking.dto';
 import { UpdateRankingDto } from './dtos/update-ranking.dto';
+import { ModifyPerMatchDto } from './dtos/modify-per-match.dto';
 
 @Controller('api/v1/ranking')
 export class RankingController {
@@ -50,5 +51,14 @@ export class RankingController {
   @Delete(':id')
   delete(@Param('id') id: string) {
     return this.clientMicroRanking.emit('delete-ranking', id);
+  }
+
+  @HttpCode(202)
+  @Post('Modify-per-match')
+  modifyPerMatch(@Body() modifyPerMatchDto: ModifyPerMatchDto) {
+    return this.clientMicroRanking.emit(
+      'modifyPerMatch-ranking',
+      modifyPerMatchDto,
+    );
   }
 }

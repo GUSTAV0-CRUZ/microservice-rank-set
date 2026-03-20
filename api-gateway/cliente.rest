@@ -131,7 +131,7 @@ GET {{baseUrl}}challenge
 
 ###
 # @name ChallengeGetOne
-GET {{baseUrl}}challenge/69bac7eb7b8525d7fb4ad509
+GET {{baseUrl}}challenge/69bc9fd74f95b5c0ebaa45e4
 
 ###
 # @name ChallengePost
@@ -146,7 +146,7 @@ Content-Type: application/json
 
 ###
 # @name ChallengePatch
-PATCH  {{baseUrl}}challenge/69bac7eb7b8525d7fb4ad509
+PATCH  {{baseUrl}}challenge/69bc9fd74f95b5c0ebaa45e4
 Content-Type: application/json
 
 {
@@ -155,7 +155,7 @@ Content-Type: application/json
 
 ###
 # @name ChallengeDelete
-DELETE  {{baseUrl}}challenge/69bac6b2e2b75929b312013f
+DELETE  {{baseUrl}}challenge/69babe812d4400951d8d402e
 
 ###
 # @name ChallengePlayerGetOne
@@ -163,7 +163,7 @@ GET {{baseUrl}}challenge/player/69bab21c384cfd6900e2e1a7
 
 ###
 # @name ChallengeAddMatch
-PATCH  {{baseUrl}}challenge/69bac7eb7b8525d7fb4ad509/AddMatch
+PATCH  {{baseUrl}}challenge/69bc9fd74f95b5c0ebaa45e4/AddMatch
 Content-Type: application/json
 
 {
@@ -187,7 +187,7 @@ GET {{baseUrl}}match
 
 ###
 # @name MatchGetOne
-GET {{baseUrl}}match/69bac8c26a9145e9d4b17541
+GET {{baseUrl}}match/69bca0c9c2b417030bb416b3
 
 ###
 # @name MatchPost
@@ -196,7 +196,7 @@ Content-Type: application/json
 
 {
   "challenge": "69b879414a0cd4f77edb80ec",
-  "category": "any category",
+  "category": "69bab2fb384cfd6900e2e1b1",
   "players": ["69a1a8f29fda1c56f912a825", "69a6f7a2f38dbedaa8bc29c5"],
   "result": [
     {
@@ -264,4 +264,15 @@ Content-Type: application/json
 
 ###
 # @name RankingDelete
-DELETE  {{baseUrl}}ranking/69bc3c5a62cb7df5b0d5aa07
+DELETE  {{baseUrl}}ranking/69bd682096890a41b81fb1d1
+
+###
+# @name RankingModifyPerMatchPost
+POST {{baseUrl}}ranking/Modify-per-match
+Content-Type: application/json
+
+{
+  "category": "69bab2fb384cfd6900e2e1b1",
+  "players": ["69a1a8f29fda1c56f912a825", "69a6f7a2f38dbedaa8bc29c5"],
+  "def": "69a6f7a2f38dbedaa8bc29c5"
+}

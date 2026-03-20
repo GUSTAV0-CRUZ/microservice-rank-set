@@ -11,7 +11,7 @@ export class UpdateRankingDto {
   @IsOptional()
   score: number;
 
-  @IsNotEmpty()
+  @IsOptional()
   @Type(() => MatchHistory)
   matchHistory: MatchHistory;
 }

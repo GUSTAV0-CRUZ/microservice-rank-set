@@ -26,7 +26,7 @@ export class ChallengeSchemaDb implements Challenge {
   @Prop({ type: mongoose.Schema.ObjectId })
   applicant: string;
 
-  @Prop({ type: String })
+  @Prop({ type: mongoose.Schema.ObjectId })
   category: string;
 
   @Prop([

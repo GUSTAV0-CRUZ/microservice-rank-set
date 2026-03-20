@@ -10,6 +10,7 @@ import {
 import { CreateRankingDto } from './dtos/create-ranking.dto';
 import { Channel, Message } from 'amqplib';
 import { UpdateRankingInterface } from './interfaces/update-ranking.interface';
+import { ModifyPerMatchDto } from './dtos/modify-per-match.dto';
 
 @Controller()
 export class RankingController {
@@ -111,6 +112,29 @@ export class RankingController {
 
     try {
       await this.rankingService.delete(id);
+      channel.ack(originalMsg);
+    } catch (error) {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
+      if (error?.message?.includes('SSL routines')) {
+        channel.nack(originalMsg, false, true);
+        throw error;
+      }
+
+      channel.ack(originalMsg);
+      throw error;
+    }
+  }
+
+  @EventPattern('modifyPerMatch-ranking')
+  async modifyPerMatch(
+    @Payload() modifyPerMatchDto: ModifyPerMatchDto,
+    @Ctx() ctx: RmqContext,
+  ) {
+    const channel = ctx.getChannelRef() as Channel;
+    const originalMsg = ctx.getMessage() as Message;
+
+    try {
+      await this.rankingService.modifyPerMatch(modifyPerMatchDto);
       channel.ack(originalMsg);
     } catch (error) {
       // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
