@@ -258,6 +258,10 @@ Content-Type: application/json
   "score": 10,
   "matchHistory": {
     "victory": 1,
-    "defeat": 0,
+    "defeat": 0
   }
 }
+
+###
+# @name RankingDelete
+DELETE  {{baseUrl}}ranking/69bc3c5a62cb7df5b0d5aa07

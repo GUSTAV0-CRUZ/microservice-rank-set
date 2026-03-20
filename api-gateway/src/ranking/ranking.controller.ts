@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   HttpCode,
   Param,
@@ -43,5 +44,11 @@ export class RankingController {
       id,
       updateRankingDto,
     });
+  }
+
+  @HttpCode(202)
+  @Delete(':id')
+  delete(@Param('id') id: string) {
+    return this.clientMicroRanking.emit('delete-ranking', id);
   }
 }

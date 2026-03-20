@@ -86,7 +86,7 @@ export class RankingService {
 
       return ranking;
     } catch (error) {
-      this.logError(error, this.findAll.name);
+      this.logError(error, this.update.name);
       // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
       if (error.path === '_id') throw new RpcException('Type of id invalid');
 
@@ -95,5 +95,20 @@ export class RankingService {
     }
   }
 
-  async delete(id: string) {}
+  async delete(id: string) {
+    try {
+      const ranking = await this.rankingRepository.delete(id);
+
+      if (!ranking) throw new RpcException('Ranking not found');
+
+      return ranking;
+    } catch (error) {
+      this.logError(error, this.update.name);
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+      if (error.path === '_id') throw new RpcException('Type of id invalid');
+
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
+      throw new RpcException(error.message);
+    }
+  }
 }
