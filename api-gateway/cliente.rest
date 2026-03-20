@@ -247,3 +247,17 @@ GET {{baseUrl}}ranking
 GET {{baseUrl}}ranking/69bc3c5a62cb7df5b0d5aa07
 ?limit=1
 &offset=0
+
+###
+# @name RankingPatch
+PATCH  {{baseUrl}}ranking/69bc3c5a62cb7df5b0d5aa07
+Content-Type: application/json
+
+{
+  "position": 1,
+  "score": 10,
+  "matchHistory": {
+    "victory": 1,
+    "defeat": 0,
+  }
+}

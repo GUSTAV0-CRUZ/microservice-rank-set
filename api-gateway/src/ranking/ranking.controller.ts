@@ -1,7 +1,16 @@
-import { Body, Controller, Get, HttpCode, Param, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  HttpCode,
+  Param,
+  Patch,
+  Post,
+} from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 import { ClientproxyRmqService } from 'src/client-proxy-rmq/client-proxy-rmq.service';
 import { CreateRankingDto } from './dtos/create-ranking.dto';
+import { UpdateRankingDto } from './dtos/update-ranking.dto';
 
 @Controller('api/v1/ranking')
 export class RankingController {
@@ -25,5 +34,14 @@ export class RankingController {
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.clientMicroRanking.send('findOneById-ranking', id);
+  }
+
+  @HttpCode(202)
+  @Patch(':id')
+  update(@Param('id') id: string, @Body() updateRankingDto: UpdateRankingDto) {
+    return this.clientMicroRanking.emit('update-ranking', {
+      id,
+      updateRankingDto,
+    });
   }
 }
