@@ -53,7 +53,7 @@ export class ChallengeService {
       if (players[0] !== applicant && players[1] !== applicant)
         throw new RpcException('Applicant not is one player of challenge');
 
-      const category = await lastValueFrom<{ name: string }>(
+      const category = await lastValueFrom<{ _id: string }>(
         this.microBackendClientProxy.send(
           'findCategoryContainPlayerId-category',
           applicant,
@@ -66,7 +66,7 @@ export class ChallengeService {
         players,
         dateHourRequest: new Date(),
         status: ChallengeStatus.PENDING,
-        category: category['name'],
+        category: category['_id'],
       };
 
       const newChallenge = this.challengeRepository.create(challenge);
