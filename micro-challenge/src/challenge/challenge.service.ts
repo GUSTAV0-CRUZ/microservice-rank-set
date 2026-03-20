@@ -14,6 +14,7 @@ export class ChallengeService {
   private readonly logger = new Logger(ChallengeService.name);
   private microBackendClientProxy: ClientProxy;
   private microMatchClientProxy: ClientProxy;
+  private microRankingClientProxy: ClientProxy;
 
   constructor(
     private readonly challengeRepository: ChallengeRepository,
@@ -24,6 +25,9 @@ export class ChallengeService {
 
     this.microMatchClientProxy =
       clienteProxyRmqService.getClientProxyRmqMicroMatch();
+
+    this.microRankingClientProxy =
+      clienteProxyRmqService.getClientProxyRmqMicroRanking();
   }
 
   private logError(error: any, methodName: string) {
@@ -210,6 +214,12 @@ export class ChallengeService {
 
       if (!challengeUpdated)
         throw new RpcException('Object of challenge is empity');
+
+      this.microRankingClientProxy.emit('modifyPerMatch-ranking', {
+        category,
+        players,
+        def: createAddMatchDto.def,
+      });
 
       return challengeUpdated;
     } catch (error) {

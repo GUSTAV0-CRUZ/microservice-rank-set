@@ -91,7 +91,7 @@ describe('ChallengeService', () => {
       jest.spyOn(challengeRepository, 'create').mockResolvedValue({
         ...challenge,
         ...challengeCreate,
-      } as any);
+      });
 
       const result = await challengeService.create(challengeCreate as any);
 
@@ -249,7 +249,7 @@ describe('ChallengeService', () => {
       jest.spyOn(challengeRepository, 'update').mockResolvedValue({
         ...challenge,
         ...challengeUpdated,
-      } as any);
+      });
 
       const result = await challengeService.update(id, challengeUpdated as any);
 
@@ -360,7 +360,7 @@ describe('ChallengeService', () => {
         ...challenge,
         ...match,
         ...dto,
-      } as any);
+      });
 
       const result = await challengeService.addMatch(id, dto as any);
 

@@ -131,7 +131,7 @@ GET {{baseUrl}}challenge
 
 ###
 # @name ChallengeGetOne
-GET {{baseUrl}}challenge/69bc9fd74f95b5c0ebaa45e4
+GET {{baseUrl}}challenge/69bd997c79a8771c24c56f39
 
 ###
 # @name ChallengePost
@@ -146,7 +146,7 @@ Content-Type: application/json
 
 ###
 # @name ChallengePatch
-PATCH  {{baseUrl}}challenge/69bc9fd74f95b5c0ebaa45e4
+PATCH  {{baseUrl}}challenge/69bd997c79a8771c24c56f39
 Content-Type: application/json
 
 {
@@ -155,7 +155,7 @@ Content-Type: application/json
 
 ###
 # @name ChallengeDelete
-DELETE  {{baseUrl}}challenge/69babe812d4400951d8d402e
+DELETE  {{baseUrl}}challenge/69bd941866036a7794d865de
 
 ###
 # @name ChallengePlayerGetOne
@@ -163,7 +163,7 @@ GET {{baseUrl}}challenge/player/69bab21c384cfd6900e2e1a7
 
 ###
 # @name ChallengeAddMatch
-PATCH  {{baseUrl}}challenge/69bc9fd74f95b5c0ebaa45e4/AddMatch
+PATCH  {{baseUrl}}challenge/69bd997c79a8771c24c56f39/AddMatch
 Content-Type: application/json
 
 {
@@ -172,7 +172,7 @@ Content-Type: application/json
     "setMacth": "3-0"
     },
     {
-    "setMacth": "2-1"
+    "setMacth": "3-1"
     }
   ],
   "def": "69bab231384cfd6900e2e1a9"

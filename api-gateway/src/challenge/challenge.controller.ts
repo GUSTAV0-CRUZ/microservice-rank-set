@@ -73,7 +73,7 @@ export class ChallengeController {
     @Param('id') id: string,
     @Body() createAddMatchDto: CreateAddMatchDto,
   ) {
-    return this.microChallengeClientProxy.emit('addMatch-challenge', {
+    return this.microChallengeClientProxy.send('addMatch-challenge', {
       id,
       createAddMatchDto,
     });

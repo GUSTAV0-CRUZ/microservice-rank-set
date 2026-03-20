@@ -20,7 +20,7 @@ async function bootstrap() {
     },
   );
 
-  logger.log('Initializing microservice micro-challenge...');
+  logger.log('Initializing microservice micro-ranking...');
   await app.listen();
 }
 bootstrap();

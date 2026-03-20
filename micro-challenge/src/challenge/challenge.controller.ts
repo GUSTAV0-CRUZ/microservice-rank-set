@@ -151,7 +151,7 @@ export class ChallengeController {
     }
   }
 
-  @EventPattern('addMatch-challenge')
+  @MessagePattern('addMatch-challenge')
   async AddMatch(
     @Payload() createAddMatchInterface: CreateAddMatchInterface,
     @Ctx() ctx: RmqContext,
