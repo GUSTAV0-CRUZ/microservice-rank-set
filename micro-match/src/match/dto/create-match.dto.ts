@@ -12,6 +12,7 @@ import { Type } from 'class-transformer';
 export class CreateMatchDto {
   @IsString()
   @IsNotEmpty()
+  @IsMongoId()
   category: string;
 
   @IsNotEmpty()

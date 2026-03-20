@@ -14,7 +14,7 @@ export type MatchDocument = Document & MatchSchemaDb;
 
 @Schema({ timestamps: true })
 export class MatchSchemaDb implements Match {
-  @Prop({ type: String })
+  @Prop({ type: mongoose.Schema.Types.ObjectId })
   category: string;
 
   @Prop([{ type: mongoose.Schema.Types.ObjectId }])
