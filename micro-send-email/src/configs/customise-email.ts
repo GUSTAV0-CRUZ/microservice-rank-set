@@ -1,16 +1,20 @@
 export class CustomeseEmail {
   constructor(
-    private readonly aplicante: string,
+    private readonly applicant: string,
     private readonly challenged: string,
   ) {}
+
+  getSubjectCustomese() {
+    return `Você foi desafiado no Rank-set!`;
+  }
 
   getTextCustomese() {
     return `
         Você foi desafiado no Rank-set!
 
-      Olá ${this.aplicante},
+      Olá ${this.applicant},
 
-      Você recebeu um novo desafio de ${this.aplicante}.
+      Você recebeu um novo desafio de ${this.applicant}.
 
       Acesse a plataforma para aceitar ou recusar o desafio.
 
@@ -36,7 +40,7 @@ export class CustomeseEmail {
               <h2 style="margin-top: 0;">${this.challenged} você foi desafiado! 🎯</h2>
               
               <p>
-                o jogador ${this.aplicante} acabou de te desafiar em uma nova partida.
+                o jogador ${this.applicant} acabou de te desafiar em uma nova partida.
               </p>
 
               <p>
