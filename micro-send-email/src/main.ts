@@ -10,7 +10,7 @@ async function bootstrap() {
     {
       transport: Transport.RMQ,
       options: {
-        noAck: true,
+        noAck: false,
         urls: [String(process.env.RABBITMQ_URL)],
         queue: 'micro-send-email',
         queueOptions: {

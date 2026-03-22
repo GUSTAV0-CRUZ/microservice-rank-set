@@ -11,10 +11,19 @@ export class SendEmailService {
 
   async sendMessage(sendMessageDto: SendMessageDto) {
     try {
-      this.logger.log(sendMessageDto);
-      const { to, from, text = '', html = '' } = sendMessageDto;
+      // this.logger.log(sendMessageDto);
+      const { to, from } = sendMessageDto;
+      const subject = 'any subject';
+      const text = 'any text';
+      const html = 'any html';
 
-      return await this.mailgunService.sendSimpleMessage(to, from, text, html);
+      return await this.mailgunService.sendSimpleMessage(
+        to,
+        from,
+        subject,
+        text,
+        html,
+      );
     } catch (error) {
       logError(this.logger, error, this.sendMessage.name);
       // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access

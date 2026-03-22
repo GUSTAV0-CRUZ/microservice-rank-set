@@ -11,10 +11,10 @@ export class MailgunService {
   async sendSimpleMessage(
     to: string,
     from: string,
+    subject: string,
     text: string,
     html: string,
   ) {
-    this.logger.log(to, from, text, html);
     const mailgun = new Mailgun(FormData);
     const mg = mailgun.client({
       username: String(process.env.MAILGUN_USER_NAME) || 'api',
@@ -27,10 +27,11 @@ export class MailgunService {
       const domain = String(process.env.MAILGUN_DOMAIN);
 
       const message = {
-        from: '',
-        to: [''],
-        subject: '',
-        text: '',
+        from,
+        to: [to],
+        subject,
+        text,
+        html,
       };
 
       const data = await mg.messages.create(domain, message);
