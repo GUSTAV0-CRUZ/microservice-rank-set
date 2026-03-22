@@ -17,9 +17,8 @@ export class SendEmailService {
     const subject = customeseEmail.getSubjectCustomese();
     const text = customeseEmail.getTextCustomese();
     const html = customeseEmail.getHtmlCustomese();
+    const from = customeseEmail.getFromCustomese();
 
-    const from =
-      'Mailgun Sandbox <postmaster@sandboxa0df7f3b4dd1445a8ffef012b16a57c9.mailgun.org>';
     try {
       return await this.mailgunService.sendSimpleMessage(
         to,

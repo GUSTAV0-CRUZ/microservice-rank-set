@@ -4,6 +4,10 @@ export class CustomeseEmail {
     private readonly challenged: string,
   ) {}
 
+  getFromCustomese() {
+    return `Rank-set <${process.env.MAILGUN_FROM}>`;
+  }
+
   getSubjectCustomese() {
     return `Você foi desafiado no Rank-set!`;
   }
