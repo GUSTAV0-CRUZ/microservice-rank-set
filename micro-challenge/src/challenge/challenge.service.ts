@@ -50,10 +50,10 @@ export class ChallengeService {
       const { players, applicant, dateHourChallenge } = createChallengeDto;
 
       const [playerOne, playerTwo] = await Promise.all([
-        lastValueFrom<{ email: string }>(
+        lastValueFrom<{ email: string; name: string }>(
           this.microBackendClientProxy.send('findOneById-player', players[0]),
         ),
-        lastValueFrom<{ email: string }>(
+        lastValueFrom<{ email: string; name: string }>(
           this.microBackendClientProxy.send('findOneById-player', players[1]),
         ),
       ]);
@@ -79,9 +79,14 @@ export class ChallengeService {
 
       const newChallenge = this.challengeRepository.create(challenge);
 
+      const playerApplicant = applicant === players[0] ? playerOne : playerTwo;
+      const playerChallenged = applicant !== players[0] ? playerOne : playerTwo;
+
       this.microSendEmailClientProxy.emit('send-message', {
-        from: applicant === players[0] ? playerOne.email : playerTwo.email,
-        to: applicant !== players[0] ? playerOne.email : playerTwo.email,
+        from: playerApplicant.email,
+        to: playerChallenged.email,
+        applicantName: playerApplicant.name,
+        challengedName: playerChallenged.name,
       });
 
       return newChallenge;
