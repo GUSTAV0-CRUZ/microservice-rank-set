@@ -8,7 +8,13 @@ import { logError } from 'src/common/logError';
 export class MailgunService {
   private logger = new Logger(MailgunService.name);
 
-  async sendSimpleMessage() {
+  async sendSimpleMessage(
+    to: string,
+    from: string,
+    text: string,
+    html: string,
+  ) {
+    this.logger.log(to, from, text, html);
     const mailgun = new Mailgun(FormData);
     const mg = mailgun.client({
       username: String(process.env.MAILGUN_USER_NAME) || 'api',
