@@ -12,10 +12,13 @@ export class SendEmailService {
   async sendMessage(sendMessageDto: SendMessageDto) {
     try {
       // this.logger.log(sendMessageDto);
-      const { to, from } = sendMessageDto;
-      const subject = 'any subject';
-      const text = 'any text';
+      const { to, from: fromUser } = sendMessageDto;
+      const subject = 'Você foi desafiado no Rank-set!';
+      const text = `any text ${fromUser}`;
       const html = 'any html';
+
+      const from =
+        'Mailgun Sandbox <postmaster@sandboxa0df7f3b4dd1445a8ffef012b16a57c9.mailgun.org>';
 
       return await this.mailgunService.sendSimpleMessage(
         to,
