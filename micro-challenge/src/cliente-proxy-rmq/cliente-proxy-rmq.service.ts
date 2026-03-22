@@ -39,4 +39,15 @@ export class ClienteProxyRmqService {
       },
     });
   }
+
+  getClientProxyRmqMicroSendEmail() {
+    return ClientProxyFactory.create({
+      transport: Transport.RMQ,
+      options: {
+        urls: [String(process.env.RABBITMQ_URL)],
+        queue: 'micro-send-email',
+        queueOptions: { durable: true },
+      },
+    });
+  }
 }

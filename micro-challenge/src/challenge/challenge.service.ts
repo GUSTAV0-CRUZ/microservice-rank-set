@@ -15,6 +15,7 @@ export class ChallengeService {
   private microBackendClientProxy: ClientProxy;
   private microMatchClientProxy: ClientProxy;
   private microRankingClientProxy: ClientProxy;
+  private microSendEmailClientProxy: ClientProxy;
 
   constructor(
     private readonly challengeRepository: ChallengeRepository,
@@ -28,6 +29,9 @@ export class ChallengeService {
 
     this.microRankingClientProxy =
       clienteProxyRmqService.getClientProxyRmqMicroRanking();
+
+    this.microSendEmailClientProxy =
+      clienteProxyRmqService.getClientProxyRmqMicroSendEmail();
   }
 
   private logError(error: any, methodName: string) {
@@ -74,6 +78,11 @@ export class ChallengeService {
       };
 
       const newChallenge = this.challengeRepository.create(challenge);
+
+      this.microSendEmailClientProxy.emit('send-message', {
+        from: applicant,
+        to: applicant === players[0] ? players[0] : players[1],
+      });
 
       return newChallenge;
     } catch (error) {
