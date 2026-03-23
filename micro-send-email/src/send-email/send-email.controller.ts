@@ -20,6 +20,14 @@ export class SendEmailController {
       await this.sendEmailService.sendMessage(sendMessageDto);
       channel.ack(originalMsg);
     } catch (error) {
+      const errorRetry = [429, 500, 502, 503, 504];
+
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
+      if (errorRetry.includes(error.status)) {
+        channel.nack(originalMsg, false, true);
+        throw error;
+      }
+
       channel.ack(originalMsg);
       throw error;
     }
