@@ -276,3 +276,16 @@ Content-Type: application/json
   "players": ["69a1a8f29fda1c56f912a825", "69a6f7a2f38dbedaa8bc29c5"],
   "def": "69a6f7a2f38dbedaa8bc29c5"
 }
+
+
+### Auth
+
+###
+# @name AuthPost
+POST {{baseUrl}}auth
+Content-Type: application/json
+
+{
+  "email": "gustavo.cruzs.dev@gmail.com",
+  "password": "Gustavo 123"
+}
