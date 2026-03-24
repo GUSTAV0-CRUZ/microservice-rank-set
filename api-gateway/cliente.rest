@@ -281,11 +281,21 @@ Content-Type: application/json
 ### Auth
 
 ###
-# @name AuthPost
-POST {{baseUrl}}auth
+# @name AuthSignUpPost
+POST {{baseUrl}}auth/signUp
 Content-Type: application/json
 
 {
   "email": "gustavo.cruzs.dev@gmail.com",
-  "password": "Gustavo 123"
+  "password": "Gu$tavo123"
+}
+
+###
+# @name AuthSignInPost
+POST {{baseUrl}}auth/signIn
+Content-Type: application/json
+
+{
+  "email": "gustavo.cruzs.dev@gmail.com",
+  "password": "Gu$tavo123"
 }
