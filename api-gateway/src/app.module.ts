@@ -5,6 +5,8 @@ import { ConfigModule } from '@nestjs/config';
 import { ChallengeModule } from './challenge/challenge.module';
 import { MatchModule } from './match/match.module';
 import { RankingModule } from './ranking/ranking.module';
+import { AuthModule } from './auth/auth.module';
+import { SupabaseModule } from './supabase/supabase.module';
 
 @Module({
   imports: [
@@ -16,6 +18,8 @@ import { RankingModule } from './ranking/ranking.module';
     ChallengeModule,
     MatchModule,
     RankingModule,
+    AuthModule,
+    SupabaseModule,
   ],
 })
 export class AppModule {}
