@@ -321,7 +321,7 @@ POST {{baseUrl}}auth/signUp
 Content-Type: application/json
 
 {
-  "email": "gustavo.cruzs.dev@gmail.com",
+  "email": "gustavocruzsantos39@gmail.com",
   "password": "Gu$tavo123"
 }
 
@@ -331,6 +331,6 @@ POST {{baseUrl}}auth/signIn
 Content-Type: application/json
 
 {
-  "email": "gustavo.cruzs.dev@gmail.com",
+  "email": "gustavocruzsantos39@gmail.com",
   "password": "Gu$tavo123"
 }
