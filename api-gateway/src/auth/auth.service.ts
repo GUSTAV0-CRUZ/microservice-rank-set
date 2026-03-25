@@ -1,4 +1,8 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { SupabaseProvider } from './providers/supabase.provider';
 import { SignUpDto } from './dtos/SignUp.dto';
 import { SignInDto } from './dtos/signIn.dto';
@@ -9,19 +13,30 @@ export class AuthService {
 
   async signUp(signUpDto: SignUpDto) {
     try {
-      return this.supabaseProvider.signUp(signUpDto);
+      const { data, error } = await this.supabaseProvider.signUp(signUpDto);
+
+      if (error) throw new BadRequestException(error.message);
+
+      return data.user;
     } catch (error) {
       // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
       throw new BadRequestException(error.message);
     }
   }
 
-  signIn(signInDto: SignInDto) {
+  async signIn(signInDto: SignInDto) {
     try {
-      return this.supabaseProvider.signInWithPassword(signInDto);
+      const { data, error } =
+        await this.supabaseProvider.signInWithPassword(signInDto);
+
+      if (error) throw new UnauthorizedException(error.message);
+
+      const { access_token, refresh_token } = data.session;
+
+      return { access_token, refresh_token };
     } catch (error) {
       // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-      throw new BadRequestException(error.message);
+      throw new UnauthorizedException(error.message);
     }
   }
 }
