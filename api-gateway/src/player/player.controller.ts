@@ -22,7 +22,7 @@ import { SupabaseGuard } from 'src/common/guards/supabase.guard';
 import { CurrentUser } from 'src/common/decorators/current-user.decorator';
 import { CurrentUserDto } from 'src/common/dtos/current-user.dto';
 
-@Controller('api/v1/player')
+@Controller('api/v2/player')
 export class PlayerController {
   private clientAdminBackend: ClientProxy;
 
@@ -54,6 +54,7 @@ export class PlayerController {
     });
   }
 
+  @UseGuards(SupabaseGuard)
   @HttpCode(202)
   @Patch(':id')
   update(@Param('id') id: string, @Body() updatePlayerDto: UpdatePlayerDto) {
@@ -63,12 +64,14 @@ export class PlayerController {
     });
   }
 
+  @UseGuards(SupabaseGuard)
   @HttpCode(202)
   @Delete(':id')
   delete(@Param('id') id: string) {
     return this.clientAdminBackend.emit('delete-player', id);
   }
 
+  @UseGuards(SupabaseGuard)
   @Patch(':id/upload-image')
   @UseInterceptors(FileInterceptor('file'))
   upload(

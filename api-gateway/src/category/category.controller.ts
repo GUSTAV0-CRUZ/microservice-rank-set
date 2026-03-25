@@ -8,6 +8,7 @@ import {
   Param,
   Patch,
   Post,
+  UseGuards,
 } from '@nestjs/common';
 import { CreateCategoryDto } from './dtos/create-category.dto';
 import { ClientproxyRmqService } from 'src/client-proxy-rmq/client-proxy-rmq.service';
@@ -15,8 +16,9 @@ import { ClientProxy } from '@nestjs/microservices';
 import { UpdateCategoryDto } from './dtos/update-category.dto';
 import { AddPlayerDto } from './dtos/add-player.dto';
 import { RemovePlayerDto } from './dtos/remove-player.dto';
+import { SupabaseGuard } from 'src/common/guards/supabase.guard';
 
-@Controller('api/v1/category')
+@Controller('api/v2/category')
 export class CategoryController {
   private clientAdminBackend: ClientProxy;
   // private readonly logger = new Logger(CategoryController.name);
@@ -26,6 +28,7 @@ export class CategoryController {
       clientProxyRmqService.getClientProxyRmqAdminBackend();
   }
 
+  @UseGuards(SupabaseGuard)
   @HttpCode(202)
   @Post()
   create(@Body() createCategoryDto: CreateCategoryDto) {
@@ -42,6 +45,7 @@ export class CategoryController {
     return this.clientAdminBackend.send('findOneById-category', id);
   }
 
+  @UseGuards(SupabaseGuard)
   @HttpCode(201)
   @Patch(':id')
   update(
@@ -54,12 +58,14 @@ export class CategoryController {
     });
   }
 
+  @UseGuards(SupabaseGuard)
   @HttpCode(202)
   @Delete(':id')
   delete(@Param('id') id: string) {
     return this.clientAdminBackend.emit('delete-category', id);
   }
 
+  @UseGuards(SupabaseGuard)
   @HttpCode(202)
   @Patch(':id/addPlayer')
   addPlayer(@Param('id') id: string, @Body() addPlayerDto: AddPlayerDto) {
@@ -69,6 +75,7 @@ export class CategoryController {
     });
   }
 
+  @UseGuards(SupabaseGuard)
   @HttpCode(202)
   @Patch(':id/removePlayer')
   removePlayer(

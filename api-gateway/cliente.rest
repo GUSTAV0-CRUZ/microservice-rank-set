@@ -1,4 +1,5 @@
-@baseUrl = http://localhost:3000/api/v1/
+@baseUrl = http://localhost:3000/api/v2/
+@AuthToken = {{AuthSignInPost.response.body.access_token}}
 
 ### Player
 
@@ -15,7 +16,7 @@ GET {{baseUrl}}player/69bab231384cfd6900e2e1a9
 # @name PlayerPost
 POST {{baseUrl}}player
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJFUzI1NiIsImtpZCI6IjE2MTk0NmYwLTY4NzYtNDBiZi1iY2VhLTZkNGE0OTBlYTI2NyIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJodHRwczovL2hlaHFrZnN1ZHhrdWt5d211YnJhLnN1cGFiYXNlLmNvL2F1dGgvdjEiLCJzdWIiOiI0YjZmODk1MS01ODUzLTQxMWEtYmRmMC0yYzA3OTg1NjFmZGYiLCJhdWQiOiJhdXRoZW50aWNhdGVkIiwiZXhwIjoxNzc0NDA0MzkyLCJpYXQiOjE3NzQ0MDA3OTIsImVtYWlsIjoiZ3VzdGF2by5jcnV6cy5kZXZAZ21haWwuY29tIiwicGhvbmUiOiIiLCJhcHBfbWV0YWRhdGEiOnsicHJvdmlkZXIiOiJlbWFpbCIsInByb3ZpZGVycyI6WyJlbWFpbCJdfSwidXNlcl9tZXRhZGF0YSI6eyJlbWFpbCI6Imd1c3Rhdm8uY3J1enMuZGV2QGdtYWlsLmNvbSIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJwaG9uZV92ZXJpZmllZCI6ZmFsc2UsInN1YiI6IjRiNmY4OTUxLTU4NTMtNDExYS1iZGYwLTJjMDc5ODU2MWZkZiJ9LCJyb2xlIjoiYXV0aGVudGljYXRlZCIsImFhbCI6ImFhbDEiLCJhbXIiOlt7Im1ldGhvZCI6InBhc3N3b3JkIiwidGltZXN0YW1wIjoxNzc0NDAwNzkyfV0sInNlc3Npb25faWQiOiJlYzIwMDhiMi1iNTA0LTQ5ODYtYjZmNC1kMzA1ZjE3MDc3YjEiLCJpc19hbm9ueW1vdXMiOmZhbHNlfQ.4GX02D7-NgF3bA3ieGqrRZXIoBegH10s25Z-PaEpwaW5DSi4KXCsXHUWIraIwCqjTRa6L-2SZLAR8doBhefLTw
+Authorization: Bearer {{AuthToken}}
 
 {
   "name": "Gustavo Cruz",
@@ -29,6 +30,7 @@ Authorization: Bearer eyJhbGciOiJFUzI1NiIsImtpZCI6IjE2MTk0NmYwLTY4NzYtNDBiZi1iY2
 # @name PlayerPatch
 PATCH  {{baseUrl}}player/69b1929bf60852e6e5bc7a1
 Content-Type: application/json
+Authorization: Bearer {{AuthToken}}
 
 {
   "name": "test updated"
@@ -36,10 +38,12 @@ Content-Type: application/json
 ###
 # @name PlayerDelete
 DELETE  {{baseUrl}}player/69ab34d55a827cb4bdbe175e
+Authorization: Bearer {{AuthToken}}
 
 ###
 # @name UploadedImagePlayerPost
 PATCH  {{baseUrl}}player/69b1b16280a6ed3deee3979e/upload-image
+Authorization: Bearer {{AuthToken}}
 Content-Type: multipart/form-data; boundary=----FormBoundary
 
 ------FormBoundary
@@ -49,31 +53,37 @@ Content-Type: image/png
 < ./dev/nestjs.png 
 ------FormBoundary--
 
+
+###
 ### Category
+###
 
 # @name CategoryGetAll
 GET {{baseUrl}}category
+Authorization: Bearer {{AuthToken}}
 
 ###
 # @name CategoryGetOne
 GET {{baseUrl}}category/69bab2fb384cfd6900e2e1b1
+Authorization: Bearer {{AuthToken}}
 
 ###
 # @name CategoryPost
 POST {{baseUrl}}category
 Content-Type: application/json
+Authorization: Bearer {{AuthToken}}
 
 {
   "name": "C",
   "description": "any desripition",
   "events": []
-
 }
 
 ###
 # @name CategoryPatch
 PATCH  {{baseUrl}}category/69bab2fb384cfd6900e2e1b1
 Content-Type: application/json
+Authorization: Bearer {{AuthToken}}
 
 {
   "addEvents": [
@@ -103,11 +113,13 @@ Content-Type: application/json
 ###
 # @name CategoryDelete
 DELETE  {{baseUrl}}category/69af0f57338b6c3df97ea22f
+Authorization: Bearer {{AuthToken}}
 
 ###
 # @name AddPlayer
 PATCH  {{baseUrl}}category/69bab2fb384cfd6900e2e1b1/addPlayer
 Content-Type: application/json
+Authorization: Bearer {{AuthToken}}
 
 {
   "addPlayers": ["69bab231384cfd6900e2e1a9"]
@@ -117,12 +129,16 @@ Content-Type: application/json
 # @name RemovePlayer
 PATCH  {{baseUrl}}category/69bab2ef384cfd6900e2e1af/removePlayer
 Content-Type: application/json
+Authorization: Bearer {{AuthToken}}
 
 {
   "removePlayers": ["69bab231384cfd6900e2e1a9"]
 }
 
+
+###
 ### challenge
+###
 
 # @name ChallengeGetAll
 GET {{baseUrl}}challenge
@@ -132,11 +148,13 @@ GET {{baseUrl}}challenge
 ###
 # @name ChallengeGetOne
 GET {{baseUrl}}challenge/69bd997c79a8771c24c56f39
+Authorization: Bearer {{AuthToken}}
 
 ###
 # @name ChallengePost
 POST {{baseUrl}}challenge
 Content-Type: application/json
+Authorization: Bearer {{AuthToken}}
 
 {
   "dateHourChallenge": "2026-03-20T07:30:00",
@@ -148,6 +166,7 @@ Content-Type: application/json
 # @name ChallengePatch
 PATCH  {{baseUrl}}challenge/69bd997c79a8771c24c56f39
 Content-Type: application/json
+Authorization: Bearer {{AuthToken}}
 
 {
   "status": "ACCEPTED"
@@ -156,15 +175,18 @@ Content-Type: application/json
 ###
 # @name ChallengeDelete
 DELETE  {{baseUrl}}challenge/69bd941866036a7794d865de
+Authorization: Bearer {{AuthToken}}
 
 ###
 # @name ChallengePlayerGetOne
 GET {{baseUrl}}challenge/player/69bab21c384cfd6900e2e1a7
+Authorization: Bearer {{AuthToken}}
 
 ###
 # @name ChallengeAddMatch
 PATCH  {{baseUrl}}challenge/69bd997c79a8771c24c56f39/AddMatch
 Content-Type: application/json
+Authorization: Bearer {{AuthToken}}
 
 {
   "result": [
@@ -178,63 +200,74 @@ Content-Type: application/json
   "def": "69bab231384cfd6900e2e1a9"
 }
 
+
+###
 ### Match
+###
 
 # @name MatchGetAll
 GET {{baseUrl}}match
 ?limit=1
 &offset=0
+Authorization: Bearer {{AuthToken}}
 
 ###
 # @name MatchGetOne
 GET {{baseUrl}}match/69bca0c9c2b417030bb416b3
+Authorization: Bearer {{AuthToken}}
 
 ###
-# @name MatchPost
-POST {{baseUrl}}match
-Content-Type: application/json
+# # @name MatchPost
+# POST {{baseUrl}}match
+# Content-Type: application/json
+# Authorization: Bearer {{AuthToken}}
 
-{
-  "challenge": "69b879414a0cd4f77edb80ec",
-  "category": "69bab2fb384cfd6900e2e1b1",
-  "players": ["69a1a8f29fda1c56f912a825", "69a6f7a2f38dbedaa8bc29c5"],
-  "result": [
-    {
-      "setMacth": "2-0"
-    }
-  ],
-  "def": "69a1a8f29fda1c56f912a825"
-}
+# {
+#   "challenge": "69b879414a0cd4f77edb80ec",
+#   "category": "69bab2fb384cfd6900e2e1b1",
+#   "players": ["69a1a8f29fda1c56f912a825", "69a6f7a2f38dbedaa8bc29c5"],
+#   "result": [
+#     {
+#       "setMacth": "2-0"
+#     }
+#   ],
+#   "def": "69a1a8f29fda1c56f912a825"
+# }
+
+# ###
+# # @name MatchPatch
+# PATCH  {{baseUrl}}match/69b89d2bbacb176f5e3c43ec
+# Content-Type: application/json
+# Authorization: Bearer {{AuthToken}}
+
+# {
+#   "result": [
+#     {
+#     "setMacth": "3-1"
+#     }
+#   ],
+#   "def": "69a1a8f29fda1c56f912a826"
+# }
+
+# ###
+# # @name MatchDelete
+# DELETE  {{baseUrl}}match/69bac6486a9145e9d4b1753b
+# Authorization: Bearer {{AuthToken}}
+
 
 ###
-# @name MatchPatch
-PATCH  {{baseUrl}}match/69b89d2bbacb176f5e3c43ec
-Content-Type: application/json
-
-{
-  "result": [
-    {
-    "setMacth": "3-1"
-    }
-  ],
-  "def": "69a1a8f29fda1c56f912a826"
-}
-
-###
-# @name MatchDelete
-DELETE  {{baseUrl}}match/69bac6486a9145e9d4b1753b
-
-
 ### Ranking
-
 ###
-# @name RankingPost
-POST {{baseUrl}}ranking
-Content-Type: application/json
 
-{
-  "players": ["69a1a8f29fda1c56f912a825", "69a6f7a2f38dbedaa8bc29c5"]
-}
+# ###
+# # @name RankingPost
+# POST {{baseUrl}}ranking
+# Content-Type: application/json
+# Authorization: Bearer {{AuthToken}}
+
+# {
+#   "players": ["69a1a8f29fda1c56f912a825", "69a6f7a2f38dbedaa8bc29c5"]
+# }
 
 ###
 # @name RankingGetAll
@@ -248,34 +281,37 @@ GET {{baseUrl}}ranking/69bc3c5a62cb7df5b0d5aa07
 ?limit=1
 &offset=0
 
-###
-# @name RankingPatch
-PATCH  {{baseUrl}}ranking/69bc3c5a62cb7df5b0d5aa07
-Content-Type: application/json
+# ###
+# # @name RankingPatch
+# PATCH  {{baseUrl}}ranking/69bc3c5a62cb7df5b0d5aa07
+# Content-Type: application/json
+# Authorization: Bearer {{AuthToken}}
 
-{
-  "position": 1,
-  "score": 10,
-  "matchHistory": {
-    "victory": 1,
-    "defeat": 0
-  }
-}
+# {
+#   "position": 1,
+#   "score": 10,
+#   "matchHistory": {
+#     "victory": 1,
+#     "defeat": 0
+#   }
+# }
 
-###
-# @name RankingDelete
-DELETE  {{baseUrl}}ranking/69bd682096890a41b81fb1d1
+# ###
+# # @name RankingDelete
+# DELETE  {{baseUrl}}ranking/69bd682096890a41b81fb1d1
+# Authorization: Bearer {{AuthToken}}
 
-###
-# @name RankingModifyPerMatchPost
-POST {{baseUrl}}ranking/Modify-per-match
-Content-Type: application/json
+# ###
+# # @name RankingModifyPerMatchPost
+# POST {{baseUrl}}ranking/Modify-per-match
+# Content-Type: application/json
+# Authorization: Bearer {{AuthToken}}
 
-{
-  "category": "69bab2fb384cfd6900e2e1b1",
-  "players": ["69a1a8f29fda1c56f912a825", "69a6f7a2f38dbedaa8bc29c5"],
-  "def": "69a6f7a2f38dbedaa8bc29c5"
-}
+# {
+#   "category": "69bab2fb384cfd6900e2e1b1",
+#   "players": ["69a1a8f29fda1c56f912a825", "69a6f7a2f38dbedaa8bc29c5"],
+#   "def": "69a6f7a2f38dbedaa8bc29c5"
+# }
 
 
 ### Auth

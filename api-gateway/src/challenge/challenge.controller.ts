@@ -7,14 +7,16 @@ import {
   Param,
   Patch,
   Post,
+  UseGuards,
 } from '@nestjs/common';
 import { ClientproxyRmqService } from 'src/client-proxy-rmq/client-proxy-rmq.service';
 import { ClientProxy } from '@nestjs/microservices';
 import { CreateChallengeDto } from './dto/create-challenge.dto';
 import { UpdateChallengeDto } from './dto/update-challenge.dto';
 import { CreateAddMatchDto } from './dto/create-addMatch.dto';
+import { SupabaseGuard } from 'src/common/guards/supabase.guard';
 
-@Controller('api/v1/challenge')
+@Controller('api/v2/challenge')
 export class ChallengeController {
   private microChallengeClientProxy: ClientProxy;
 
@@ -23,6 +25,7 @@ export class ChallengeController {
       clienteProxyRmq.getClientProxyRmqMicroChallenge();
   }
 
+  @UseGuards(SupabaseGuard)
   @HttpCode(202)
   @Post()
   create(@Body() createChallengeDto: CreateChallengeDto) {
@@ -37,11 +40,13 @@ export class ChallengeController {
     return this.microChallengeClientProxy.send('findAll-challenge', '');
   }
 
+  @UseGuards(SupabaseGuard)
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.microChallengeClientProxy.send('findOneById-challenge', id);
   }
 
+  @UseGuards(SupabaseGuard)
   @Patch(':id')
   update(
     @Param('id') id: string,
@@ -53,12 +58,14 @@ export class ChallengeController {
     });
   }
 
+  @UseGuards(SupabaseGuard)
   @HttpCode(202)
   @Delete(':id')
   delete(@Param('id') id: string) {
     return this.microChallengeClientProxy.emit('delete-challenge', id);
   }
 
+  @UseGuards(SupabaseGuard)
   @Get('player/:id')
   findChallengesByIdPlayer(@Param('id') id: string) {
     return this.microChallengeClientProxy.send(
@@ -67,6 +74,7 @@ export class ChallengeController {
     );
   }
 
+  @UseGuards(SupabaseGuard)
   @HttpCode(202)
   @Patch(':id/AddMatch')
   AddMatch(

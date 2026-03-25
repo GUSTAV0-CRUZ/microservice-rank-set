@@ -1,19 +1,22 @@
 import {
   Body,
   Controller,
-  Delete,
+  // Delete,
   Get,
-  HttpCode,
+  // HttpCode,
   Param,
-  Patch,
-  Post,
+  // Patch,
+  // Post,
+  UseGuards,
 } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 import { ClientproxyRmqService } from 'src/client-proxy-rmq/client-proxy-rmq.service';
-import { CreateMatchDto } from './dto/create-match.dto';
-import { UpdateMatchDto } from './dto/update-match.dto';
+// import { CreateMatchDto } from './dto/create-match.dto';
+// import { UpdateMatchDto } from './dto/update-match.dto';
+import { SupabaseGuard } from 'src/common/guards/supabase.guard';
 
-@Controller('api/v1/match')
+@UseGuards(SupabaseGuard)
+@Controller('api/v2/match')
 export class MatchController {
   private clientProxymicroMatch: ClientProxy;
   constructor(clientproxyRmqService: ClientproxyRmqService) {
@@ -21,11 +24,11 @@ export class MatchController {
       clientproxyRmqService.getClientProxyMicroMatch();
   }
 
-  @HttpCode(202)
-  @Post()
-  create(@Body() createMatchDto: CreateMatchDto) {
-    return this.clientProxymicroMatch.emit('create-match', createMatchDto);
-  }
+  // @HttpCode(202)
+  // @Post()
+  // create(@Body() createMatchDto: CreateMatchDto) {
+  //   return this.clientProxymicroMatch.emit('create-match', createMatchDto);
+  // }
 
   @Get()
   findAll() {
@@ -37,17 +40,17 @@ export class MatchController {
     return this.clientProxymicroMatch.send('findOne-match', id);
   }
 
-  @HttpCode(202)
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateMatchDto: UpdateMatchDto) {
-    return this.clientProxymicroMatch.emit('update-match', {
-      id,
-      updateMatchDto,
-    });
-  }
+  // @HttpCode(202)
+  // @Patch(':id')
+  // update(@Param('id') id: string, @Body() updateMatchDto: UpdateMatchDto) {
+  //   return this.clientProxymicroMatch.emit('update-match', {
+  //     id,
+  //     updateMatchDto,
+  //   });
+  // }
 
-  @Delete(':id')
-  delete(@Param('id') id: string) {
-    return this.clientProxymicroMatch.emit('delete-match', id);
-  }
+  // @Delete(':id')
+  // delete(@Param('id') id: string) {
+  //   return this.clientProxymicroMatch.emit('delete-match', id);
+  // }
 }
