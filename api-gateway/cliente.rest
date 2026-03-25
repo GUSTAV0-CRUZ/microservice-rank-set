@@ -36,7 +36,7 @@ Authorization: Bearer {{AuthToken}}
 }
 ###
 # @name PlayerDelete
-DELETE  {{baseUrl}}player/69ab34d55a827cb4bdbe175e
+DELETE  {{baseUrl}}player/69c46ebf2d5ca5390bbdd389
 Authorization: Bearer {{AuthToken}}
 
 ###
@@ -321,7 +321,7 @@ POST {{baseUrl}}auth/signUp
 Content-Type: application/json
 
 {
-  "email": "gustavocruzsantos39@gmail.com",
+  "email": "gustavo.cruzs.dev@gmail.com",
   "password": "Gu$tavo123"
 }
 
@@ -331,6 +331,6 @@ POST {{baseUrl}}auth/signIn
 Content-Type: application/json
 
 {
-  "email": "gustavocruzsantos39@gmail.com",
+  "email": "gustavocruzs.dev@gmail.com",
   "password": "Gu$tavo123"
 }

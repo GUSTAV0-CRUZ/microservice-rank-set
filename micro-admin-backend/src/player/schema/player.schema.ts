@@ -6,7 +6,7 @@ export type PlayerDocument = PlayerSchemaDb & Document;
 
 @Schema({ timestamps: true })
 export class PlayerSchemaDb implements Player {
-  @Prop({ required: false, sparse: true, unique: true })
+  @Prop({ sparse: true, unique: true })
   tell: string;
 
   @Prop({ required: true, unique: true })
