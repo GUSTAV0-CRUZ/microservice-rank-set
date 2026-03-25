@@ -1,6 +1,7 @@
 import {
   IsInt,
   IsNotEmpty,
+  IsOptional,
   IsString,
   MaxLength,
   MinLength,
@@ -16,7 +17,8 @@ export class CreatePlayerDto {
   @IsString()
   @IsNotEmpty()
   @MinLength(11)
-  readonly tell: string;
+  @IsOptional()
+  readonly tell?: string;
 
   @IsString()
   @IsNotEmpty()

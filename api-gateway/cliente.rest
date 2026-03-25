@@ -20,7 +20,6 @@ Authorization: Bearer {{AuthToken}}
 
 {
   "name": "Gustavo Cruz",
-  "tell": "97777757234",
   "ranking": "A",
   "positionRanking": 1,
   "pictureUrl": ""
