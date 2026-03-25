@@ -6,14 +6,28 @@ import {
 import { SupabaseProvider } from './providers/supabase.provider';
 import { SignUpDto } from './dtos/SignUp.dto';
 import { SignInDto } from './dtos/signIn.dto';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class AuthService {
-  constructor(private readonly supabaseProvider: SupabaseProvider) {}
+  private domainApiUrl: string;
+
+  constructor(
+    private readonly supabaseProvider: SupabaseProvider,
+    configService: ConfigService,
+  ) {
+    this.domainApiUrl =
+      configService.get<string>('DOMAIN_API_URL') ?? 'http://localhost:3000';
+  }
 
   async signUp(signUpDto: SignUpDto) {
     try {
-      const { data, error } = await this.supabaseProvider.signUp(signUpDto);
+      const { data, error } = await this.supabaseProvider.signUp({
+        ...signUpDto,
+        options: {
+          emailRedirectTo: `${this.domainApiUrl}/api/v2/auth/confirmed-email`,
+        },
+      });
 
       if (error) throw new BadRequestException(error.message);
 
