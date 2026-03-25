@@ -11,12 +11,16 @@ import {
   UploadedFile,
   ParseFilePipeBuilder,
   HttpStatus,
+  UseGuards,
 } from '@nestjs/common';
 import { CreatePlayerDto } from './dtos/create-player.dto';
 import { UpdatePlayerDto } from './dtos/update-player.dto';
 import { ClientProxy } from '@nestjs/microservices';
 import { ClientproxyRmqService } from 'src/client-proxy-rmq/client-proxy-rmq.service';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { SupabaseGuard } from 'src/common/guards/supabase.guard';
+import { CurrentUser } from 'src/common/decorators/current-user.decorator';
+import { CurrentUserDto } from 'src/common/dtos/current-user.dto';
 
 @Controller('api/v1/player')
 export class PlayerController {
@@ -37,10 +41,17 @@ export class PlayerController {
     return this.clientAdminBackend.send('findOneById-player', id);
   }
 
+  @UseGuards(SupabaseGuard)
   @HttpCode(202)
   @Post()
-  create(@Body() createPlayerDto: CreatePlayerDto) {
-    return this.clientAdminBackend.emit('create-player', createPlayerDto);
+  create(
+    @CurrentUser() user: CurrentUserDto,
+    @Body() createPlayerDto: CreatePlayerDto,
+  ) {
+    return this.clientAdminBackend.emit('create-player', {
+      ...createPlayerDto,
+      email: user?.email,
+    });
   }
 
   @HttpCode(202)

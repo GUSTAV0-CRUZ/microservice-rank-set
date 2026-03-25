@@ -1,5 +1,4 @@
 import {
-  IsEmail,
   IsInt,
   IsNotEmpty,
   IsString,
@@ -8,12 +7,6 @@ import {
 } from 'class-validator';
 
 export class CreatePlayerDto {
-  @IsNotEmpty()
-  @IsString()
-  @IsEmail()
-  @MaxLength(250)
-  readonly email: string;
-
   @IsNotEmpty()
   @IsString()
   @MinLength(3)
