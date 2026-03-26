@@ -6,7 +6,7 @@ import { Player } from './entities/Player.entitie';
 import { RpcException } from '@nestjs/microservices';
 import { PaginationDto } from 'src/utils/pagination.dto';
 import { UpdatePlayerDto } from './dtos/update-player.dto';
-import { CloudinaryService } from 'src/cloudinary/cloudinary.service';
+import { CloudinaryService } from '../cloudinary/cloudinary.service';
 
 @Injectable()
 export class PlayerService {
