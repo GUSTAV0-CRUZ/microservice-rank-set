@@ -7,7 +7,7 @@ import { CategoryRepository } from './repository/category.repository';
 import { RpcException } from '@nestjs/microservices';
 import { Category } from './entities/category.entity';
 import { AddPlayerDto } from './dto/add-player.dto';
-import { PlayerService } from 'src/player/player.service';
+import { PlayerService } from '../player/player.service';
 import { RemovePlayerDto } from './dto/remove-player.dto';
 
 @Injectable()
@@ -28,12 +28,10 @@ export class CategoryService {
     });
   }
 
-  async create(createCategoryDto: CreateCategoryDto): Promise<void> {
+  async create(createCategoryDto: CreateCategoryDto): Promise<Category> {
     // this.logger.log('CREATECATEGORYDTO:  ', createCategoryDto);
     try {
-      await this.categoryRepository.create(createCategoryDto);
-
-      return;
+      return await this.categoryRepository.create(createCategoryDto);
     } catch (error) {
       this.logError(error, this.create.name);
       // eslint-disable-next-line @typescript-eslint/no-unsafe-call
@@ -41,6 +39,7 @@ export class CategoryService {
         'Path',
       )[1] as string;
       if (erroFildRequired) throw new RpcException(`Fild:${erroFildRequired}`);
+
       if (error.code === 11000)
         throw new RpcException('Value of key name is duplicate');
 
@@ -49,7 +48,12 @@ export class CategoryService {
   }
 
   async findAll(): Promise<Category[]> {
-    return await this.categoryRepository.findAll();
+    try {
+      return await this.categoryRepository.findAll();
+    } catch (error) {
+      this.logError(error, this.findAll.name);
+      throw new RpcException(error.message);
+    }
   }
 
   async findOne(id: string): Promise<Category> {
@@ -62,8 +66,6 @@ export class CategoryService {
     } catch (error) {
       this.logError(error, this.findOne.name);
       if (error.path === '_id') throw new RpcException('Type of id invalid');
-
-      if (error.status === 404) throw new RpcException('Category not found');
 
       throw new RpcException(error.message);
     }
