@@ -114,7 +114,7 @@ export class RankingService {
     }
   }
 
-  calculationScore(valueExistent: number, valueForOperation: number) {
+  private calculationScore(valueExistent: number, valueForOperation: number) {
     return {
       '-': (): number =>
         valueExistent - valueForOperation < 0
@@ -123,6 +123,41 @@ export class RankingService {
       '+': (): number => valueExistent + valueForOperation,
       '*': (): number => valueExistent * valueForOperation,
       '/': (): number => valueExistent / valueForOperation,
+    };
+  }
+
+  private eventOfCategoryPerEventsNameEnum(
+    category: { events: [{ name: string; value: number; operation: string }] },
+    eventsNameEnum: EventsNameEnum,
+  ) {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-enum-comparison
+    return category.events.filter((event) => event.name === eventsNameEnum)[0];
+  }
+
+  private factoryPlayerWinningOrLosing(
+    select: 'Winning' | 'Losing',
+    rankingsOfPlayers: Array<Ranking>,
+    def: string,
+  ) {
+    return rankingsOfPlayers[0]['player'] === def
+      ? rankingsOfPlayers[select === 'Winning' ? 0 : 1]
+      : rankingsOfPlayers[select === 'Winning' ? 1 : 0];
+  }
+
+  private factoryPlayerWinningOrLosingForUpdate(
+    select: 'Winning' | 'Losing',
+    score: number,
+    rankingPlayer: Ranking,
+  ) {
+    return {
+      score,
+      position: 0,
+      matchHistory: {
+        victory: (rankingPlayer.matchHistory.victory +=
+          select === 'Winning' ? 1 : 0),
+        defeat: (rankingPlayer.matchHistory.defeat +=
+          select === 'Losing' ? 1 : 0),
+      },
     };
   }
 
@@ -144,7 +179,9 @@ export class RankingService {
         return rankingPerPlayer as Ranking;
       });
 
-      const rankingsOfPlayers = await Promise.all(rankingsOfPlayersPromise);
+      const rankingsOfPlayers = (await Promise.all(
+        rankingsOfPlayersPromise,
+      )) as Array<Ranking>;
 
       const categorySelected = await lastValueFrom<{
         events: [
@@ -156,64 +193,73 @@ export class RankingService {
         ];
       }>(this.microAdinBakend.send('findOneById-category', category));
 
-      const playerWinning =
-        rankingsOfPlayers[0]['player'] === def
-          ? rankingsOfPlayers[0]
-          : rankingsOfPlayers[1];
+      const rankingOfPlayerWinning = this.factoryPlayerWinningOrLosing(
+        'Winning',
+        rankingsOfPlayers,
+        def,
+      );
 
-      const playerLosing =
-        rankingsOfPlayers[0]['player'] !== def
-          ? rankingsOfPlayers[0]
-          : rankingsOfPlayers[1];
+      const rankingOfPlayerLosing = this.factoryPlayerWinningOrLosing(
+        'Losing',
+        rankingsOfPlayers,
+        def,
+      );
 
-      const eventVictoryLeader = categorySelected.events.filter(
-        (event) => event.name === EventsNameEnum.VICTORY_LEADER,
-      )[0];
+      const eventVictoryLeader = this.eventOfCategoryPerEventsNameEnum(
+        categorySelected,
+        EventsNameEnum.VICTORY_LEADER,
+      );
 
-      const eventVictory = categorySelected.events.filter(
-        (event) => event.name === EventsNameEnum.VICTORY,
-      )[0];
+      const eventVictory = this.eventOfCategoryPerEventsNameEnum(
+        categorySelected,
+        EventsNameEnum.VICTORY,
+      );
 
-      const eventDefeat = categorySelected.events.filter(
-        (event) => event.name === EventsNameEnum.DEFEAT,
-      )[0];
+      const eventDefeat = this.eventOfCategoryPerEventsNameEnum(
+        categorySelected,
+        EventsNameEnum.DEFEAT,
+      );
 
       const eventWinning =
-        playerLosing.position === 1 ? eventVictoryLeader : eventVictory;
+        rankingOfPlayerLosing.position === 1
+          ? eventVictoryLeader
+          : eventVictory;
 
       // eslint-disable-next-line @typescript-eslint/no-unsafe-call
       const scoreWinning = this.calculationScore(
-        playerWinning.score,
+        rankingOfPlayerWinning.score,
         eventWinning.value,
       )[eventWinning.operation]() as number;
 
       // eslint-disable-next-line @typescript-eslint/no-unsafe-call
       const scoreLosing = this.calculationScore(
-        playerLosing.score,
+        rankingOfPlayerLosing.score,
         eventDefeat.value,
       )[eventDefeat.operation]() as number;
 
-      const playerWinningUpdate: UpdateRankingDto = {
-        score: scoreWinning,
-        position: 0,
-        matchHistory: {
-          victory: (playerWinning.matchHistory.victory += 1),
-          defeat: playerWinning.matchHistory.defeat,
-        },
-      };
+      const rankingOfPlayerWinningUpdate: UpdateRankingDto =
+        this.factoryPlayerWinningOrLosingForUpdate(
+          'Winning',
+          scoreWinning,
+          rankingOfPlayerWinning,
+        );
 
-      const playerLosingUpdate: UpdateRankingDto = {
-        score: scoreLosing,
-        position: 0,
-        matchHistory: {
-          victory: playerLosing.matchHistory.victory,
-          defeat: (playerLosing.matchHistory.defeat += 1),
-        },
-      };
+      const rankingOfPlayerLosingUpdate: UpdateRankingDto =
+        this.factoryPlayerWinningOrLosingForUpdate(
+          'Losing',
+          scoreLosing,
+          rankingOfPlayerLosing,
+        );
 
       await Promise.all([
-        this.update(String(playerWinning['_id']), playerWinningUpdate),
-        this.update(String(playerLosing['_id']), playerLosingUpdate),
+        this.update(
+          String(rankingOfPlayerWinning['_id']),
+          rankingOfPlayerWinningUpdate,
+        ),
+        this.update(
+          String(rankingOfPlayerLosing['_id']),
+          rankingOfPlayerLosingUpdate,
+        ),
       ]);
 
       const rankinsSortScore: unknown =
