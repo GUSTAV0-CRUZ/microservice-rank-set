@@ -1,12 +1,21 @@
-/* eslint-disable @typescript-eslint/unbound-method */
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
+/* eslint-disable @typescript-eslint/unbound-method */
 import { Test, TestingModule } from '@nestjs/testing';
 import { MatchService } from './match.service';
 import { MatchRepository } from './repository/match.repository';
-import { createMatch } from 'src/utils/match/create-match';
-import { BadRequestException } from '@nestjs/common';
-import { ChallengeService } from 'src/challenge/challenge.service';
-import { createChallenge } from 'src/utils/challenge/create-challenge';
+import { RpcException } from '@nestjs/microservices';
+
+const createMatch = (
+  category?: string,
+  players?: Array<string>,
+  def?: string,
+  result?: Array<any>,
+) => ({
+  category: category ?? 'anyCategory',
+  players: players ?? ['player1', 'player2'],
+  def: def ?? 'player1',
+  result: result ?? [{ set: '3-0' }],
+});
 
 describe('MatchService', () => {
   let matchService: MatchService;
@@ -26,12 +35,6 @@ describe('MatchService', () => {
             delete: jest.fn(),
           },
         },
-        {
-          provide: ChallengeService,
-          useValue: {
-            findOne: jest.fn(),
-          },
-        },
       ],
     }).compile();
 
@@ -45,63 +48,49 @@ describe('MatchService', () => {
 
   describe('create', () => {
     it('Should return new match', async () => {
-      const matchCreate = createMatch();
-      const matchDto = {
-        category: 'any category',
-        players: ['69a1a8f29fda1c56f912a825', '69a6f7a2f38dbedaa8bc29c5'],
-        challengeId: '69a851a8ace9c0a64fd80d81',
-        result: [
-          {
-            set: '69a1a8f29fda1c56f912a825',
-          },
-        ],
-        def: '69a1a8f29fda1c56f912a825',
-      };
-      const challenge = createChallenge(matchCreate);
+      const matchDto = createMatch();
 
-      jest.spyOn(matchRepository, 'create').mockResolvedValue({
-        category: challenge.category,
-        players: challenge.players,
-        def: matchDto.def,
-        result: matchDto.result,
-      } as any);
+      jest.spyOn(matchRepository, 'create').mockResolvedValue(matchDto as any);
 
       const result = await matchService.create(matchDto as any);
 
       expect(matchRepository.create).toHaveBeenCalledWith(matchDto);
-      expect(result).toEqual({
-        category: challenge.category,
-        players: challenge.players,
-        def: matchDto.def,
-        result: matchDto.result,
-      });
+      expect(result).toEqual(matchDto);
     });
 
-    it('Should return the error "BadRequestException"', async () => {
+    it('Should return the generic error "RpcException"', async () => {
       jest.spyOn(matchRepository, 'create').mockRejectedValue(new Error());
+
       await expect(matchService.create({} as any)).rejects.toThrow(
-        BadRequestException,
+        RpcException,
       );
     });
   });
 
   describe('findAll', () => {
     it('Should return array of match', async () => {
-      const arraymatch = [createMatch()];
+      const arrayMatch = [createMatch()];
+
       jest
         .spyOn(matchRepository, 'findAll')
-        .mockResolvedValue(arraymatch as any);
+        .mockResolvedValue(arrayMatch as any);
 
-      const result = await matchService.findAll({} as any);
+      const result = await matchService.findAll();
 
       expect(matchRepository.findAll).toHaveBeenCalledTimes(1);
-      expect(result).toEqual(arraymatch);
+      expect(result).toEqual(arrayMatch);
+    });
+
+    it('Should return the generic error "RpcException"', async () => {
+      jest.spyOn(matchRepository, 'findAll').mockRejectedValue(new Error());
+
+      await expect(matchService.findAll()).rejects.toThrow(RpcException);
     });
   });
 
   describe('findOne', () => {
     it('Should return one match', async () => {
-      const id = 'idOfmatch123';
+      const id = 'idMatch123';
       const match = createMatch();
 
       jest.spyOn(matchRepository, 'findOneId').mockResolvedValue(match as any);
@@ -112,45 +101,42 @@ describe('MatchService', () => {
       expect(result).toEqual(match);
     });
 
-    it('Should return the error "match not found"', async () => {
+    it('Should return the error "Match not found"', async () => {
       jest.spyOn(matchRepository, 'findOneId').mockResolvedValue(null);
+
       await expect(matchService.findOne('1a2b3c')).rejects.toThrow(
         'Match not found',
       );
     });
 
     it('Should return the error "Type of id invalid"', async () => {
-      const errorImplementKey = new BadRequestException();
+      const errorImplementKey = new Error();
       errorImplementKey['path'] = '_id';
 
       jest.spyOn(matchRepository, 'findOneId').mockImplementationOnce(() => {
         throw errorImplementKey;
       });
-      await expect(matchService.findOne('1a2b3c')).rejects.toThrow(
+
+      await expect(matchService.findOne('')).rejects.toThrow(
         'Type of id invalid',
       );
     });
 
-    it('Should return the error "BadRequestException"', async () => {
+    it('Should return the generic error "RpcException"', async () => {
       jest.spyOn(matchRepository, 'findOneId').mockRejectedValue(new Error());
-      await expect(matchService.findOne('1a2b3c')).rejects.toThrow(
-        BadRequestException,
-      );
+
+      await expect(matchService.findOne('')).rejects.toThrow(RpcException);
     });
   });
 
   describe('update', () => {
     it('Should return match updated', async () => {
+      const id = 'id123';
       const match = createMatch();
       const matchUpdated = {
-        result: [
-          {
-            set: 'player wins',
-          },
-        ],
-        def: 'IdPlayer',
+        result: [{ set: '2-1' }],
+        def: 'player2',
       };
-      const id = '3672ihr23t6723y26';
 
       jest.spyOn(matchRepository, 'update').mockResolvedValue({
         ...match,
@@ -166,39 +152,42 @@ describe('MatchService', () => {
       });
     });
 
-    it('Should return the error "match not found"', async () => {
+    it('Should return the error "Match not found"', async () => {
       jest.spyOn(matchRepository, 'update').mockResolvedValue(null);
+
       await expect(matchService.update('', {} as any)).rejects.toThrow(
         'Match not found',
       );
     });
 
     it('Should return the error "Type of id invalid"', async () => {
-      const errorImplementKey = new BadRequestException();
+      const errorImplementKey = new Error();
       errorImplementKey['path'] = '_id';
 
       jest.spyOn(matchRepository, 'update').mockImplementationOnce(() => {
         throw errorImplementKey;
       });
+
       await expect(matchService.update('', {} as any)).rejects.toThrow(
         'Type of id invalid',
       );
     });
 
-    it('Should return the error "BadRequestException"', async () => {
+    it('Should return the generic error "RpcException"', async () => {
       jest.spyOn(matchRepository, 'update').mockRejectedValue(new Error());
+
       await expect(matchService.update('', {} as any)).rejects.toThrow(
-        BadRequestException,
+        RpcException,
       );
     });
   });
 
   describe('delete', () => {
     it('Should return match deleted', async () => {
+      const id = 'id123';
       const match = createMatch();
-      const id = '3672ihr23t6723y26';
 
-      jest.spyOn(matchRepository, 'delete').mockReturnValue(match as any);
+      jest.spyOn(matchRepository, 'delete').mockResolvedValue(match as any);
 
       const result = await matchService.delete(id);
 
@@ -206,30 +195,29 @@ describe('MatchService', () => {
       expect(result).toEqual(match);
     });
 
-    it('Should return the error "match not found"', async () => {
+    it('Should return the error "Match not found"', async () => {
       jest.spyOn(matchRepository, 'delete').mockResolvedValue(null);
-      await expect(matchService.delete('idTeste123')).rejects.toThrow(
-        'Match not found',
-      );
+
+      await expect(matchService.delete('')).rejects.toThrow('Match not found');
     });
 
     it('Should return the error "Type of id invalid"', async () => {
-      const errorImplementKey = new BadRequestException();
+      const errorImplementKey = new Error();
       errorImplementKey['path'] = '_id';
 
       jest.spyOn(matchRepository, 'delete').mockImplementationOnce(() => {
         throw errorImplementKey;
       });
+
       await expect(matchService.delete('')).rejects.toThrow(
         'Type of id invalid',
       );
     });
 
-    it('Should return the error "BadRequestException"', async () => {
+    it('Should return the generic error "RpcException"', async () => {
       jest.spyOn(matchRepository, 'delete').mockRejectedValue(new Error());
-      await expect(matchService.delete('')).rejects.toThrow(
-        BadRequestException,
-      );
+
+      await expect(matchService.delete('')).rejects.toThrow(RpcException);
     });
   });
 });
