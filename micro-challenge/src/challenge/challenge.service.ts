@@ -4,7 +4,7 @@ import { CreateChallengeDto } from './dto/create-challenge.dto';
 import { Challenge } from './entities/challenge.entity';
 import { ChallengeStatus } from './enums/challenge-status.enum';
 import { ClientProxy, RpcException } from '@nestjs/microservices';
-import { ClienteProxyRmqService } from 'src/cliente-proxy-rmq/cliente-proxy-rmq.service';
+import { ClienteProxyRmqService } from '../cliente-proxy-rmq/cliente-proxy-rmq.service';
 import { lastValueFrom } from 'rxjs';
 import { UpdateChallengeDto } from './dto/update-challenge.dto';
 import { CreateAddMatchDto } from './dto/create-addMatch.dto';
@@ -49,6 +49,9 @@ export class ChallengeService {
     try {
       const { players, applicant, dateHourChallenge } = createChallengeDto;
 
+      if (players[0] !== applicant && players[1] !== applicant)
+        throw new RpcException('Applicant not is one player of challenge');
+
       const [playerOne, playerTwo] = await Promise.all([
         lastValueFrom<{ email: string; name: string }>(
           this.microBackendClientProxy.send('findOneById-player', players[0]),
@@ -57,9 +60,6 @@ export class ChallengeService {
           this.microBackendClientProxy.send('findOneById-player', players[1]),
         ),
       ]);
-
-      if (players[0] !== applicant && players[1] !== applicant)
-        throw new RpcException('Applicant not is one player of challenge');
 
       const category = await lastValueFrom<{ _id: string }>(
         this.microBackendClientProxy.send(
@@ -97,9 +97,9 @@ export class ChallengeService {
     }
   }
 
-  findAll() {
+  async findAll() {
     try {
-      return this.challengeRepository.findAll();
+      return await this.challengeRepository.findAll();
     } catch (error) {
       this.logError(error, this.findAll.name);
       // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
@@ -132,12 +132,11 @@ export class ChallengeService {
     const { status } = updateChallengeDto;
     const dateHourResponse = new Date();
 
-    if ((await this.findOne(id)).status !== ChallengeStatus.PENDING)
-      throw new RpcException(
-        'The Status of Challenge should is "PENDING" for updateded',
-      );
-
     try {
+      if ((await this.findOne(id)).status !== ChallengeStatus.PENDING)
+        throw new RpcException(
+          'The Status of Challenge should is "PENDING" for updateded',
+        );
       const challenge = await this.challengeRepository.update(id, {
         status,
         dateHourResponse,
