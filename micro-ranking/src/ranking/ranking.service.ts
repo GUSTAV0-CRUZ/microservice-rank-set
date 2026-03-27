@@ -12,7 +12,6 @@ import { Ranking } from './entities/Ranking';
 @Injectable()
 export class RankingService {
   private microAdinBakend: ClientProxy;
-  private microMatch: ClientProxy;
   private readonly logger = new Logger(RankingService.name);
 
   constructor(
@@ -21,7 +20,6 @@ export class RankingService {
   ) {
     this.microAdinBakend =
       clientProxyRmqservice.getClientProxyRmqAdminBackend();
-    this.microMatch = clientProxyRmqservice.getClientProxyRmqMicroMatch();
   }
 
   private logError(error: any, methodName: string) {
