@@ -2,7 +2,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import { RpcException } from '@nestjs/microservices';
 import { logError } from 'src/common/logError';
 import { CustomeseEmail } from 'src/configs/customise-email';
-import { SendMessageDto } from 'src/dtos/send-message.dto';
+import { SendMessageDto } from 'src/send-email/dtos/send-message.dto';
 import { MailgunService } from 'src/mailgun/mailgun.service';
 
 @Injectable()

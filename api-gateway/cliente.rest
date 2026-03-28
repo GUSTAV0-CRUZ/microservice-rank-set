@@ -34,6 +34,7 @@ Authorization: Bearer {{AuthToken}}
 {
   "name": "test updated"
 }
+
 ###
 # @name PlayerDelete
 DELETE  {{baseUrl}}player/69c46ebf2d5ca5390bbdd389
@@ -41,7 +42,7 @@ Authorization: Bearer {{AuthToken}}
 
 ###
 # @name UploadedImagePlayerPost
-PATCH  {{baseUrl}}player/69b1b16280a6ed3deee3979e/upload-image
+PATCH  {{baseUrl}}player/69c46f502d5ca5390bbdd38e/upload-image
 Authorization: Bearer {{AuthToken}}
 Content-Type: multipart/form-data; boundary=----FormBoundary
 

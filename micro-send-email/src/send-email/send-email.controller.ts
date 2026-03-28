@@ -1,6 +1,6 @@
 import { Controller } from '@nestjs/common';
 import { Ctx, EventPattern, Payload, RmqContext } from '@nestjs/microservices';
-import { SendMessageDto } from 'src/dtos/send-message.dto';
+import { SendMessageDto } from 'src/send-email/dtos/send-message.dto';
 import { Channel, Message } from 'amqplib';
 import { SendEmailService } from './send-email.service';
 
