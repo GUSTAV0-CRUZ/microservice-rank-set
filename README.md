@@ -160,6 +160,14 @@ sudo docker compose up --build
 
 ---
 
+### 🔹 Centralização de Autenticação no API Gateway
+- Autenticação concentrada no Gateway utilizando **Supabase**
+- Redução de chamadas entre microserviços
+- Simplificação do fluxo de autenticação
+- Aproveitamento da abstração do provedor para acelerar o desenvolvimento
+
+---
+
 ## ✅ Qualidade e Testes
 
 O projeto utiliza **Jest** para testes automatizados:
