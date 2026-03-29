@@ -1,11 +1,12 @@
 # 🎾 Rank-set
 
-> Sistema de gestão de rankings e desafios esportivos com arquitetura de microserviços orientada a eventos.
+> Event-driven microservices platform for managing competitive sports rankings and challenges, designed with scalability, resilience and real-world distributed system patterns.
 
 ---
 
 ## 🚀 Status do Projeto
 
+![API Gateway CI](https://github.com/GUSTAV0-CRUZ/microservice-rank-set/actions/workflows/api-gateway.yml/badge.svg)
 ![Status](https://img.shields.io/badge/status-atualizado-brightgreen)
 ![Node](https://img.shields.io/badge/node-%3E%3D18-green)
 ![NestJS](https://img.shields.io/badge/framework-NestJS-red)
@@ -24,11 +25,15 @@ O **Rank-set** é um sistema escalável para gerenciamento de rankings e desafio
 - ⚡ Processamento assíncrono
 - 🧱 Arquitetura baseada em microserviços
 
-A aplicação evolui de um modelo monolítico para uma arquitetura distribuída utilizando **NestJS + RabbitMQ**.
+A aplicação evolui de um modelo monolítico para uma arquitetura distribuída utilizando **NestJS + RabbitMQ**, adotando padrões utilizados em sistemas reais de produção.
 
 ---
 
 ## 🏗️ Arquitetura
+
+### 📷 Diagrama da Arquitetura
+
+![Arquitetura do Sistema](./docs/architecture.png)
 
 A aplicação é composta por múltiplos microserviços independentes que se comunicam via mensageria (AMQP).
 
@@ -61,6 +66,16 @@ Client → API Gateway → RabbitMQ → Microservices
 
 ---
 
+## 🖥️ Execução em Ambiente Real
+
+### 📦 Containers em execução
+
+![Docker Running](./docs/images/docker-running.png)
+
+A imagem acima demonstra a execução completa do ambiente local utilizando **Docker Compose**, com todos os microserviços ativos e comunicação assíncrona via RabbitMQ.
+
+---
+
 ## 🧠 Conceitos Aplicados
 
 - Arquitetura orientada a eventos
@@ -82,20 +97,14 @@ Client → API Gateway → RabbitMQ → Microservices
 
 ### ▶️ Rodando o projeto
 
-#### 1. Clone o repositório
-
 ```bash
 git clone https://github.com/GUSTAV0-CRUZ/microservice-rank-set.git
 cd microservice-rank-set
 ```
 
-#### 2. Configure o `.env`
-
 ```env
 RABBITMQ_URL=amqp://guest:guest@rabbitmq:5672
 ```
-
-#### 3. Suba os containers
 
 ```bash
 sudo docker compose up --build
@@ -120,21 +129,14 @@ sudo docker compose up --build
 ## ⚙️ Decisões de Engenharia
 
 ### 🔹 Multi-Stage Builds
-
 - Redução de até **80% no tamanho das imagens**
 - Separação entre build e runtime
 
----
-
 ### 🔹 ACK/NACK (Resiliência)
-
 - `ack` → mensagem processada com sucesso  
 - `nack` → reprocessamento automático (`requeue: true`)
 
----
-
 ### 🔹 Filtro Global de Exceções
-
 - Padronização de erros HTTP
 - Tradução de erros entre microserviços
 
@@ -144,14 +146,11 @@ sudo docker compose up --build
 
 Para garantir a integridade de cada microserviço, o projeto utiliza **Jest** para testes automatizados:
 
-- **Testes Unitários:** Focados na lógica de negócio dos `Services`
-- **Mocks:** Isolamento total de dependências externas (Banco de Dados e RabbitMQ)
-- **Garantia de Fluxo:** Validação de regras críticas como cálculo de ranking e expiração de desafios
-
-### ▶️ Rodar testes
+- Testes unitários focados na lógica de negócio
+- Mocks para isolamento de dependências externas
+- Validação de regras críticas (ranking e desafios)
 
 ```bash
-# Dentro da pasta de qualquer microserviço
 npm run test
 ```
 
@@ -159,24 +158,19 @@ npm run test
 
 ## 🤖 Integração Contínua (CI)
 
-O projeto utiliza **GitHub Actions** para garantir a estabilidade e qualidade do código em cada alteração:
+O projeto utiliza **GitHub Actions** para garantir a qualidade do código:
 
-- **Pipeline de Validação:** Executado automaticamente a cada `push` ou `pull request` nas pastas dos microserviços
-- **Ambiente Isolado:** O workflow instala as dependências, executa os testes unitários com Jest e valida se o build da imagem Docker está íntegro
-- **Badge de Status:** O status atual da integração pode ser acompanhado diretamente no topo deste README
-
-### 🔹 Estrutura do Workflow
+- Execução automática a cada `push` e `pull request`
+- Validação de testes unitários
+- Verificação de build Docker
 
 ```yaml
-# Exemplo de fluxo executado pelo robô:
 Checkout Código -> Setup Node.js -> Install Deps -> Run Tests -> Docker Build Check
 ```
 
 ---
 
 ## 🧪 Padrão de Commits
-
-Este projeto segue **Conventional Commits**:
 
 ```
 feat: nova funcionalidade
@@ -192,4 +186,4 @@ test: testes
 <img src="https://github.com/GUSTAV0-CRUZ.png" width="100px;" />
 
 **Gustavo Cruz**  
-🔗 https://github.com/GUSTAV0-CRUZ
+https://github.com/GUSTAV0-CRUZ
