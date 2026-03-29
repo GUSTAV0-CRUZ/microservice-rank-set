@@ -28,8 +28,10 @@ export class allExceptionFilter implements ExceptionFilter {
         ? exception.getStatus()
         : HttpStatus.BAD_REQUEST;
 
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-    if (exception?.message.includes('not found')) status = 404;
+    const errorMessage = String(message).toLowerCase();
+    if (errorMessage.includes('not found')) {
+      status = HttpStatus.NOT_FOUND;
+    }
 
     // logger.log('exception: ', exception);
     // logger.log('ctx: ', ctx);
