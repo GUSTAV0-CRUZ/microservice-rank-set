@@ -157,6 +157,23 @@ npm run test
 
 ---
 
+## 🤖 Integração Contínua (CI)
+
+O projeto utiliza **GitHub Actions** para garantir a estabilidade e qualidade do código em cada alteração:
+
+- **Pipeline de Validação:** Executado automaticamente a cada `push` ou `pull request` nas pastas dos microserviços
+- **Ambiente Isolado:** O workflow instala as dependências, executa os testes unitários com Jest e valida se o build da imagem Docker está íntegro
+- **Badge de Status:** O status atual da integração pode ser acompanhado diretamente no topo deste README
+
+### 🔹 Estrutura do Workflow
+
+```yaml
+# Exemplo de fluxo executado pelo robô:
+Checkout Código -> Setup Node.js -> Install Deps -> Run Tests -> Docker Build Check
+```
+
+---
+
 ## 🧪 Padrão de Commits
 
 Este projeto segue **Conventional Commits**:
