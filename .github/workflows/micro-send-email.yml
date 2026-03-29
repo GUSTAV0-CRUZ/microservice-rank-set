@@ -1,0 +1,40 @@
+name: Micro-send-email
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'micro-send-email/**'
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  unit-tests-and-build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout do código
+        uses: actions/checkout@v4
+
+      - name: Instalar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: micro-send-email/package-lock.json
+
+      - name: Instalar dependências
+        run: |
+          cd micro-send-email
+          npm install
+
+      - name: Executar testes unitários
+        run: |
+          cd micro-send-email
+          npm run test
+
+      - name: Validar Build do Docker
+        uses: docker/build-push-action@v5
+        with:
+          context: ./micro-send-email
+          push: false
