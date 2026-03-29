@@ -31,10 +31,54 @@ services:
     build:
       context: ./micro-admin-backend
       dockerfile: Dockerfile
-    container_name: micro-admin-local
+    container_name: micro-admin-backend-local
     restart: always
     env_file:
       - ./micro-admin-backend/.env
+    depends_on:
+      - rabbitmq
+
+  micro-challenge:
+    build:
+      context: ./micro-challenge
+      dockerfile: Dockerfile
+    container_name: micro-challenge-local
+    restart: always
+    env_file:
+      - ./micro-challenge/.env
+    depends_on:
+      - rabbitmq
+
+  micro-match:
+    build:
+      context: ./micro-match
+      dockerfile: Dockerfile
+    container_name: micro-match-local
+    restart: always
+    env_file:
+      - ./micro-match/.env
+    depends_on:
+      - rabbitmq
+
+  micro-ranking:
+    build:
+      context: ./micro-ranking
+      dockerfile: Dockerfile
+    container_name: micro-ranking-local
+    restart: always
+    env_file:
+      - ./micro-ranking/.env
+    depends_on:
+      - rabbitmq
+
+  micro-send-email:
+    build:
+      context: ./micro-send-email
+      dockerfile: Dockerfile
+    container_name: micro-send-email-local
+    restart: always
+    env_file:
+      - ./micro-send-email/.env
     depends_on:
       - rabbitmq
 

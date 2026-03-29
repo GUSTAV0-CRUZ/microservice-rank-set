@@ -64,7 +64,7 @@ Authorization: Bearer {{AuthToken}}
 
 ###
 # @name CategoryGetOne
-GET {{baseUrl}}category/69bab2fb384cfd6900e2e1b1
+GET {{baseUrl}}category/69c95e9a5307289301b5838f
 Authorization: Bearer {{AuthToken}}
 
 ###
@@ -74,14 +74,14 @@ Content-Type: application/json
 Authorization: Bearer {{AuthToken}}
 
 {
-  "name": "C",
+  "name": "A",
   "description": "any desripition",
   "events": []
 }
 
 ###
 # @name CategoryPatch
-PATCH  {{baseUrl}}category/69bab2fb384cfd6900e2e1b1
+PATCH  {{baseUrl}}category/69c95e9a5307289301b5838f
 Content-Type: application/json
 Authorization: Bearer {{AuthToken}}
 
@@ -117,12 +117,12 @@ Authorization: Bearer {{AuthToken}}
 
 ###
 # @name AddPlayer
-PATCH  {{baseUrl}}category/69bab2fb384cfd6900e2e1b1/addPlayer
+PATCH  {{baseUrl}}category/69c95e9a5307289301b5838f/addPlayer
 Content-Type: application/json
 Authorization: Bearer {{AuthToken}}
 
 {
-  "addPlayers": ["69bab231384cfd6900e2e1a9"]
+  "addPlayers": ["69c46f502d5ca5390bbdd38e"]
 }
 
 ###
@@ -147,7 +147,7 @@ GET {{baseUrl}}challenge
 
 ###
 # @name ChallengeGetOne
-GET {{baseUrl}}challenge/69bd997c79a8771c24c56f39
+GET {{baseUrl}}challenge/69c9659b49d1edc0e638da2a
 Authorization: Bearer {{AuthToken}}
 
 ###
@@ -158,13 +158,13 @@ Authorization: Bearer {{AuthToken}}
 
 {
   "dateHourChallenge": "2026-03-20T07:30:00",
-  "applicant": "69bab231384cfd6900e2e1a9",
-  "players": ["69bab231384cfd6900e2e1a9", "69bf5893f22d968dc1f14f80"]
+  "applicant": "69c46f502d5ca5390bbdd38e",
+  "players": ["69c46f502d5ca5390bbdd38e", "69c46fa52d5ca5390bbdd391"]
 }
 
 ###
 # @name ChallengePatch
-PATCH  {{baseUrl}}challenge/69bd997c79a8771c24c56f39
+PATCH  {{baseUrl}}challenge/69c9659b49d1edc0e638da2a
 Content-Type: application/json
 Authorization: Bearer {{AuthToken}}
 
@@ -174,7 +174,7 @@ Authorization: Bearer {{AuthToken}}
 
 ###
 # @name ChallengeDelete
-DELETE  {{baseUrl}}challenge/69bd941866036a7794d865de
+DELETE  {{baseUrl}}challenge/69c960868a6762ce6e2ebc09
 Authorization: Bearer {{AuthToken}}
 
 ###
@@ -184,7 +184,7 @@ Authorization: Bearer {{AuthToken}}
 
 ###
 # @name ChallengeAddMatch
-PATCH  {{baseUrl}}challenge/69bd997c79a8771c24c56f39/AddMatch
+PATCH  {{baseUrl}}challenge/69c9659b49d1edc0e638da2a/AddMatch
 Content-Type: application/json
 Authorization: Bearer {{AuthToken}}
 
@@ -197,7 +197,7 @@ Authorization: Bearer {{AuthToken}}
     "setMacth": "3-1"
     }
   ],
-  "def": "69bab231384cfd6900e2e1a9"
+  "def": "69c46fa52d5ca5390bbdd391"
 }
 
 
@@ -332,6 +332,6 @@ POST {{baseUrl}}auth/signIn
 Content-Type: application/json
 
 {
-  "email": "gustavocruzs.dev@gmail.com",
+  "email": "gustavo.cruzs.dev@gmail.com",
   "password": "Gu$tavo123"
 }
