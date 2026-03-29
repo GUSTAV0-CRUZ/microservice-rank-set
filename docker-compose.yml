@@ -6,13 +6,26 @@ services:
     container_name: rabbitmq-local
     restart: always
     ports:
-      - "5672:5672"   # Porta para o NestJS se comunicar (Protocolo AMQP)
-      - "15672:15672" # Porta para o seu Navegador (Painel de Controle)
+      - "5672:5672"   # Porta AMQP (Microserviços)
+      - "15672:15672" # Porta Dashboard (Navegador)
     environment:
       - RABBITMQ_DEFAULT_USER=guest
       - RABBITMQ_DEFAULT_PASS=guest
     volumes:
       - rabbitmq_data:/var/lib/rabbitmq
+
+  api-gateway:
+    build:
+      context: ./api-gateway
+      dockerfile: Dockerfile
+    container_name: api-gateway-local
+    restart: always
+    ports:
+      - "8080:3000" # Exemplo: Acessar via http://localhost:8080
+    env_file:
+      - ./api-gateway/.env
+    depends_on:
+      - rabbitmq
 
 volumes:
   rabbitmq_data:

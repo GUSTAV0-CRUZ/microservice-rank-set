@@ -1,4 +1,4 @@
-@baseUrl = http://localhost:3000/api/v2/
+@baseUrl = http://localhost:8080/api/v2/
 @AuthToken = {{AuthSignInPost.response.body.access_token}}
 
 ### Player
