@@ -41,7 +41,35 @@ A aplicação é composta por múltiplos microserviços independentes que se com
 Client → API Gateway → RabbitMQ → Microservices
 ```
 
-### 🔹 Microserviços
+---
+
+## 🖥️ Execução em Ambiente Real
+
+### 📦 Containers em execução
+
+![Docker Running](./docs/images/docker-running.png)
+
+A imagem acima demonstra a execução completa do ambiente local utilizando **Docker Compose**, com todos os microserviços ativos e comunicação assíncrona via RabbitMQ.
+
+---
+
+### 📨 Filas e Mensageria (RabbitMQ)
+
+![RabbitMQ Queues](./docs/images/rabbitMQ-queues.png)
+
+Visualização das filas no RabbitMQ, evidenciando a comunicação assíncrona entre os microserviços através de eventos.
+
+---
+
+### ⚙️ Pipeline de Integração Contínua
+
+![CI Status](./docs/images/ci-status.png)
+
+Execução real do pipeline no GitHub Actions, validando testes automatizados e integridade dos builds a cada alteração no código.
+
+---
+
+## 🔹 Microserviços
 
 - **API Gateway**
   - Entrada única do sistema
@@ -63,16 +91,6 @@ Client → API Gateway → RabbitMQ → Microservices
 
 - **Micro-Send-Email**
   - Envio de notificações (Mailgun)
-
----
-
-## 🖥️ Execução em Ambiente Real
-
-### 📦 Containers em execução
-
-![Docker Running](./docs/images/docker-running.png)
-
-A imagem acima demonstra a execução completa do ambiente local utilizando **Docker Compose**, com todos os microserviços ativos e comunicação assíncrona via RabbitMQ.
 
 ---
 
@@ -144,7 +162,7 @@ sudo docker compose up --build
 
 ## ✅ Qualidade e Testes
 
-Para garantir a integridade de cada microserviço, o projeto utiliza **Jest** para testes automatizados:
+O projeto utiliza **Jest** para testes automatizados:
 
 - Testes unitários focados na lógica de negócio
 - Mocks para isolamento de dependências externas
