@@ -1,62 +1,178 @@
-# 🎾 Rank-set: Microservices & Messaging Architecture
+# 🎾 Rank-set
 
-Sistema de gestão de rankings e desafios esportivos escalável, construído com **NestJS** e arquitetura baseada em eventos via **RabbitMQ**. O projeto demonstra a transição de uma arquitetura monolítica para microserviços, focando em resiliência, desacoplamento e observabilidade.
+> Sistema de gestão de rankings e desafios esportivos com arquitetura de microserviços orientada a eventos.
 
 ---
 
-## 🏗️ Arquitetura do Sistema
+## 🚀 Status do Projeto
 
-A aplicação foi decomposta em serviços especializados que se comunicam de forma assíncrona. Essa abordagem garante que falhas em serviços periféricos (como o envio de e-mails) não interrompam o fluxo principal de criação de partidas ou gestão de usuários.
+![Status](https://img.shields.io/badge/status-atualizado-brightgreen)
+![Node](https://img.shields.io/badge/node-%3E%3D18-green)
+![NestJS](https://img.shields.io/badge/framework-NestJS-red)
+![Docker](https://img.shields.io/badge/docker-ready-blue)
+![RabbitMQ](https://img.shields.io/badge/messaging-RabbitMQ-orange)
+![Tests](https://img.shields.io/badge/tests-Jest-blueviolet)
 
-### Microserviços:
-* **API Gateway:** Ponto único de entrada. Centraliza a autenticação (Supabase) e distribui comandos para os microserviços via RabbitMQ.
-* **Micro-Match:** Gerencia o ciclo de vida das partidas e desafios. Dispara eventos ao finalizar confrontos.
-* **Micro-Ranking:** O "motor" de pontuação. Reage a eventos de partidas para atualizar as posições dos jogadores em tempo real.
-* **Micro-Admin:** Cadastro base de categorias, jogadores e regras de negócio.
-* **Micro-Send-Email:** Serviço de notificação isolado, integrado ao **Mailgun**.
+---
+
+## 📌 Sobre o Projeto
+
+O **Rank-set** é um sistema escalável para gerenciamento de rankings e desafios esportivos, construído com foco em:
+
+- 🔥 Escalabilidade
+- 🔗 Desacoplamento
+- ⚡ Processamento assíncrono
+- 🧱 Arquitetura baseada em microserviços
+
+A aplicação evolui de um modelo monolítico para uma arquitetura distribuída utilizando **NestJS + RabbitMQ**.
+
+---
+
+## 🏗️ Arquitetura
+
+A aplicação é composta por múltiplos microserviços independentes que se comunicam via mensageria (AMQP).
+
+```
+Client → API Gateway → RabbitMQ → Microservices
+```
+
+### 🔹 Microserviços
+
+- **API Gateway**
+  - Entrada única do sistema
+  - Autenticação via Supabase
+  - Validação JWT
+  - Orquestra comunicação com RabbitMQ
+
+- **Micro-Admin**
+  - Gerenciamento de jogadores e categorias
+
+- **Micro-Match**
+  - Controle de partidas
+
+- **Micro-Ranking**
+  - Atualização de rankings em tempo real
+
+- **Micro-Challenge**
+  - Fluxo de desafios entre jogadores
+
+- **Micro-Send-Email**
+  - Envio de notificações (Mailgun)
+
+---
+
+## 🧠 Conceitos Aplicados
+
+- Arquitetura orientada a eventos
+- Comunicação assíncrona
+- Isolamento de serviços
+- Alta resiliência
+- Escalabilidade horizontal
+
+---
+
+## 🐳 Execução com Docker
+
+### 📋 Pré-requisitos
+
+- Docker
+- Docker Compose
+
+---
+
+### ▶️ Rodando o projeto
+
+#### 1. Clone o repositório
+
+```bash
+git clone https://github.com/GUSTAV0-CRUZ/microservice-rank-set.git
+cd microservice-rank-set
+```
+
+#### 2. Configure o `.env`
+
+```env
+RABBITMQ_URL=amqp://guest:guest@rabbitmq:5672
+```
+
+#### 3. Suba os containers
+
+```bash
+sudo docker compose up --build
+```
 
 ---
 
 ## 🛠️ Stack Tecnológica
 
-* **Framework:** [NestJS](https://nestjs.com/)
-* **Message Broker:** [RabbitMQ](https://www.rabbitmq.com/) (Protocolo AMQP)
-* **Banco de Dados:** [MongoDB](https://www.mongodb.com/) (Flexibilidade de documentos e velocidade de escrita)
-* **Provedores Cloud:** * **Mailgun:** Disparo de e-mails transacionais.
-    * **Cloudinary:** Gerenciamento e persistência de imagens.
-    * **Supabase:** Autenticação e storage.
-* **Testes:** Jest (Testes unitários e de integração nos Services).
+| Categoria        | Tecnologia            |
+|-----------------|----------------------|
+| Backend         | NestJS               |
+| Mensageria      | RabbitMQ (AMQP)      |
+| Containerização | Docker + Compose     |
+| Banco de Dados  | MongoDB Atlas        |
+| Autenticação    | Supabase             |
+| Emails          | Mailgun              |
+| Imagens         | Cloudinary           |
 
 ---
 
-## 🚀 Decisões de Engenharia & Patterns
+## ⚙️ Decisões de Engenharia
 
-### 1. Comunicação Baseada em Eventos (Event-Driven)
-Diferente do monólito original, os serviços são desacoplados. Quando um desafio é concluído no `micro-match`, ele emite um evento que o `micro-ranking` consome. Isso garante que o sistema de ranking possa escalar independentemente.
+### 🔹 Multi-Stage Builds
 
-### 2. Resiliência com ACK/NACK
-Foi implementado o controle manual de confirmação de mensagens:
-* **Sucesso:** A mensagem é removida da fila apenas após o processamento completo (`channel.ack`).
-* **Falhas Retentáveis:** Em erros de infraestrutura (ex: instabilidade na API do Mailgun), a mensagem recebe um `nack` e volta para a fila (`requeue: true`) para ser reprocessada automaticamente.
-
-### 3. Design Patterns Aplicados
-* **Factory & Strategy:** Utilizados no cálculo de scores para selecionar a operação aritmética (vitória, derrota, líder) baseada na categoria.
-* **Repository Pattern:** Isolamento da camada de dados, facilitando a manutenção e a criação de mocks para testes unitários.
-* **Adapter:** Padronização da interface de comunicação com serviços externos como Mailgun e Cloudinary.
+- Redução de até **80% no tamanho das imagens**
+- Separação entre build e runtime
 
 ---
 
-## 🧠 Desafios Superados & Aprendizados
+### 🔹 ACK/NACK (Resiliência)
 
-* **Rastreabilidade:** O desafio de rastrear o fluxo de uma mensagem entre múltiplos serviços. Resolvido através de logs estruturados utilizando o `Logger` nativo do NestJS com metadados de contexto (`methodName`, `stack`).
-* **Consistência Eventual:** Entender que, em microserviços, os dados podem levar milissegundos para se sincronizarem entre serviços, e como projetar a interface para lidar com isso.
-* **Gestão de Erros:** Diferenciar erros de negócio (que não devem ser reprocessados) de erros de rede (que exigem retry na fila).
+- `ack` → mensagem processada com sucesso  
+- `nack` → reprocessamento automático (`requeue: true`)
+
+---
+
+### 🔹 Filtro Global de Exceções
+
+- Padronização de erros HTTP
+- Tradução de erros entre microserviços
+
+---
+
+## ✅ Qualidade e Testes
+
+Para garantir a integridade de cada microserviço, o projeto utiliza **Jest** para testes automatizados:
+
+- **Testes Unitários:** Focados na lógica de negócio dos `Services`
+- **Mocks:** Isolamento total de dependências externas (Banco de Dados e RabbitMQ)
+- **Garantia de Fluxo:** Validação de regras críticas como cálculo de ranking e expiração de desafios
+
+### ▶️ Rodar testes
+
+```bash
+# Dentro da pasta de qualquer microserviço
+npm run test
+```
+
+---
+
+## 🧪 Padrão de Commits
+
+Este projeto segue **Conventional Commits**:
+
+```
+feat: nova funcionalidade
+fix: correção de bug
+refactor: melhoria interna
+test: testes
+```
 
 ---
 
 ## 👨‍💻 Autor
 
-| [<img src="https://github.com/GUSTAV0-CRUZ.png" width="100px;"/><br /><sub><b>Gustavo Cruz</b></sub>](https://github.com/GUSTAV0-CRUZ) |
-| :---: |
+<img src="https://github.com/GUSTAV0-CRUZ.png" width="100px;" />
 
-Projeto desenvolvido por Gustavo Cruz (GUSTAV0-CRUZ).
+**Gustavo Cruz**  
+🔗 https://github.com/GUSTAV0-CRUZ
