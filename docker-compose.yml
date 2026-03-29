@@ -27,5 +27,16 @@ services:
     depends_on:
       - rabbitmq
 
+  micro-admin-backend:
+    build:
+      context: ./micro-admin-backend
+      dockerfile: Dockerfile
+    container_name: micro-admin-local
+    restart: always
+    env_file:
+      - ./micro-admin-backend/.env
+    depends_on:
+      - rabbitmq
+
 volumes:
   rabbitmq_data:
